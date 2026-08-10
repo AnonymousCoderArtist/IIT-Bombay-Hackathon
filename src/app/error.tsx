@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 export default function GlobalError({
@@ -10,6 +11,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
+
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -23,7 +26,7 @@ export default function GlobalError({
       </p>
       <div className="flex gap-2">
         <Button onClick={reset}>Try again</Button>
-        <Button variant="outline" onClick={() => (window.location.href = "/dashboard")}>
+        <Button variant="outline" onClick={() => router.push("/dashboard")}>
           Go to dashboard
         </Button>
       </div>

@@ -16,6 +16,7 @@ import {
   FileText,
 } from "lucide-react";
 import { StatCard } from "@/components/dashboard/stat-card";
+import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -159,6 +160,8 @@ export default function DashboardHome() {
           </CardContent>
         </Card>
       </div>
+
+      {role === "admin" && <AnalyticsCharts data={data ?? {}} />}
     </div>
   );
 }

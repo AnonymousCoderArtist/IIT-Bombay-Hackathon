@@ -11,6 +11,8 @@ import {
   AttendanceRecord,
   Submission,
   Notification,
+  Club,
+  Notice,
 } from "../src/lib/models";
 
 const departments = [
@@ -330,6 +332,63 @@ async function main() {
     },
   ]);
   console.log("2 notifications created");
+
+  console.log("\n--- Seeding clubs ---");
+  await Club.updateOne(
+    { name: "Coding Club" },
+    {
+      $set: {
+        description: "DSA, competitive programming aur project building ke liye.",
+        category: "Technical",
+        coordinatorId: coordinatorId,
+        members: studentIds.slice(0, 2),
+      },
+    },
+    { upsert: true }
+  );
+  await Club.updateOne(
+    { name: "Robotics Society" },
+    {
+      $set: {
+        description: "Robots banao, competitions khelo, electronics seekho.",
+        category: "Technical",
+        coordinatorId: coordinatorId,
+        members: studentIds.slice(0, 1),
+      },
+    },
+    { upsert: true }
+  );
+  await Club.updateOne(
+    { name: "Dance & Music Club" },
+    {
+      $set: {
+        description: "Cultural nights aur inter-college fests ka hissa bano.",
+        category: "Cultural",
+        coordinatorId: coordinatorId,
+        members: [],
+      },
+    },
+    { upsert: true }
+  );
+  console.log("3 clubs created");
+
+  console.log("\n--- Seeding notices ---");
+  await Notice.create([
+    {
+      title: "Mid-sem exam schedule out",
+      body: "Mid-semester exams start from 1st of next month. Detailed timetable on the notice board.",
+      category: "Exam",
+      authorId: coordinatorId,
+      pinned: true,
+    },
+    {
+      title: "Tech Fest registrations open",
+      body: "Tech Fest 2026 registrations are open. Hurry, seats are limited!",
+      category: "Event",
+      authorId: facultyId,
+    },
+  ]);
+  console.log("2 notices created");
 
   await mongoose.disconnect();
   console.log("\nDone! Login with the test credentials above.\n");

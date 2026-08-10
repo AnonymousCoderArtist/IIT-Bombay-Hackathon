@@ -13,3 +13,5 @@ export { Application } from "./Application";
 export { Settings } from "./Settings";
 export { ActivityLog } from "./ActivityLog";
 export { Otp } from "./Otp";
+export { Club } from "./Club";
+export { Notice } from "./Notice";

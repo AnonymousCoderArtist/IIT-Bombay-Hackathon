@@ -15,6 +15,8 @@ import {
   Users,
   ScrollText,
   Megaphone,
+  Sparkles,
+  FileWarning,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,25 +27,33 @@ const roleLinks = {
     { href: "/assignments", label: "Assignments", icon: ClipboardList },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/placements", label: "Placements", icon: Briefcase },
+    { href: "/clubs", label: "Clubs", icon: Sparkles },
+    { href: "/notices", label: "Notices", icon: FileWarning },
   ],
   faculty: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/attendance", label: "Attendance", icon: CalendarDays },
     { href: "/assignments", label: "Assignments", icon: ClipboardList },
+    { href: "/notices", label: "Notices", icon: FileWarning },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/placements", label: "Placements", icon: Briefcase },
+    { href: "/clubs", label: "Clubs", icon: Sparkles },
   ],
   coordinator: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/assignments", label: "Assignments", icon: ClipboardList },
     { href: "/placements", label: "Placements", icon: Briefcase },
+    { href: "/clubs", label: "Clubs", icon: Sparkles },
+    { href: "/notices", label: "Notices", icon: FileWarning },
   ],
   admin: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/users", label: "Users", icon: Users },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/placements", label: "Placements", icon: Briefcase },
+    { href: "/clubs", label: "Clubs", icon: Sparkles },
+    { href: "/notices", label: "Notices", icon: FileWarning },
     { href: "/admin/logs", label: "Activity Logs", icon: ScrollText },
   ],
 };

@@ -119,6 +119,74 @@ export async function GET() {
 
   const pendingApplications = await Application.countDocuments({ status: "pending" });
 
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+  sixMonthsAgo.setDate(1);
+
+  const [monthlyAgg, deptAgg, applicationAgg, topEvents] = await Promise.all([
+    AttendanceRecord.aggregate([
+      { $match: { markedAt: { $gte: sixMonthsAgo } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m", date: "$markedAt" } },
+          total: { $sum: 1 },
+          present: { $sum: { $cond: [{ $ne: ["$status", "absent"] }, 1, 0] } },
+        },
+      },
+    ]),
+    AttendanceRecord.aggregate([
+      {
+        $lookup: {
+          from: "attendancesessions",
+          localField: "sessionId",
+          foreignField: "_id",
+          as: "session",
+        },
+      },
+      { $unwind: "$session" },
+      { $match: { "session.department": { $ne: null } } },
+      {
+        $group: {
+          _id: "$session.department",
+          total: { $sum: 1 },
+          present: { $sum: { $cond: [{ $ne: ["$status", "absent"] }, 1, 0] } },
+        },
+      },
+    ]),
+    Application.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
+    Event.find().sort({ registeredCount: -1 }).limit(5).select("title registeredCount").lean(),
+  ]);
+
+  const monthMap = new Map(monthlyAgg.map((m) => [m._id as string, m]));
+  const attendanceTrend: { month: string; percentage: number }[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(sixMonthsAgo);
+    d.setMonth(d.getMonth() + i);
+    const key = d.toISOString().slice(0, 7);
+    const bucket = monthMap.get(key);
+    const total = bucket?.total ?? 0;
+    attendanceTrend.push({
+      month: d.toLocaleDateString("en-IN", { month: "short" }),
+      percentage: total === 0 ? 0 : Math.round(((bucket.present ?? 0) / total) * 100),
+    });
+  }
+
+  const departmentPerformance = deptAgg.map((d) => ({
+    name: d._id as string,
+    percentage:
+      d.total === 0 ? 0 : Math.round(((d.present ?? 0) / d.total) * 100),
+  }));
+
+  const placementStats = applicationAgg.map((a) => ({
+    name: a._id as string,
+    value: a.count,
+  }));
+
+  const eventParticipation = topEvents.map((e) => ({
+    name: (e.title as string).length > 18 ? (e.title as string).slice(0, 18) + "…" : (e.title as string),
+    value: e.registeredCount,
+  }));
+
   return NextResponse.json({
     role,
     data: {
@@ -137,6 +205,10 @@ export async function GET() {
       unreadNotifications,
       attendancePercentage:
         records.length === 0 ? 0 : Math.round((presentCount / records.length) * 100),
+      attendanceTrend,
+      departmentPerformance,
+      placementStats,
+      eventParticipation,
     },
   });
 }
