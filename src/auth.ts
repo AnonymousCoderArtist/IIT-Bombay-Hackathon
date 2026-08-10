@@ -6,13 +6,10 @@ import { ZodError } from "zod";
 import { dbConnect } from "@/lib/db";
 import { User } from "@/lib/models";
 import { loginSchema } from "@/lib/validators";
+import { authConfig } from "@/auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  session: { strategy: "jwt" },
-  pages: {
-    signIn: "/login",
-    error: "/login",
-  },
+  ...authConfig,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -92,20 +89,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       return true;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.role = (user as { role?: string }).role;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as "student" | "faculty" | "coordinator" | "admin";
-      }
-      return session;
     },
   },
 });

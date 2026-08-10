@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Campus Management Platform
 
-## Getting Started
+Ek hi platform pe campus ki saari cheezein — attendance, assignments, events, placements, notifications. Students, faculty, coordinators aur admin ke liye alag dashboards.
 
-First, run the development server:
+Built for **DevFusion 4.0: The Developers Hackathon**.
+
+## Tech Stack
+
+- **Frontend:** Next.js 16, React 19, Tailwind CSS, shadcn/ui, Framer Motion
+- **Backend:** Next.js API routes, MongoDB (Mongoose)
+- **Auth:** NextAuth v5 — Email + OTP, Google OAuth, JWT sessions
+- **Extras:** QR event passes, email via SMTP, activity logs, dark/light mode
+
+## Features
+
+- Role-based dashboards (Student / Faculty / Coordinator / Admin)
+- Attendance — faculty creates sessions, students get subject-wise analytics
+- Assignments — upload with deadline + rubric, submit (file / GitHub link), grade with feedback
+- Events — register, cancel, QR pass download
+- Placements — company listings, apply with resume, application status
+- Notifications — assignments, attendance, events, placements, alerts
+- Global search + analytics charts
+- Admin panel — user management, roles, activity logs
+
+## Quick Start
+
+Pehle kuch cheezein chahiye:
+
+- Node.js 18.18+ (20+ recommended)
+- MongoDB — local ya [MongoDB Atlas](https://www.mongodb.com/atlas) (free tier kaafi hai)
 
 ```bash
+# 1. Repo clone karo
+git clone https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon.git
+cd IIT-Bombay-Hackathon
+
+# 2. Dependencies install karo
+npm install
+
+# 3. Environment setup
+cp .env.example .env
+# .env mein MONGODB_URI daalo (aur AUTH_SECRET - `openssl rand -base64 32` se bana sakte ho)
+
+# 4. Database seed karo (sample data + test users)
+npm run seed
+
+# 5. Dev server chalayo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000) pe kholo.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Test Credentials
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Role | Email | Password |
+| ---- | ----- | -------- |
+| Admin | `admin@smartcampus.edu` | `Admin@123` |
+| Coordinator | `coordinator@smartcampus.edu` | `Coord@123` |
+| Faculty | `faculty@smartcampus.edu` | `Faculty@123` |
+| Student | `student@smartcampus.edu` | `Student@123` |
 
-## Learn More
+## Testing
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Static checks (lint + typecheck)
+npm run check
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Server chal raha ho toh API sanity check
+npm run test
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Test credentials se login karo:
+#   - Student: attendance, assignments submit, events register, placements apply
+#   - Faculty: attendance session banao, assignment create + grade karo
+#   - Coordinator: events aur placements post karo
+#   - Admin: users manage karo, logs dekho
+```
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Repo ko GitHub pe push karo (already hai)
+2. [Vercel](https://vercel.com/new) pe "Import Project" → repo select karo
+3. Environment variables `.env` se daalo:
+   - `MONGODB_URI` (Atlas URL)
+   - `AUTH_SECRET`
+   - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
+   - `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM`
+4. Deploy karo, done
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> Note: Vercel ke serverless filesystem pe files save nahi hoti, isliye resume/attachment upload ke liye Cloudinary ya Vercel Blob jaise service use karni padti hai.
+
+## Environment Variables
+
+`MONGODB_URI`, `AUTH_SECRET`, Google OAuth credentials aur SMTP details — full list `.env.example` mein hai.
+
+## Deliverables
+
+- Source code + live app (Vercel)
+- README (yehi hai)
+- Test credentials (upar)
+- Env template (`.env.example`)
+- Database schema — `src/lib/models/`
+- License — [MIT](LICENSE)
+
+## License
+
+MIT

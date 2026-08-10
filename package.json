@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "tsx --env-file-if-exists=.env scripts/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "eslint && tsc --noEmit",
+    "test": "node test/check.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -40,6 +44,7 @@
     "eslint-config-next": "16.3.0",
     "shadcn": "^4.16.2",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5"
   }
 }
