@@ -50,7 +50,7 @@ export function Testimonials() {
               <div>
                 <Quote className="size-6 text-primary" />
                 <blockquote className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  "{testimonial.quote}"
+                  &ldquo;{testimonial.quote}&rdquo;
                 </blockquote>
               </div>
               <figcaption className="mt-6">
