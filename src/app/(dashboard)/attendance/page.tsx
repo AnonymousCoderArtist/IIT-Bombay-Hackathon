@@ -182,7 +182,21 @@ function FacultyAttendance() {
   }
 
   useEffect(() => {
-    loadSessions().catch(() => setLoading(false));
+    let cancelled = false;
+    fetch("/api/attendance/sessions")
+      .then((res) => res.json())
+      .then((json) => {
+        if (!cancelled) {
+          setSessions(json.sessions ?? []);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function handleCreate(event: React.FormEvent) {
