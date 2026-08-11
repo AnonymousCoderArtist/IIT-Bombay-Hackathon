@@ -164,6 +164,10 @@ for i in $(seq 1 6); do curl -s -o /dev/null -w "%{http_code} " \
 - 2-minute video ke liye: landing → register/verify → login (student) → dashboard → attendance → assignment submit → event register (QR) → placements apply → admin login → analytics + users → dark mode + mobile view
 - Screen recorder ke saath `npm run dev` terminal dikhana mat bhoolo jahan OTP log hota hai (registration demo ke liye)
 
+## Pending
+
+- [ ] Google login enable karna — Google Cloud Console se OAuth Client banake `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` `.env` me daalo (redirect URI: `http://localhost:3000/api/auth/callback/google`). Jab tak credentials nahi hain, login sirf email/password se chalta hai.
+
 ## Deploy on Vercel
 
 1. Repo ko GitHub pe push karo (already hai)
