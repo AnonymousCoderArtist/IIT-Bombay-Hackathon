@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -31,6 +31,49 @@ export default function SettingsPage() {
   });
   const [emailOptIn, setEmailOptIn] = useState(true);
   const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/users/settings")
+      .then((res) => res.json())
+      .then((json) => {
+        const settings = json.settings;
+        if (!settings) return;
+
+        if (settings.notificationPrefs) {
+          setNotificationPrefs((prev) => ({ ...prev, ...settings.notificationPrefs }));
+        }
+        if (typeof settings.emailOptIn === "boolean") {
+          setEmailOptIn(settings.emailOptIn);
+        }
+        if (settings.theme) {
+          setTheme(settings.theme);
+        }
+      })
+      .catch(() => undefined);
+  }, [setTheme]);
+
+  function saveSettings(patch: Record<string, unknown>) {
+    fetch("/api/users/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch),
+    }).catch(() => undefined);
+  }
+
+  function changeTheme(next: string) {
+    setTheme(next);
+    saveSettings({ theme: next });
+  }
+
+  function togglePref(key: string, checked: boolean) {
+    setNotificationPrefs((prev) => ({ ...prev, [key]: checked }));
+    saveSettings({ notificationPrefs: { [key]: checked } });
+  }
+
+  function toggleEmail(checked: boolean) {
+    setEmailOptIn(checked);
+    saveSettings({ emailOptIn: checked });
+  }
 
   function updatePassword(field: string, value: string) {
     setPasswordForm((prev) => ({ ...prev, [field]: value }));
@@ -113,21 +156,21 @@ export default function SettingsPage() {
             <CardContent className="flex flex-wrap gap-2">
               <Button
                 variant={theme === "light" ? "default" : "outline"}
-                onClick={() => setTheme("light")}
+                onClick={() => changeTheme("light")}
               >
                 <Sun className="size-4" />
                 Light
               </Button>
               <Button
                 variant={theme === "dark" ? "default" : "outline"}
-                onClick={() => setTheme("dark")}
+                onClick={() => changeTheme("dark")}
               >
                 <Moon className="size-4" />
                 Dark
               </Button>
               <Button
                 variant={(!theme || theme === "system") ? "default" : "outline"}
-                onClick={() => setTheme("system")}
+                onClick={() => changeTheme("system")}
               >
                 <Monitor className="size-4" />
                 System
@@ -212,9 +255,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch
                     checked={notificationPrefs[key]}
-                    onCheckedChange={(checked) =>
-                      setNotificationPrefs((prev) => ({ ...prev, [key]: checked }))
-                    }
+                    onCheckedChange={(checked) => togglePref(key, checked)}
                   />
                 </div>
               ))}
@@ -223,7 +264,7 @@ export default function SettingsPage() {
                   <p className="text-sm font-medium">Email notifications</p>
                   <p className="text-xs text-muted-foreground">Receive updates in your inbox</p>
                 </div>
-                <Switch checked={emailOptIn} onCheckedChange={setEmailOptIn} />
+                <Switch checked={emailOptIn} onCheckedChange={toggleEmail} />
               </div>
             </CardContent>
           </Card>
