@@ -15,3 +15,4 @@ export { ActivityLog } from "./ActivityLog";
 export { Otp } from "./Otp";
 export { Club } from "./Club";
 export { Notice } from "./Notice";
+export { StudyMaterial } from "./StudyMaterial";

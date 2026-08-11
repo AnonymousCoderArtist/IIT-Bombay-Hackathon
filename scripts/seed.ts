@@ -13,6 +13,7 @@ import {
   Notification,
   Club,
   Notice,
+  StudyMaterial,
 } from "../src/lib/models";
 
 const departments = [
@@ -248,6 +249,44 @@ async function main() {
     },
   ]);
   console.log(`${assignmentDocs.length} assignments created`);
+
+  console.log("\n--- Seeding study materials ---");
+  await StudyMaterial.create([
+    {
+      title: "DBMS - Normalization Notes",
+      description: "1NF se BCNF tak complete notes with examples.",
+      subject: "DBMS",
+      course: "CS301",
+      fileUrl: "/uploads/files/dbms-normalization-notes.pdf",
+      fileType: "application/pdf",
+      facultyId,
+      department: "CS",
+      semester: 5,
+    },
+    {
+      title: "OS - Process Scheduling Slides",
+      description: "Round robin, priority aur multilevel queues.",
+      subject: "Operating Systems",
+      course: "CS302",
+      fileUrl: "/uploads/files/os-scheduling-slides.pdf",
+      fileType: "application/pdf",
+      facultyId,
+      department: "CS",
+      semester: 5,
+    },
+    {
+      title: "Web Dev - React Fundamentals",
+      description: "Components, props, state aur hooks ka quick reference.",
+      subject: "Web Development",
+      course: "CS401",
+      fileUrl: "/uploads/files/react-fundamentals.pdf",
+      fileType: "application/pdf",
+      facultyId,
+      department: "CS",
+      semester: 5,
+    },
+  ]);
+  console.log("3 study materials created");
 
   console.log("\n--- Seeding attendance ---");
   const sessions = await AttendanceSession.create([

@@ -17,6 +17,7 @@ import {
   Megaphone,
   Sparkles,
   FileWarning,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +26,7 @@ const roleLinks = {
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/attendance", label: "Attendance", icon: CalendarDays },
     { href: "/assignments", label: "Assignments", icon: ClipboardList },
+    { href: "/materials", label: "Materials", icon: BookOpen },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/placements", label: "Placements", icon: Briefcase },
     { href: "/clubs", label: "Clubs", icon: Sparkles },
@@ -34,6 +36,7 @@ const roleLinks = {
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/attendance", label: "Attendance", icon: CalendarDays },
     { href: "/assignments", label: "Assignments", icon: ClipboardList },
+    { href: "/materials", label: "Materials", icon: BookOpen },
     { href: "/notices", label: "Notices", icon: FileWarning },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/placements", label: "Placements", icon: Briefcase },

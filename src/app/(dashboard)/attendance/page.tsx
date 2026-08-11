@@ -25,7 +25,18 @@ type StudentAttendance = {
   summary: { total: number; present: number; late: number; excused: number; absent: number; percentage: number };
   subjectWise: { subject: string; total: number; present: number; percentage: number }[];
   history: { _id: string; status: string; sessionId: { subject: string; date: string } }[];
+  monthly?: {
+    month: string;
+    summary: { total: number; present: number; late: number; excused: number; absent: number; percentage: number };
+    subjectWise: { subject: string; total: number; present: number; percentage: number }[];
+    byDay: { date: string; subject: string; status: string }[];
+  } | null;
 };
+
+function currentMonth() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+}
 
 export default function AttendancePage() {
   const { data: session } = useSession();
@@ -50,14 +61,16 @@ export default function AttendancePage() {
 function StudentAttendanceView() {
   const [data, setData] = useState<StudentAttendance | null>(null);
   const [loading, setLoading] = useState(true);
+  const [month, setMonth] = useState(currentMonth());
 
   useEffect(() => {
-    fetch("/api/attendance/me")
+    setLoading(true);
+    fetch(`/api/attendance/me?month=${month}`)
       .then((res) => res.json())
       .then((json) => setData(json))
       .catch(() => undefined)
       .finally(() => setLoading(false));
-  }, []);
+  }, [month]);
 
   if (loading) {
     return (
@@ -84,29 +97,44 @@ function StudentAttendanceView() {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { label: "Overall", value: `${data.summary.percentage}%`, sub: `${data.summary.present + data.summary.late + data.summary.excused}/${data.summary.total} sessions` },
-          { label: "Present", value: data.summary.present },
-          { label: "Late", value: data.summary.late },
-          { label: "Absent", value: data.summary.absent },
-        ].map((stat) => (
-          <Card key={stat.label}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground">{stat.label}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{stat.value}</p>
-              {stat.sub && <p className="mt-1 text-xs text-muted-foreground">{stat.sub}</p>}
-            </CardContent>
-          </Card>
-        ))}
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { label: "Overall", value: `${data.summary.percentage}%`, sub: `${data.summary.present + data.summary.late + data.summary.excused}/${data.summary.total} sessions` },
+            { label: "Present", value: data.summary.present },
+            { label: "Late", value: data.summary.late },
+            { label: "Absent", value: data.summary.absent },
+          ].map((stat) => (
+            <Card key={stat.label}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm text-muted-foreground">{stat.label}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{stat.value}</p>
+                {stat.sub && <p className="mt-1 text-xs text-muted-foreground">{stat.sub}</p>}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="w-full sm:w-auto">
+          <Label htmlFor="month" className="text-xs text-muted-foreground">
+            Monthly report
+          </Label>
+          <Input
+            id="month"
+            type="month"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="mt-1 w-full sm:w-44"
+          />
+        </div>
       </div>
 
       <Tabs defaultValue="subjects">
         <TabsList>
           <TabsTrigger value="subjects">Subject-wise</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
+          <TabsTrigger value="monthly">Monthly report</TabsTrigger>
         </TabsList>
 
         <TabsContent value="subjects" className="mt-4 space-y-3">
@@ -161,6 +189,97 @@ function StudentAttendanceView() {
               ))}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="monthly" className="mt-4 space-y-4">
+          {!data.monthly || data.monthly.summary.total === 0 ? (
+            <Card>
+              <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
+                <CalendarDays className="size-10 text-muted-foreground" />
+                <p className="font-medium">No attendance for this month</p>
+                <p className="text-sm text-muted-foreground">
+                  Koi attendance session is month me nahi hua.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  { label: "Monthly %", value: `${data.monthly.summary.percentage}%`, sub: `${data.monthly.summary.present + data.monthly.summary.late + data.monthly.summary.excused}/${data.monthly.summary.total} sessions` },
+                  { label: "Present", value: data.monthly.summary.present },
+                  { label: "Late", value: data.monthly.summary.late },
+                  { label: "Absent", value: data.monthly.summary.absent },
+                ].map((stat) => (
+                  <Card key={stat.label}>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm text-muted-foreground">{stat.label}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-2xl font-bold">{stat.value}</p>
+                      {stat.sub && <p className="mt-1 text-xs text-muted-foreground">{stat.sub}</p>}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Subject-wise ({data.monthly.month})</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {data.monthly.subjectWise.map((subject) => (
+                      <div key={subject.subject}>
+                        <div className="flex items-center justify-between text-sm">
+                          <p className="font-medium">{subject.subject}</p>
+                          <p className="text-muted-foreground">
+                            {subject.present}/{subject.total} · {subject.percentage}%
+                          </p>
+                        </div>
+                        <Progress value={subject.percentage} className="mt-2" />
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Day-wise breakdown</CardTitle>
+                  </CardHeader>
+                  <CardContent className="max-h-80 divide-y overflow-y-auto">
+                    {data.monthly.byDay.map((day, idx) => (
+                      <div key={idx} className="flex items-center justify-between py-2.5">
+                        <div>
+                          <p className="text-sm font-medium">{day.subject}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(day.date).toLocaleDateString("en-IN", {
+                              weekday: "short",
+                              day: "numeric",
+                              month: "short",
+                            })}
+                          </p>
+                        </div>
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
+                            day.status === "present"
+                              ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
+                              : day.status === "late"
+                                ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                                : day.status === "excused"
+                                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
+                                  : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
+                          }`}
+                        >
+                          {day.status}
+                        </span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+            </>
+          )}
         </TabsContent>
       </Tabs>
     </div>

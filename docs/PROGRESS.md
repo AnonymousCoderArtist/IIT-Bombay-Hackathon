@@ -46,19 +46,19 @@
 - [x] Faculty attendance session bana sakta hai
 - [x] Faculty present/absent mark karta hai
 - [x] Student % + history + subject-wise analytics dekhta hai
-- [ ] Monthly attendance report
+- [x] Monthly attendance report (month filter + summary + day-wise breakdown)
 
 ### 6. Assignment Module
 - [x] Faculty upload (title, description, deadline, attachments, rubric)
 - [x] Student submit (PDF / ZIP / GitHub link)
-- [ ] Submission history (student side)
-- [ ] Late submission status (Late badge)
+- [x] Submission history (student side)
+- [x] Late submission status (Late badge)
 - [x] Faculty review / marks / feedback
-- [ ] Study material upload (faculty)
+- [x] Study material upload (faculty + students browse/download)
 
 ### 7. Event Management
 - [x] Event create (banner, description, venue, registration deadline, seats, QR)
-- [ ] Speakers field
+- [x] Speakers field
 - [x] Student register / cancel registration
 - [x] Ticket view + QR pass download
 
