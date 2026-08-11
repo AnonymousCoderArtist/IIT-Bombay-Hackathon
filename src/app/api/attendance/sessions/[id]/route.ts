@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
-import { AttendanceSession, AttendanceRecord } from "@/lib/models";
+import { AttendanceSession, AttendanceRecord, Notification } from "@/lib/models";
 import { jsonError } from "@/lib/api-helpers";
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -77,6 +77,20 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }));
 
   await AttendanceRecord.bulkWrite(ops);
+
+  const studentIds = Object.keys(statuses);
+
+  if (studentIds.length > 0) {
+    await Notification.insertMany(
+      studentIds.map((studentId) => ({
+        userId: studentId,
+        title: "Attendance marked",
+        message: `Attendance marked for ${attendanceSession.subject}: ${statuses[studentId]}.`,
+        type: "attendance",
+        link: "/attendance",
+      }))
+    );
+  }
 
   return NextResponse.json({ message: "Attendance updated" });
 }

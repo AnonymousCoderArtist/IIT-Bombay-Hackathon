@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
-import { Notification } from "@/lib/models";
+import { Notification, EventRegistration, Event } from "@/lib/models";
 import { jsonError } from "@/lib/api-helpers";
 
 export async function GET() {
@@ -12,6 +12,41 @@ export async function GET() {
   }
 
   await dbConnect();
+
+  const upcomingEvents = await EventRegistration.find({
+    studentId: session.user.id,
+    status: "registered",
+  })
+    .populate("eventId", "title startDate venue")
+    .lean();
+
+  const now = Date.now();
+  const soon = new Date(now + 24 * 60 * 60 * 1000);
+
+  for (const reg of upcomingEvents) {
+    const event = reg.eventId as unknown as { _id: string; title: string; startDate: string; venue?: string };
+    if (!event?.startDate) continue;
+
+    const start = new Date(event.startDate).getTime();
+    if (start < now || start > soon.getTime()) continue;
+
+    const eventId = (event._id ?? (reg.eventId as unknown as string)).toString();
+    const existing = await Notification.exists({
+      userId: session.user.id,
+      type: "event",
+      link: `/events/${eventId}`,
+    });
+
+    if (existing) continue;
+
+    await Notification.create({
+      userId: session.user.id,
+      title: "Event reminder",
+      message: `${event.title} ${event.venue ? `at ${event.venue}` : ""} is starting soon.`,
+      type: "event",
+      link: `/events/${eventId}`,
+    });
+  }
 
   const notifications = await Notification.find({ userId: session.user.id })
     .sort({ createdAt: -1 })

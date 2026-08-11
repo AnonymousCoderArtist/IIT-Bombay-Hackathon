@@ -14,6 +14,7 @@ import {
   Club,
   Notice,
   StudyMaterial,
+  Course,
 } from "../src/lib/models";
 
 const departments = [
@@ -197,6 +198,16 @@ async function main() {
     .map((u) => createdIds[u.role + u.email]);
   const facultyId = createdIds["facultyfaculty@smartcampus.edu"];
   const coordinatorId = createdIds["coordinatorcoordinator@smartcampus.edu"];
+
+  console.log("\n--- Seeding courses ---");
+  const courseDocs = await Course.create([
+    { name: "Database Management", code: "CS301", department: "CS", credits: 4 },
+    { name: "Operating Systems", code: "CS302", department: "CS", credits: 4 },
+    { name: "Data Structures", code: "CS201", department: "CS", credits: 4 },
+    { name: "Web Development", code: "CS401", department: "CS", credits: 3 },
+    { name: "Digital Electronics", code: "EC201", department: "EC", credits: 4 },
+  ]);
+  console.log(`${courseDocs.length} courses created`);
 
   console.log("\n--- Seeding events ---");
   const eventIds: string[] = [];

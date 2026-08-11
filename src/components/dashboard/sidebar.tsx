@@ -53,6 +53,7 @@ const roleLinks = {
   admin: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/users", label: "Users", icon: Users },
+    { href: "/admin/academics", label: "Academics", icon: BookOpen },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/placements", label: "Placements", icon: Briefcase },
     { href: "/clubs", label: "Clubs", icon: Sparkles },

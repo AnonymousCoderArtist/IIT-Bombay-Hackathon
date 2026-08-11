@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
-import { Placement, Application } from "@/lib/models";
+import { Placement, Application, Notification, User } from "@/lib/models";
 import { placementSchema } from "@/lib/validators";
 import { jsonError, logActivity } from "@/lib/api-helpers";
 
@@ -70,6 +70,20 @@ export async function POST(request: Request) {
   await dbConnect();
 
   const placement = await Placement.create(parsed.data);
+
+  const students = await User.find({ role: "student" }).select("_id");
+
+  if (students.length > 0) {
+    await Notification.insertMany(
+      students.map((student: { _id: unknown }) => ({
+        userId: student._id,
+        title: "New placement opening",
+        message: `${parsed.data.company} is hiring for ${parsed.data.jobRole}.`,
+        type: "placement",
+        link: "/placements",
+      }))
+    );
+  }
 
   await logActivity("create_placement", placement._id.toString(), session.user.id);
 

@@ -69,9 +69,9 @@
 ### 9. Notifications
 - [x] Notification page + unread badge + mark-as-read
 - [x] Generate hoti hain: assignment submit, submission grade, placement apply pe
-- [ ] Auto-notify: attendance mark hone pe
-- [ ] Auto-notify: event reminder
-- [ ] Auto-notify: nayi placement khulne pe
+- [x] Auto-notify: attendance mark hone pe
+- [x] Auto-notify: event reminder (24h pehle, registered students)
+- [x] Auto-notify: nayi placement khulne pe
 - [ ] System alerts
 
 ### 10. Search
@@ -85,7 +85,7 @@
 - [x] User management (list, role change, status, delete)
 - [x] Activity logs
 - [x] Events / placements management
-- [ ] Departments & Courses management UI
+- [x] Departments & Courses management UI
 
 ### 13. Settings
 - [x] Profile, password, theme, notification preferences, delete account

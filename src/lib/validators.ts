@@ -53,6 +53,14 @@ export const assignmentSchema = z.object({
   rubric: z.string().max(2000).optional().or(z.literal("")),
 });
 
+export const courseSchema = z.object({
+  name: z.string().min(2).max(120),
+  code: z.string().min(1).max(20),
+  department: z.string().max(80).optional().or(z.literal("")),
+  credits: z.coerce.number().min(0).max(20).default(0),
+  description: z.string().max(500).optional().or(z.literal("")),
+});
+
 export const studyMaterialSchema = z.object({
   title: z.string().min(3).max(120),
   description: z.string().max(2000).optional().or(z.literal("")),
