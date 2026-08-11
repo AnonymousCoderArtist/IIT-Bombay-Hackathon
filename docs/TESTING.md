@@ -16,7 +16,7 @@
 
 ## Setup (pehli baar)
 
-1. MongoDB start ho — `sudo systemctl start mongodb` (ya phir already enabled hai)
+1. MongoDB start karo — `npm run mongo:start` (data `~/data/mongodb` mein, background mein)
 2. `npm run seed` — sample data daalo
 3. `npm run dev` — server on
 4. Browser mein `http://localhost:3000` kholo

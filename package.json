@@ -10,7 +10,9 @@
     "seed": "tsx --env-file-if-exists=.env scripts/seed.ts",
     "typecheck": "tsc --noEmit",
     "check": "eslint && tsc --noEmit",
-    "test": "node test/check.mjs"
+    "test": "node test/check.mjs",
+    "mongo:start": "mkdir -p ~/data/mongodb && mongod --dbpath ~/data/mongodb --port 27017 --bind_ip 127.0.0.1 --fork --logpath ~/data/mongodb/mongod.log",
+    "mongo:stop": "mongod --dbpath ~/data/mongodb --shutdown"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

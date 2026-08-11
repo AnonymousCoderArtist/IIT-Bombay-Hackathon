@@ -66,9 +66,10 @@ npm run dev
 ### Step 1 — Setup
 
 ```bash
-# 1. Local MongoDB chalu karo (ya Atlas URL .env mein daalo)
-# Docker ke bina (Arch): sudo systemctl start mongodb   (install: yay -S mongodb-bin mongosh-bin)
-# Docker se: docker run -d --name smc-mongo -p 27017:27017 mongo:7
+# 1. MongoDB start karo — Docker/atlas ki zaroorat nahi (local mongod)
+npm run mongo:start      # ~/data/mongodb mein data store hoga, background mein chalega
+# (aise check karo: mongosh --eval "db.runCommand({ping:1})"  →  { ok: 1 })
+# (band karna ho toh: npm run mongo:stop)
 
 # 2. Dependencies + env
 npm install
