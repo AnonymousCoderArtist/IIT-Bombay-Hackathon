@@ -200,14 +200,22 @@ async function main() {
   const coordinatorId = createdIds["coordinatorcoordinator@smartcampus.edu"];
 
   console.log("\n--- Seeding courses ---");
-  const courseDocs = await Course.create([
-    { name: "Database Management", code: "CS301", department: "CS", credits: 4 },
-    { name: "Operating Systems", code: "CS302", department: "CS", credits: 4 },
-    { name: "Data Structures", code: "CS201", department: "CS", credits: 4 },
-    { name: "Web Development", code: "CS401", department: "CS", credits: 3 },
-    { name: "Digital Electronics", code: "EC201", department: "EC", credits: 4 },
-  ]);
-  console.log(`${courseDocs.length} courses created`);
+  const courseDocs = await Course.bulkWrite(
+    [
+      { name: "Database Management", code: "CS301", department: "CS", credits: 4 },
+      { name: "Operating Systems", code: "CS302", department: "CS", credits: 4 },
+      { name: "Data Structures", code: "CS201", department: "CS", credits: 4 },
+      { name: "Web Development", code: "CS401", department: "CS", credits: 3 },
+      { name: "Digital Electronics", code: "EC201", department: "EC", credits: 4 },
+    ].map((c) => ({
+      updateOne: {
+        filter: { code: c.code },
+        update: { $setOnInsert: c },
+        upsert: true,
+      },
+    }))
+  );
+  console.log(`${Object.keys(courseDocs.upsertedIds ?? {}).length || courseDocs.modifiedCount + courseDocs.upsertedCount} courses ready`);
 
   console.log("\n--- Seeding events ---");
   const eventIds: string[] = [];
@@ -262,42 +270,50 @@ async function main() {
   console.log(`${assignmentDocs.length} assignments created`);
 
   console.log("\n--- Seeding study materials ---");
-  await StudyMaterial.create([
-    {
-      title: "DBMS - Normalization Notes",
-      description: "1NF se BCNF tak complete notes with examples.",
-      subject: "DBMS",
-      course: "CS301",
-      fileUrl: "/uploads/files/dbms-normalization-notes.pdf",
-      fileType: "application/pdf",
-      facultyId,
-      department: "CS",
-      semester: 5,
-    },
-    {
-      title: "OS - Process Scheduling Slides",
-      description: "Round robin, priority aur multilevel queues.",
-      subject: "Operating Systems",
-      course: "CS302",
-      fileUrl: "/uploads/files/os-scheduling-slides.pdf",
-      fileType: "application/pdf",
-      facultyId,
-      department: "CS",
-      semester: 5,
-    },
-    {
-      title: "Web Dev - React Fundamentals",
-      description: "Components, props, state aur hooks ka quick reference.",
-      subject: "Web Development",
-      course: "CS401",
-      fileUrl: "/uploads/files/react-fundamentals.pdf",
-      fileType: "application/pdf",
-      facultyId,
-      department: "CS",
-      semester: 5,
-    },
-  ]);
-  console.log("3 study materials created");
+  await StudyMaterial.bulkWrite(
+    [
+      {
+        title: "DBMS - Normalization Notes",
+        description: "1NF se BCNF tak complete notes with examples.",
+        subject: "DBMS",
+        course: "CS301",
+        fileUrl: "/uploads/files/dbms-normalization-notes.pdf",
+        fileType: "application/pdf",
+        facultyId,
+        department: "CS",
+        semester: 5,
+      },
+      {
+        title: "OS - Process Scheduling Slides",
+        description: "Round robin, priority aur multilevel queues.",
+        subject: "Operating Systems",
+        course: "CS302",
+        fileUrl: "/uploads/files/os-scheduling-slides.pdf",
+        fileType: "application/pdf",
+        facultyId,
+        department: "CS",
+        semester: 5,
+      },
+      {
+        title: "Web Dev - React Fundamentals",
+        description: "Components, props, state aur hooks ka quick reference.",
+        subject: "Web Development",
+        course: "CS401",
+        fileUrl: "/uploads/files/react-fundamentals.pdf",
+        fileType: "application/pdf",
+        facultyId,
+        department: "CS",
+        semester: 5,
+      },
+    ].map((m) => ({
+      updateOne: {
+        filter: { title: m.title },
+        update: { $setOnInsert: m },
+        upsert: true,
+      },
+    }))
+  );
+  console.log("3 study materials ready");
 
   console.log("\n--- Seeding attendance ---");
   const sessions = await AttendanceSession.create([
