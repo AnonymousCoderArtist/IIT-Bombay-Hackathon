@@ -47,7 +47,7 @@ const users = [
     phone: "9876500002",
   },
   {
-    name: "Priya Patel",
+    name: "Lokesh Lal",
     email: "student@smartcampus.edu",
     password: "Student@123",
     role: "student",
@@ -56,8 +56,8 @@ const users = [
     rollNumber: "CS2023001",
     phone: "9876500003",
     skills: ["React", "Node.js", "MongoDB"],
-    linkedin: "https://linkedin.com/in/priyapatel",
-    github: "https://github.com/priyapatel",
+    linkedin: "https://linkedin.com/in/lokeshlal",
+    github: "https://github.com/lokeshlal",
     bio: "Final year CS student, interested in full-stack development.",
   },
   {

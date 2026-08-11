@@ -20,6 +20,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -222,29 +223,33 @@ export default function AdminUsersPage() {
                     Manage
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-44">
-                    <DropdownMenuLabel>Change role</DropdownMenuLabel>
-                    {["student", "faculty", "coordinator", "admin"].map((r) => (
-                      <DropdownMenuItem
-                        key={r}
-                        className="capitalize"
-                        onSelect={() => updateRole(user._id, r)}
-                      >
-                        {r}
-                        {user.role === r && " ✓"}
-                      </DropdownMenuItem>
-                    ))}
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Change role</DropdownMenuLabel>
+                      {["student", "faculty", "coordinator", "admin"].map((r) => (
+                        <DropdownMenuItem
+                          key={r}
+                          className="capitalize"
+                          onSelect={() => updateRole(user._id, r)}
+                        >
+                          {r}
+                          {user.role === r && " ✓"}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Status</DropdownMenuLabel>
-                    {["active", "pending", "blocked"].map((s) => (
-                      <DropdownMenuItem
-                        key={s}
-                        className="capitalize"
-                        onSelect={() => updateStatus(user._id, s)}
-                      >
-                        {s}
-                        {user.status === s && " ✓"}
-                      </DropdownMenuItem>
-                    ))}
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Status</DropdownMenuLabel>
+                      {["active", "pending", "blocked"].map((s) => (
+                        <DropdownMenuItem
+                          key={s}
+                          className="capitalize"
+                          onSelect={() => updateStatus(user._id, s)}
+                        >
+                          {s}
+                          {user.status === s && " ✓"}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Loader2, Upload, Save, LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,7 @@ const initialForm = {
 };
 
 export default function ProfilePage() {
+  const { update: updateSession } = useSession();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -96,6 +98,7 @@ export default function ProfilePage() {
           body: JSON.stringify({ image: data.url }),
         });
         toast.success("Profile picture updated");
+        await updateSession();
       } else {
         await fetch("/api/users/profile", {
           method: "PATCH",
@@ -144,6 +147,7 @@ export default function ProfilePage() {
       }
 
       toast.success("Profile saved");
+      await updateSession();
     } finally {
       setSaving(false);
     }

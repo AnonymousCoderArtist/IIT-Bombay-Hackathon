@@ -5,7 +5,7 @@ import { Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Priya Sharma",
+    name: "Lokesh Lal",
     role: "B.Tech, Computer Science",
     quote:
       "Attendance aur assignment sab ek jagah. Ab mujhe kisi bhi deadline ka miss hone ka dar nahi.",

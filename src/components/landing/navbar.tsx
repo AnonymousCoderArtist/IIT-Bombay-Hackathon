@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GraduationCap, Menu, Moon, Sun, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const links = [
     { label: "Features", href: "#features" },
@@ -45,7 +48,7 @@ export function Navbar() {
             aria-label="Toggle theme"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           >
-            {resolvedTheme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+            {mounted && (resolvedTheme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />)}
           </Button>
 
           <div className="hidden items-center gap-2 md:flex">

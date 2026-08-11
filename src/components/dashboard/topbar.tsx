@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -24,6 +25,9 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const router = useRouter();
   const [unread, setUnread] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     fetch("/api/notifications")
@@ -61,7 +65,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           aria-label="Toggle theme"
         >
-          {resolvedTheme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />}
+          {mounted && (resolvedTheme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />)}
         </Button>
 
         <Link
@@ -93,26 +97,28 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
             }
           />
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>
-              <p className="truncate">{session?.user?.name}</p>
-              <p className="truncate text-xs font-normal text-muted-foreground">
-                {session?.user?.email}
-              </p>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem render={<Link href="/profile" />}>
-              <User className="size-4" />
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem render={<Link href="/settings" />}>
-              <Settings className="size-4" />
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut}>
-              <LogOut className="size-4" />
-              Sign out
-            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>
+                <p className="truncate">{session?.user?.name}</p>
+                <p className="truncate text-xs font-normal text-muted-foreground">
+                  {session?.user?.email}
+                </p>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem render={<Link href="/profile" />}>
+                <User className="size-4" />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem render={<Link href="/settings" />}>
+                <Settings className="size-4" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSignOut}>
+                <LogOut className="size-4" />
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
