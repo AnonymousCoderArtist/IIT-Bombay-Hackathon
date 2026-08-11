@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Moon, Sun, Monitor } from "lucide-react";
+import { Loader2, Moon, Sun, Monitor, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +31,18 @@ export default function SettingsPage() {
   });
   const [emailOptIn, setEmailOptIn] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    try {
+      await signOut({ redirect: false });
+      router.push("/");
+      router.refresh();
+    } finally {
+      setSigningOut(false);
+    }
+  }
 
   useEffect(() => {
     fetch("/api/users/settings")
@@ -270,7 +282,20 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="danger" className="mt-6">
+        <TabsContent value="danger" className="mt-6 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Log out</CardTitle>
+              <CardDescription>Is device se apne account se sign out karo.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="outline" onClick={handleSignOut} disabled={signingOut}>
+                {signingOut ? <Loader2 className="size-4 animate-spin" /> : <LogOut className="size-4" />}
+                Log out
+              </Button>
+            </CardContent>
+          </Card>
+
           <Card className="border-destructive/30">
             <CardHeader>
               <CardTitle className="text-destructive">Delete account</CardTitle>
