@@ -7,6 +7,7 @@ import { dbConnect } from "@/lib/db";
 import { User } from "@/lib/models";
 import { loginSchema } from "@/lib/validators";
 import { authConfig } from "@/auth.config";
+import { rateLimit } from "@/lib/api-helpers";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -24,6 +25,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         try {
           const parsed = loginSchema.parse(credentials);
+
+          const limited = rateLimit(`login:${parsed.email}`, 10, 60 * 1000);
+          if (!limited.allowed) {
+            throw new Error("RATE_LIMITED");
+          }
+
           await dbConnect();
 
           const user = await User.findOne({ email: parsed.email });
