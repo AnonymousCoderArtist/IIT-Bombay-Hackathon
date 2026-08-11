@@ -72,7 +72,7 @@
 - [x] Auto-notify: attendance mark hone pe
 - [x] Auto-notify: event reminder (24h pehle, registered students)
 - [x] Auto-notify: nayi placement khulne pe
-- [ ] System alerts
+- [x] System alerts (admin account updates pe)
 
 ### 10. Search
 - [x] Global search — students, faculty, events, assignments, placements

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
-import { User } from "@/lib/models";
+import { User, Notification } from "@/lib/models";
 import { adminUserUpdateSchema } from "@/lib/validators";
 import { jsonError, logActivity } from "@/lib/api-helpers";
 
@@ -84,6 +84,20 @@ export async function PATCH(request: Request) {
   if (parsed.data.status) user.status = parsed.data.status;
 
   await user.save();
+
+  const changes: string[] = [];
+  if (parsed.data.role) changes.push(`role: ${parsed.data.role}`);
+  if (parsed.data.status) changes.push(`status: ${parsed.data.status}`);
+
+  if (changes.length > 0) {
+    await Notification.create({
+      userId: id,
+      title: "System alert",
+      message: `Admin ne aapka account update kiya (${changes.join(", ")}).`,
+      type: "system",
+      link: "/settings",
+    });
+  }
 
   await logActivity("update_user", id, session.user.id);
 
