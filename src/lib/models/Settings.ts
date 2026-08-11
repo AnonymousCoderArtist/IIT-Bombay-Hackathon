@@ -6,6 +6,7 @@ const settingsSchema = new Schema(
     theme: { type: String, enum: ["light", "dark", "system"], default: "system" },
     emailOptIn: { type: Boolean, default: true },
     language: { type: String, default: "en" },
+    publicProfile: { type: Boolean, default: true },
     notificationPrefs: {
       assignment: { type: Boolean, default: true },
       attendance: { type: Boolean, default: true },

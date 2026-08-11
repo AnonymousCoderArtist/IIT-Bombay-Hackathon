@@ -30,6 +30,7 @@ export default function SettingsPage() {
     placement: true,
   });
   const [emailOptIn, setEmailOptIn] = useState(true);
+  const [publicProfile, setPublicProfile] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
 
@@ -56,6 +57,9 @@ export default function SettingsPage() {
         }
         if (typeof settings.emailOptIn === "boolean") {
           setEmailOptIn(settings.emailOptIn);
+        }
+        if (typeof settings.publicProfile === "boolean") {
+          setPublicProfile(settings.publicProfile);
         }
         if (settings.theme) {
           setTheme(settings.theme);
@@ -85,6 +89,11 @@ export default function SettingsPage() {
   function toggleEmail(checked: boolean) {
     setEmailOptIn(checked);
     saveSettings({ emailOptIn: checked });
+  }
+
+  function togglePublicProfile(checked: boolean) {
+    setPublicProfile(checked);
+    saveSettings({ publicProfile: checked });
   }
 
   function updatePassword(field: string, value: string) {
@@ -156,6 +165,7 @@ export default function SettingsPage() {
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="password">Password</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
+          <TabsTrigger value="privacy">Privacy</TabsTrigger>
           <TabsTrigger value="danger">Danger zone</TabsTrigger>
         </TabsList>
 
@@ -277,6 +287,35 @@ export default function SettingsPage() {
                   <p className="text-xs text-muted-foreground">Receive updates in your inbox</p>
                 </div>
                 <Switch checked={emailOptIn} onCheckedChange={toggleEmail} />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="privacy" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Privacy</CardTitle>
+              <CardDescription>
+                Kaunsi cheezein dusre users ko dikhengi, control karo.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium">Public profile</p>
+                  <p className="text-xs text-muted-foreground">
+                    Profile (naam, department, skills) dusre students aur faculty ko dikhe.
+                  </p>
+                </div>
+                <Switch checked={publicProfile} onCheckedChange={togglePublicProfile} />
+              </div>
+              <div className="border-t pt-4">
+                <p className="text-sm font-medium">Data</p>
+                <p className="text-xs text-muted-foreground">
+                  Apna data delete karna ho to "Danger zone" tab me jao. Download koi option abhi
+                  nahi hai.
+                </p>
               </div>
             </CardContent>
           </Card>

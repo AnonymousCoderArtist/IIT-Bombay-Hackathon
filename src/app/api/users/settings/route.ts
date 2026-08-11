@@ -10,6 +10,7 @@ const settingsSchema = z.object({
   theme: z.enum(["light", "dark", "system"]).optional(),
   emailOptIn: z.boolean().optional(),
   language: z.string().max(10).optional(),
+  publicProfile: z.boolean().optional(),
   notificationPrefs: z
     .object({
       assignment: z.boolean().optional(),
@@ -37,6 +38,7 @@ export async function GET() {
       theme: "system",
       emailOptIn: true,
       language: "en",
+      publicProfile: true,
       notificationPrefs: {
         assignment: true,
         attendance: true,

@@ -30,7 +30,7 @@
 
 ### 3. Dashboards
 - [x] Student dashboard (attendance %, assignments, events, placements)
-- [ ] Student dashboard — Calendar widget (upcoming classes/deadlines/events)
+- [x] Student dashboard — Calendar widget (upcoming events/deadlines, next 14 days)
 - [x] Faculty dashboard (classes, attendance, assignments, student count, submissions)
 - [x] Coordinator dashboard
 - [x] Admin dashboard (total students/faculty/departments/events, attendance %, charts, logs)
@@ -89,8 +89,8 @@
 
 ### 13. Settings
 - [x] Profile, password, theme, notification preferences, delete account
-- [ ] Connected accounts (Google)
-- [ ] Privacy settings
+- [ ] Connected accounts (Google) — Google OAuth credentials aane ke baad
+- [x] Privacy settings (public profile toggle)
 
 ### 14. UI/UX
 - [x] Responsive design, dark & light mode, toasts, forms, animations, mobile friendly
