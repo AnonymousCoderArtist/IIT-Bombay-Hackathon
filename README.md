@@ -61,11 +61,14 @@ npm run dev
 
 ## Testing Guide
 
+> **Full detailed step-by-step guide har feature ke liye:** [`docs/TESTING.md`](docs/TESTING.md)
+
 ### Step 1 — Setup
 
 ```bash
 # 1. Local MongoDB chalu karo (ya Atlas URL .env mein daalo)
-docker run -d --name smc-mongo -p 27017:27017 mongo:7
+# Docker ke bina (Arch): sudo systemctl start mongodb   (install: yay -S mongodb-bin mongosh-bin)
+# Docker se: docker run -d --name smc-mongo -p 27017:27017 mongo:7
 
 # 2. Dependencies + env
 npm install
