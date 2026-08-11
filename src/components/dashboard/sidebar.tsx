@@ -64,7 +64,7 @@ const bottomLinks = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const role = (session?.user?.role ?? "student") as keyof typeof roleLinks;
@@ -72,8 +72,13 @@ export function Sidebar() {
   const links = [...roleLinks[role], ...bottomLinks];
 
   return (
-    <aside className="hidden w-60 shrink-0 border-r bg-card md:block">
-      <div className="sticky top-0 flex h-screen flex-col">
+    <aside
+      className={cn(
+        "w-60 shrink-0 border-r bg-card",
+        mobile ? "flex h-full flex-col" : "hidden md:flex md:flex-col"
+      )}
+    >
+      <div className={cn(mobile ? "flex h-full flex-col" : "sticky top-0 flex h-screen flex-col")}>
         <Link href="/dashboard" className="flex items-center gap-2 px-5 py-5 font-semibold">
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <GraduationCap className="size-4" />

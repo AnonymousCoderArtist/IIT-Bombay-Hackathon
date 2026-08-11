@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="fixed inset-0 z-50 md:hidden">
             <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
             <div className="absolute inset-y-0 left-0 w-60">
-              <Sidebar />
+              <Sidebar mobile />
               <button
                 onClick={() => setMobileOpen(false)}
                 className="absolute right-3 top-4 flex size-8 items-center justify-center rounded-md bg-card text-muted-foreground"
