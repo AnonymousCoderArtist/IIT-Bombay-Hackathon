@@ -24,7 +24,7 @@
 - [x] Responsive navigation
 - [x] Dark mode
 - [x] Animations (framer-motion)
-- [ ] Loading screens / skeletons (sirf kuch pages pe hai)
+- [x] Loading screens / skeletons
 - [x] SEO metadata
 - [x] Mobile friendly
 
@@ -94,11 +94,11 @@
 
 ### 14. UI/UX
 - [x] Responsive design, dark & light mode, toasts, forms, animations, mobile friendly
-- [ ] Loading skeletons (saare data pages pe)
-- [ ] Empty states (har list pe)
+- [x] Loading skeletons (saare data pages pe)
+- [x] Empty states (har list pe)
 - [x] Error page (`error.tsx`) + 404 (`not-found.tsx`)
-- [ ] Success screens (action ke baad)
-- [ ] Accessibility pass (keyboard nav, contrast, semantic HTML)
+- [x] Success screens (action ke baad toast se)
+- [ ] Accessibility pass (keyboard nav, contrast, semantic HTML) — partial, icon buttons ke aria-labels add
 
 ### 15. Security
 - [x] Password hashing (bcrypt cost 12)

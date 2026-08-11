@@ -52,7 +52,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur sm:px-6">
-      <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick}>
+      <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick} aria-label="Open navigation menu">
         <Menu className="size-5" />
       </Button>
 
