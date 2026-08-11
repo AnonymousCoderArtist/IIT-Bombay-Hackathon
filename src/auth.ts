@@ -73,6 +73,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         await dbConnect();
