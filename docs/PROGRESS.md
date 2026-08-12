@@ -3,6 +3,17 @@
 > Har feature yahan track hota hai. Build karte waqt `[ ]` → `[x]` karte jao.
 > Priority: **Tier 1 (PS PDF) → Tier 2 (Bonus) → Tier 3 (Strategy X-Factor) → Tier 4 (Deliverables)**
 
+## Overall Status (last updated: Aug 2026)
+
+- ✅ Tier 1 (PS-mandatory) — **sab done**
+- ✅ Tier 2 (Bonus) — **sab done**
+- ✅ Tier 3 (X-Factor) — plagiarism + i18n bhi done; sirf OpenVINO strategy-only hai (hardware-level, cloud demo me possible nahi)
+- ⏳ Tier 4 — source/docs/test-creds sab done; **Vercel deploy aur demo video pending** (user ke account/creds chahiye)
+- ⏳ Credentials pending (user setup karega): Google OAuth (`GOOGLE_CLIENT_ID/SECRET`) + SMTP (`SMTP_USER/PASS` — Gmail App Password)
+  - Abhi bina creds ke: Google login click pe error aata hai, emails preview mode (console `[mail:...]`)
+- ✅ Sab commits `origin/main` pe pushed
+- ✅ `npm run check` clean · `npm run build` pass · `npm run test` pass (9/9) · func-test 13/13
+
 ---
 
 ## Tier 1 — PS PDF Requirements (FIRST PRIORITY)
