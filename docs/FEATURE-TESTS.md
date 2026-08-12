@@ -118,7 +118,47 @@ curl -X POST http://localhost:8000/match -H "Content-Type: application/json" \
 
 ---
 
-## 8. Regression — core flows
+## 8. AI Plagiarism Detection
+
+- [ ] Faculty → assignment open karo → **Submissions** page → **"Plagiarism check"** button
+- [ ] Kam se kam 2 submissions hain toh button enabled hai (1 ya 0 pe disabled)
+- [ ] Click → loading → "Similarity report" panel dikhta hai
+- [ ] Pairwise list: `Student A ↔ Student B` with similarity % (≥70 red, ≥40 amber)
+- [ ] Same GitHub link wali submissions → high similarity (100%)
+- [ ] Same notes text wali submissions → high similarity
+- [ ] Sab unique → "Koi significant similarity nahi mili"
+- [ ] Student role → 403 (API se check karo)
+
+**API:**
+```bash
+curl -X POST http://localhost:3000/api/plagiarism -b <faculty-cookie> \
+  -H "Content-Type: application/json" -d '{"assignmentId":"<ID>"}'
+# → { pairs: [{ a, b, similarity, studentA, studentB }], note }
+# Python service: curl -X POST http://localhost:8000/plagiarism -d '{"texts":[...]}'
+```
+
+## 9. Calendar Sync (.ics)
+
+- [ ] Events page → **"Calendar (.ics)"** button
+- [ ] Click → `campus-events.ics` download hota hai
+- [ ] File kholo → upcoming events with date, time, venue
+- [ ] Google Calendar / Outlook me import karke test karo
+
+**API:**
+```bash
+curl -b <cookie> http://localhost:3000/api/events/export
+# → text/calendar, attachment
+```
+
+## 10. i18n — EN/HI (Landing page)
+
+- [ ] Landing page navbar me language toggle (हिंदी/EN)
+- [ ] Click → hero, features, stats, footer, FAQ heading Hindi me
+- [ ] Wapas click → English me
+- [ ] Refresh karne pe language persisted (localStorage `lang`)
+- [ ] Doosre tab me toggle → live sync (storage event)
+
+## 11. Regression — core flows
 
 - [ ] Landing → register/verify → login (all 4 roles)
 - [ ] Student: dashboard, attendance %, assignment submit, event register + QR pass, placement apply, club join/leave, notices

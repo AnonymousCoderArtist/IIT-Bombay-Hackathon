@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 const faqs = [
   {
@@ -33,18 +34,15 @@ const faqs = [
 ];
 
 export function Faq() {
+  const { t } = useI18n();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
     <section id="faq" className="border-t bg-muted/30 py-20">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Frequently asked questions
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Still curious? Reach out and we will help you out.
-          </p>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{t("faq.title")}</h2>
+          <p className="mt-4 text-muted-foreground">{t("faq.subtitle")}</p>
         </div>
 
         <div className="mt-12 space-y-3">

@@ -35,6 +35,15 @@ class SentimentRequest(BaseModel):
     text: str = Field(min_length=3, max_length=5000)
 
 
+class PlagiarismItem(BaseModel):
+    id: str = Field(min_length=1, max_length=100)
+    text: str = Field(default="", max_length=2000)
+
+
+class PlagiarismRequest(BaseModel):
+    texts: list[PlagiarismItem] = Field(min_length=2, max_length=200)
+
+
 @app.get("/health")
 def health() -> dict[str, Any]:
     return {"status": "ok", "provider": configured_provider(), "kb_chunks": len(rag.chunks)}
@@ -146,6 +155,35 @@ async def match(req: MatchRequest) -> dict[str, Any]:
             pass
 
     return result
+
+
+def _text_tokens(text: str) -> set[str]:
+    tokens = set(re.findall(r"[a-z0-9]+", text.lower()))
+    for url in re.findall(r"https?://[^\s|]+", text.lower()):
+        tokens.add(url)
+    return tokens
+
+
+def _text_similarity(a: str, b: str) -> int:
+    ta, tb = _text_tokens(a), _text_tokens(b)
+    if not ta or not tb:
+        return 0
+    if ta == tb:
+        return 100
+    overlap = len(ta & tb)
+    return round(overlap / min(len(ta), len(tb)) * 100)
+
+
+@app.post("/plagiarism")
+async def plagiarism(req: PlagiarismRequest) -> dict[str, Any]:
+    pairs = []
+    for i in range(len(req.texts)):
+        for j in range(i + 1, len(req.texts)):
+            sim = _text_similarity(req.texts[i].text, req.texts[j].text)
+            if sim >= 40:
+                pairs.append({"a": req.texts[i].id, "b": req.texts[j].id, "similarity": sim, "reason": "text"})
+    pairs.sort(key=lambda p: p["similarity"], reverse=True)
+    return {"pairs": pairs}
 
 
 @app.post("/sentiment")

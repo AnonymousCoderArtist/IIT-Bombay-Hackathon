@@ -3,13 +3,21 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Save, ExternalLink } from "lucide-react";
+import { Loader2, Save, ExternalLink, FileSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
+type PlagiarismPair = {
+  a: string;
+  b: string;
+  similarity: number;
+  studentA?: { name?: string; email?: string };
+  studentB?: { name?: string; email?: string };
+};
 
 type Submission = {
   _id: string;
@@ -30,6 +38,9 @@ export default function SubmissionsPage() {
   const [loading, setLoading] = useState(true);
   const [grades, setGrades] = useState<Record<string, { marks: string; feedback: string }>>({});
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [plagiarism, setPlagiarism] = useState<PlagiarismPair[] | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [plagiarismNote, setPlagiarismNote] = useState("");
 
   useEffect(() => {
     fetch(`/api/submissions?assignmentId=${params.id}`)
@@ -53,6 +64,28 @@ export default function SubmissionsPage() {
 
   function updateGrade(id: string, field: string, value: string) {
     setGrades((prev) => ({ ...prev, [id]: { ...prev[id], [field]: value } }));
+  }
+
+  async function runPlagiarism() {
+    setChecking(true);
+    setPlagiarism(null);
+    setPlagiarismNote("");
+    try {
+      const res = await fetch("/api/plagiarism", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ assignmentId: params.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Could not run plagiarism check");
+        return;
+      }
+      setPlagiarism(data.pairs ?? []);
+      setPlagiarismNote(data.note ?? "");
+    } finally {
+      setChecking(false);
+    }
   }
 
   async function handleGrade(id: string) {
@@ -110,10 +143,58 @@ export default function SubmissionsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Submissions</h1>
-        <p className="text-muted-foreground">Review and grade student submissions.</p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Submissions</h1>
+          <p className="text-muted-foreground">Review and grade student submissions.</p>
+        </div>
+        <Button
+          variant="outline"
+          className="gap-2"
+          onClick={runPlagiarism}
+          disabled={checking || submissions.length < 2}
+        >
+          {checking ? <Loader2 className="size-4 animate-spin" /> : <FileSearch className="size-4" />}
+          Plagiarism check
+        </Button>
       </div>
+
+      {plagiarism && (
+        <Card>
+          <CardContent className="space-y-2 pt-6">
+            <p className="text-sm font-medium">Similarity report</p>
+            {plagiarismNote && (
+              <p className="text-sm text-muted-foreground">{plagiarismNote}</p>
+            )}
+            {plagiarism.length === 0 && !plagiarismNote && (
+              <p className="text-sm text-muted-foreground">
+                Koi significant similarity nahi mili — sab submissions unique lagti hain.
+              </p>
+            )}
+            {plagiarism.map((pair) => (
+              <div
+                key={`${pair.a}-${pair.b}`}
+                className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5"
+              >
+                <p className="text-sm">
+                  <span className="font-medium">{pair.studentA?.name ?? "Student"}</span>
+                  <span className="text-muted-foreground"> ↔ </span>
+                  <span className="font-medium">{pair.studentB?.name ?? "Student"}</span>
+                </p>
+                <span
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                    pair.similarity >= 70
+                      ? "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
+                      : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                  }`}
+                >
+                  {pair.similarity}% similar
+                </span>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-4">
         {submissions.map((submission) => {

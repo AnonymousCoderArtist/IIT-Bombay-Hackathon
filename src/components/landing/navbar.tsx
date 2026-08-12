@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { GraduationCap, Menu, Moon, Sun, X } from "lucide-react";
+import { GraduationCap, Languages, Menu, Moon, Sun, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 
 export function Navbar() {
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const { t, locale, toggleLocale } = useI18n();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -17,9 +19,9 @@ export function Navbar() {
   }, []);
 
   const links = [
-    { label: "Features", href: "#features" },
-    { label: "Testimonials", href: "#testimonials" },
-    { label: "FAQ", href: "#faq" },
+    { label: t("nav.features"), href: "#features" },
+    { label: t("nav.testimonials"), href: "#testimonials" },
+    { label: t("nav.faq"), href: "#faq" },
   ];
 
   return (
@@ -54,12 +56,17 @@ export function Navbar() {
             {mounted && (resolvedTheme === "dark" ? <Sun className="size-5" /> : <Moon className="size-5" />)}
           </Button>
 
+          <Button variant="ghost" onClick={toggleLocale} aria-label="Toggle language">
+            <Languages className="size-5" />
+            <span className="text-xs font-medium">{locale === "en" ? "हिंदी" : "EN"}</span>
+          </Button>
+
           <div className="hidden items-center gap-2 md:flex">
             <Button variant="ghost" render={<Link href="/login" />}>
-              Sign in
+              {t("nav.signin")}
             </Button>
             <Button render={<Link href="/register" />}>
-              Get started
+              {t("nav.start")}
             </Button>
           </div>
 
@@ -90,10 +97,10 @@ export function Navbar() {
             ))}
             <div className="flex gap-2 pt-2">
               <Button variant="outline" className="flex-1" render={<Link href="/login" />}>
-                Sign in
+                {t("nav.signin")}
               </Button>
               <Button className="flex-1" render={<Link href="/register" />}>
-                Get started
+                {t("nav.start")}
               </Button>
             </div>
           </div>

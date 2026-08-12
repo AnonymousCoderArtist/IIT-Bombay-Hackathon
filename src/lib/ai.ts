@@ -198,6 +198,38 @@ export async function analyzeSentiment(text: string): Promise<SentimentResult> {
   return pos > neg ? { sentiment: "positive", score: 0.9 } : { sentiment: "negative", score: 0.1 };
 }
 
+export type PlagiarismPair = {
+  a: string;
+  b: string;
+  similarity: number;
+  reason?: string;
+};
+
+export async function checkPlagiarism(items: { id: string; text: string }[]): Promise<PlagiarismPair[]> {
+  const fromPython = await callPython<{ pairs: PlagiarismPair[] }>("/plagiarism", { texts: items });
+  if (fromPython) return fromPython.pairs;
+
+  const pairs: PlagiarismPair[] = [];
+  for (let i = 0; i < items.length; i++) {
+    for (let j = i + 1; j < items.length; j++) {
+      const similarity = textSimilarity(items[i].text, items[j].text);
+      if (similarity >= 40) {
+        pairs.push({ a: items[i].id, b: items[j].id, similarity, reason: "text" });
+      }
+    }
+  }
+  return pairs.sort((x, y) => y.similarity - x.similarity);
+}
+
+function textSimilarity(a: string, b: string): number {
+  const tokensA = new Set((a.toLowerCase().match(/[a-z0-9]+/g) ?? []).map((t) => t.trim()).filter(Boolean));
+  const tokensB = new Set((b.toLowerCase().match(/[a-z0-9]+/g) ?? []).map((t) => t.trim()).filter(Boolean));
+  if (!tokensA.size || !tokensB.size) return 0;
+  if (tokensA.size === tokensB.size && [...tokensA].every((t) => tokensB.has(t))) return 100;
+  const overlap = [...tokensA].filter((t) => tokensB.has(t)).length;
+  return Math.round((overlap / Math.min(tokensA.size, tokensB.size)) * 100);
+}
+
 export function aiConfigured(): boolean {
   return getProvider() !== "mock" || Boolean(SERVICE_BASE);
 }

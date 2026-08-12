@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { CalendarDays, MapPin, Users, Plus, Loader2 } from "lucide-react";
+import { CalendarDays, MapPin, Users, Plus, Loader2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,7 +50,16 @@ export default function EventsPage() {
               : "Discover and register for campus events."}
           </p>
         </div>
-        {(role === "admin" || role === "coordinator") && <CreateEventDialog />}
+        <div className="flex items-center gap-2">
+          <a
+            href="/api/events/export"
+            className="inline-flex items-center gap-2 rounded-md border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+          >
+            <Download className="size-4" />
+            Calendar (.ics)
+          </a>
+          {(role === "admin" || role === "coordinator") && <CreateEventDialog />}
+        </div>
       </div>
 
       <EventList role={role} />

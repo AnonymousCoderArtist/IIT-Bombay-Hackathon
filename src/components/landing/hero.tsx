@@ -4,8 +4,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 
 export function Hero() {
+  const { t } = useI18n();
   return (
     <section className="relative overflow-hidden">
       <div
@@ -20,28 +22,25 @@ export function Hero() {
         >
           <span className="inline-flex items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
             <Sparkles className="size-3.5" />
-            Built for modern campuses
+            {t("hero.badge")}
           </span>
 
           <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            Campus life,{" "}
+            {t("hero.title1")}{" "}
             <span className="bg-gradient-to-br from-neutral-900 via-neutral-600 to-neutral-400 bg-clip-text text-transparent dark:from-white dark:via-neutral-300 dark:to-neutral-500">
-              one platform
+              {t("hero.title2")}
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Attendance, assignments, events, placements and clubs — everything students, faculty
-            and coordinators need, together in a fast, secure and beautiful app.
-          </p>
+          <p className="mt-6 max-w-xl text-lg text-muted-foreground">{t("hero.subtitle")}</p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Button size="lg" render={<Link href="/register" />}>
-              Get started free
+              {t("hero.start")}
               <ArrowRight className="ml-2 size-4" />
             </Button>
             <Button size="lg" variant="outline" render={<a href="#features" />}>
-              Explore features
+              {t("hero.explore")}
             </Button>
           </div>
         </motion.div>

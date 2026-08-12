@@ -9,58 +9,25 @@ import {
   Briefcase,
   Users,
 } from "lucide-react";
-
-const features = [
-  {
-    icon: LayoutDashboard,
-    title: "Role-based dashboards",
-    description:
-      "Students, faculty, coordinators and admins each get a tailored dashboard with exactly what they need.",
-  },
-  {
-    icon: CalendarCheck,
-    title: "Attendance tracking",
-    description:
-      "Faculty can create sessions and mark attendance in seconds. Students get live subject-wise analytics.",
-  },
-  {
-    icon: ClipboardList,
-    title: "Assignments & grading",
-    description:
-      "Publish assignments with deadlines and rubrics, accept submissions and grade with feedback.",
-  },
-  {
-    icon: Megaphone,
-    title: "Events with QR passes",
-    description:
-      "Organize campus events, manage seat limits and hand out scannable QR entry passes to registered students.",
-  },
-  {
-    icon: Briefcase,
-    title: "Placement hub",
-    description:
-      "List openings with eligibility and CTC, let students apply with one click and track every application.",
-  },
-  {
-    icon: Users,
-    title: "Clubs & notifications",
-    description:
-      "Real-time notifications for deadlines, attendance, events and placements keep everyone in sync.",
-  },
-];
+import { useI18n } from "@/lib/i18n";
 
 export function Features() {
+  const { t } = useI18n();
+  const features = [
+    { icon: LayoutDashboard, title: t("f1.title"), description: t("f1.desc") },
+    { icon: CalendarCheck, title: t("f2.title"), description: t("f2.desc") },
+    { icon: ClipboardList, title: t("f3.title"), description: t("f3.desc") },
+    { icon: Megaphone, title: t("f4.title"), description: t("f4.desc") },
+    { icon: Briefcase, title: t("f5.title"), description: t("f5.desc") },
+    { icon: Users, title: t("f6.title"), description: t("f6.desc") },
+  ];
+
   return (
     <section id="features" className="border-t bg-muted/30 py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Everything your campus needs, in one place
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Stop juggling WhatsApp groups and spreadsheets. Smart Campus brings every workflow
-            together on a single, secure platform.
-          </p>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{t("features.title")}</h2>
+          <p className="mt-4 text-muted-foreground">{t("features.subtitle")}</p>
         </div>
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

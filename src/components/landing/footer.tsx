@@ -1,22 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import { GraduationCap, Code2, Globe, Send } from "lucide-react";
-
-const columns = [
-  {
-    title: "Product",
-    links: ["Features", "Pricing", "Changelog", "Roadmap"],
-  },
-  {
-    title: "Campus",
-    links: ["Events", "Placements", "Clubs", "Announcements"],
-  },
-  {
-    title: "Company",
-    links: ["About", "Blog", "Careers", "Contact"],
-  },
-];
+import { useI18n } from "@/lib/i18n";
 
 export function Footer() {
+  const { t } = useI18n();
+  const columns = [
+    { title: t("footer.product"), links: ["Features", "Pricing", "Changelog", "Roadmap"] },
+    { title: t("footer.campus"), links: ["Events", "Placements", "Clubs", "Announcements"] },
+    { title: t("footer.company"), links: ["About", "Blog", "Careers", "Contact"] },
+  ];
+
   return (
     <footer className="border-t bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
@@ -28,10 +23,7 @@ export function Footer() {
               </span>
               Smart Campus
             </Link>
-            <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-              The modern platform that brings students, faculty and coordinators together for a
-              smoother campus life.
-            </p>
+            <p className="mt-4 max-w-sm text-sm text-muted-foreground">{t("footer.tagline")}</p>
             <div className="mt-6 flex gap-3">
               {[Code2, Globe, Send].map((Icon, i) => (
                 <a
@@ -67,7 +59,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Smart Campus. All rights reserved.
+            © {new Date().getFullYear()} Smart Campus. {t("footer.rights")}
           </p>
           <div className="flex gap-6">
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground">

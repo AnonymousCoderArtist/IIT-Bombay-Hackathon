@@ -130,15 +130,16 @@
 - [ ] Calendar sync
 - [x] PWA support (manifest + service worker)
 - [x] Offline mode (service worker cache + offline fallback)
-- [ ] Multi-language support (i18n)
+- [x] Multi-language support (i18n — landing page EN/HI toggle)
 - [ ] Face recognition attendance
-- [ ] AI assignment plagiarism detection
+- [x] AI assignment plagiarism detection (notes/GitHub/file similarity — Python + UI)
 - [ ] Email reminders
 - [ ] Push notifications
 - [ ] WebSockets (live updates)
 - [x] CSV/Excel export
 - [x] Dockerized deployment (Dockerfile, standalone output)
 - [x] CI/CD pipeline (.github/workflows)
+- [x] Calendar sync (.ics export — events page download)
 
 ---
 

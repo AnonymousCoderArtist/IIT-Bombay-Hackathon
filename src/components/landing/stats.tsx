@@ -1,15 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const stats = [
-  { value: "4", label: "Role-based portals" },
-  { value: "13+", label: "Data entities" },
-  { value: "100%", label: "Remote ready" },
-  { value: "24/7", label: "Always available" },
-];
+import { useI18n } from "@/lib/i18n";
 
 export function Stats() {
+  const { t } = useI18n();
+  const stats = [
+    { value: "4", label: t("stats.roles") },
+    { value: "13+", label: t("stats.entities") },
+    { value: "100%", label: t("stats.remote") },
+    { value: "24/7", label: t("stats.available") },
+  ];
+
   return (
     <section className="border-t bg-primary py-14 text-primary-foreground">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 text-center sm:px-6 lg:grid-cols-4">
