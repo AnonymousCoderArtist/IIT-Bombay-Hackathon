@@ -113,6 +113,7 @@ export const placementSchema = z.object({
   location: z.string().max(120).optional().or(z.literal("")),
   deadline: z.coerce.date(),
   link: z.string().url().optional().or(z.literal("")),
+  skills: z.array(z.string().max(60)).optional(),
   status: z.enum(["active", "closed", "draft"]).optional(),
 });
 

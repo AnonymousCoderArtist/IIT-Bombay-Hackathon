@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Briefcase, MapPin, IndianRupee, Building2, Plus, Loader2, Users } from "lucide-react";
+import { Briefcase, MapPin, IndianRupee, Building2, Plus, Loader2, Users, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { matchSkills, type MatchResult } from "@/lib/ai";
 
 type Placement = {
   _id: string;
@@ -32,6 +33,7 @@ type Placement = {
   location?: string;
   deadline: string;
   link?: string;
+  skills?: string[];
   status: string;
   applied?: boolean;
   applicationStatus?: string;
@@ -65,6 +67,8 @@ function PlacementList({ role }: { role: string }) {
   const [loading, setLoading] = useState(true);
   const [applyingId, setApplyingId] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [studentSkills, setStudentSkills] = useState<string[]>([]);
+  const [aiResults, setAiResults] = useState<Record<string, MatchResult | "loading">>({});
 
   useEffect(() => {
     fetch("/api/placements")
@@ -74,7 +78,31 @@ function PlacementList({ role }: { role: string }) {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+    fetch("/api/users/profile")
+      .then((res) => res.json())
+      .then((json) => setStudentSkills(json.user?.skills ?? []))
+      .catch(() => undefined);
   }, []);
+
+  function matchPercent(placement: Placement) {
+    const required = placement.skills?.map((s) => s.toLowerCase().trim()) ?? [];
+    const owned = studentSkills.map((s) => s.toLowerCase().trim());
+    if (!required.length || !owned.length) return null;
+    const matched = required.filter((s) => owned.includes(s)).length;
+    return Math.round((matched / required.length) * 100);
+  }
+
+  async function analyze(placement: Placement) {
+    if (aiResults[placement._id] === "loading") return;
+    setAiResults((prev) => ({ ...prev, [placement._id]: "loading" }));
+    const result = await matchSkills({
+      job_role: placement.jobRole,
+      job_skills: placement.skills ?? [],
+      job_requirements: placement.eligibility ?? "",
+      profile_skills: studentSkills,
+    });
+    setAiResults((prev) => ({ ...prev, [placement._id]: result }));
+  }
 
   async function handleApply(placementId: string) {
     setApplyingId(placementId);
@@ -150,11 +178,16 @@ function PlacementList({ role }: { role: string }) {
                     <p className="text-sm text-muted-foreground">{placement.jobRole}</p>
                   </div>
                 </div>
-                {isClosed ? (
-                  <Badge variant="secondary">Closed</Badge>
-                ) : (
-                  <Badge>{placement.status}</Badge>
-                )}
+                <div className="flex flex-wrap items-center gap-2">
+                  {role === "student" && (
+                    <MatchBadge percent={matchPercent(placement)} />
+                  )}
+                  {isClosed ? (
+                    <Badge variant="secondary">Closed</Badge>
+                  ) : (
+                    <Badge>{placement.status}</Badge>
+                  )}
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -190,6 +223,33 @@ function PlacementList({ role }: { role: string }) {
                 <p className="rounded-lg bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
                   Eligibility: {placement.eligibility}
                 </p>
+              )}
+
+              {role === "student" && (
+                <div className="space-y-2">
+                  {studentSkills.length === 0 ? (
+                    <p className="text-xs text-muted-foreground">
+                      Profile me skills add karo to har opening ka AI match % dekho.
+                    </p>
+                  ) : aiResults[placement._id] === "loading" ? (
+                    <Button variant="outline" size="sm" disabled className="w-full">
+                      <Loader2 className="size-4 animate-spin" />
+                      Analyzing profile...
+                    </Button>
+                  ) : aiResults[placement._id] && aiResults[placement._id] !== "loading" ? (
+                    <AiMatchPanel result={aiResults[placement._id] as MatchResult} />
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => analyze(placement)}
+                    >
+                      <Sparkles className="size-4" />
+                      Check AI match
+                    </Button>
+                  )}
+                </div>
               )}
 
               {role === "student" ? (
@@ -254,6 +314,7 @@ function CreatePlacementDialog() {
     location: "",
     deadline: "",
     link: "",
+    skills: "",
   });
 
   function update(field: string, value: string) {
@@ -277,6 +338,10 @@ function CreatePlacementDialog() {
           location: form.location,
           deadline: new Date(form.deadline),
           link: form.link || undefined,
+          skills: form.skills
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean),
         }),
       });
 
@@ -298,6 +363,7 @@ function CreatePlacementDialog() {
         location: "",
         deadline: "",
         link: "",
+        skills: "",
       });
       window.location.reload();
     } finally {
@@ -380,6 +446,15 @@ function CreatePlacementDialog() {
               onChange={(e) => update("eligibility", e.target.value)}
             />
           </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="skills">Required skills</Label>
+            <Input
+              id="skills"
+              placeholder="React, Node.js, MongoDB (comma separated)"
+              value={form.skills}
+              onChange={(e) => update("skills", e.target.value)}
+            />
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="deadline">Application deadline</Label>
@@ -411,5 +486,45 @@ function CreatePlacementDialog() {
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function MatchBadge({ percent }: { percent: number | null }) {
+  if (percent === null) return null;
+  const classes =
+    percent >= 60
+      ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
+      : percent >= 30
+        ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+        : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300";
+  return (
+    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${classes}`}>
+      {percent}% match
+    </span>
+  );
+}
+
+function AiMatchPanel({ result }: { result: MatchResult }) {
+  return (
+    <div className="space-y-2 rounded-lg border p-3">
+      {result.strengths.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {result.strengths.map((skill) => (
+            <span
+              key={skill}
+              className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs text-green-700 dark:bg-green-900/40 dark:text-green-300"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      )}
+      {result.gaps.length > 0 && (
+        <p className="text-xs text-muted-foreground">Gaps: {result.gaps.join(", ")}</p>
+      )}
+      {result.advice && (
+        <p className="text-xs text-muted-foreground">Tip: {result.advice}</p>
+      )}
+    </div>
   );
 }

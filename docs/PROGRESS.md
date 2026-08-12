@@ -128,17 +128,17 @@
 - [x] QR attendance scanner (faculty student ka QR scan kare)
 - [x] Live chat (students ↔ faculty) — WhatsApp group links se replace kiya (faculty/admin link dalte hain, students click karke join karte hain)
 - [ ] Calendar sync
-- [ ] PWA support
-- [ ] Offline mode
+- [x] PWA support (manifest + service worker)
+- [x] Offline mode (service worker cache + offline fallback)
 - [ ] Multi-language support (i18n)
 - [ ] Face recognition attendance
 - [ ] AI assignment plagiarism detection
 - [ ] Email reminders
 - [ ] Push notifications
 - [ ] WebSockets (live updates)
-- [ ] CSV/Excel export
-- [ ] Dockerized deployment
-- [ ] CI/CD pipeline
+- [x] CSV/Excel export
+- [x] Dockerized deployment (Dockerfile, standalone output)
+- [x] CI/CD pipeline (.github/workflows)
 
 ---
 
@@ -146,7 +146,7 @@
 
 - [x] Command palette (Ctrl+K global search)
 - [x] Campus Knowledge RAG assistant (IIT Bombay KB + citations — Python service)
-- [ ] AI resume parsing + placement match % (Python `/match` API ready, UI baaki)
+- [x] AI resume parsing + placement match % (Python `/match` API + UI)
 - [x] Ambient lecture intelligence (browser STT → AI study notes + action items)
 - [x] Sentiment analytics (Python `/sentiment` API ready)
 - [ ] Plagiarism detector (submission similarity)

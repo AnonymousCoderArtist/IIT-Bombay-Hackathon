@@ -11,6 +11,7 @@ const placementSchema = new Schema(
     location: { type: String },
     deadline: { type: Date, required: true },
     link: { type: String },
+    skills: [{ type: String, trim: true }],
     status: { type: String, enum: ["active", "closed", "draft"], default: "active" },
   },
   { timestamps: true }
