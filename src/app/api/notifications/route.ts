@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
-import { Notification, EventRegistration, Event } from "@/lib/models";
+import { Notification, EventRegistration } from "@/lib/models";
 import { jsonError } from "@/lib/api-helpers";
 
 export async function GET() {

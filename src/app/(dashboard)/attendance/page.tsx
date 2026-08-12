@@ -65,7 +65,6 @@ function StudentAttendanceView() {
   const [month, setMonth] = useState(currentMonth());
 
   useEffect(() => {
-    setLoading(true);
     fetch(`/api/attendance/me?month=${month}`)
       .then((res) => res.json())
       .then((json) => setData(json))

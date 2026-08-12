@@ -313,7 +313,7 @@ export default function SettingsPage() {
               <div className="border-t pt-4">
                 <p className="text-sm font-medium">Data</p>
                 <p className="text-xs text-muted-foreground">
-                  Apna data delete karna ho to "Danger zone" tab me jao. Download koi option abhi
+                  Apna data delete karna ho to &quot;Danger zone&quot; tab me jao. Download koi option abhi
                   nahi hai.
                 </p>
               </div>

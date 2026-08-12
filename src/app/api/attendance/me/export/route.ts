@@ -3,46 +3,42 @@ import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
 import { AttendanceRecord } from "@/lib/models";
 import { jsonError } from "@/lib/api-helpers";
-import fs from "fs";
-import path from "path";
 
-export async function GET(request: Request) {
+export async function GET() {
   const session = await auth();
   if (!session?.user?.id) return jsonError("Unauthorized", 401);
 
   await dbConnect();
 
-  const records = await AttendanceRecord.find({ userId: session.user.id })
+  const records = await AttendanceRecord.find({ studentId: session.user.id })
+    .populate("sessionId", "subject")
     .sort({ createdAt: -1 })
     .lean();
 
-  const exportData = records.map((r: any) => ({
-    date: r.createdAt?.toISOString() || "",
-    subject: r.sessionId?.subject || "",
-    status: r.status || "",
-    sessionId: r.sessionId || "",
-    markedAt: r.markedAt?.toISOString() || "",
-  }));
+  const rows = records.map((record) => {
+    const sessionInfo = record.sessionId as unknown as { subject?: string } | null;
+    const marked = record.markedAt instanceof Date ? record.markedAt : new Date();
+    return {
+      date: marked.toISOString().slice(0, 10),
+      subject: sessionInfo?.subject ?? "",
+      status: record.status ?? "",
+      markedAt: marked.toISOString(),
+    };
+  });
 
   const csv = [
-    ["Date", "Subject", "Status", "Session ID", "Marked At"],
-    ...exportData.map((r) => [
-      r.date,
-      r.subject,
-      r.status,
-      r.sessionId,
-      r.markedAt,
-    ]),
-  ].map((row) => row.join(",")).join("\n");
+    ["Date", "Subject", "Status", "Marked At"],
+    ...rows.map((r) => [r.date, r.subject, r.status, r.markedAt]),
+  ]
+    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+    .join("\n");
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const csvPath = `/tmp/opencode/attendance_export_${session.user.id}_${timestamp}.csv`;
 
-  fs.writeFileSync(csvPath, csv);
-
-  return NextResponse.json({
-    message: "Downloaded",
-    path: csvPath,
-    count: records.length,
+  return new NextResponse(csv, {
+    headers: {
+      "Content-Type": "text/csv; charset=utf-8",
+      "Content-Disposition": `attachment; filename="attendance_${timestamp}.csv"`,
+    },
   });
 }

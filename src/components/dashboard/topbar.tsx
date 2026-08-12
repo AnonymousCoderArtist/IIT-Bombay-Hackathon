@@ -27,7 +27,10 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   const [unread, setUnread] = useState(0);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     fetch("/api/notifications")

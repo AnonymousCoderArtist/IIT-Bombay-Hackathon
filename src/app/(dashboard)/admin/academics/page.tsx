@@ -27,7 +27,6 @@ export default function AdminAcademicsPage() {
   const [courseForm, setCourseForm] = useState(emptyCourse);
 
   function loadAll() {
-    setLoading(true);
     Promise.all([
       fetch("/api/departments").then((r) => r.json()),
       fetch("/api/courses").then((r) => r.json()),

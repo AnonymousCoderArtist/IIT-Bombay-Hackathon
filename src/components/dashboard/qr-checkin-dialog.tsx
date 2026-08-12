@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import QRCode from "qrcode";
 import { Copy, Loader2, QrCode } from "lucide-react";
@@ -21,9 +21,8 @@ export default function QrCheckInDialog({ sessionId }: { sessionId: string }) {
   const [qrUrl, setQrUrl] = useState("");
   const [code, setCode] = useState("");
   const [expiresAt, setExpiresAt] = useState(0);
-  const [remaining, setRemaining] = useState(0);
   const [loading, setLoading] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [now, setNow] = useState(0);
 
   async function fetchToken() {
     setLoading(true);
@@ -49,25 +48,22 @@ export default function QrCheckInDialog({ sessionId }: { sessionId: string }) {
 
   useEffect(() => {
     if (!open) return;
-    fetchToken();
-    timerRef.current = setInterval(() => {
-      setRemaining(Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000)));
-    }, 1000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
   }, [open]);
 
-  useEffect(() => {
-    setRemaining(Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000)));
-  }, [expiresAt]);
-
+  const remaining = Math.max(0, Math.ceil((expiresAt - now) / 1000));
   const minutes = Math.floor(remaining / 60);
   const seconds = remaining % 60;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (next) fetchToken();
+      }}
+    >
       <DialogTrigger render={<Button variant="outline" />}>
         <QrCode className="size-4" />
         QR check-in
