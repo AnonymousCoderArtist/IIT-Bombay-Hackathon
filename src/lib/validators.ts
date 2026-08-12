@@ -80,6 +80,10 @@ export const chatSchema = z.object({
   question: z.string().min(2).max(2000),
 });
 
+export const whatsappGroupLinkSchema = z.object({
+  whatsappGroupLink: z.string().url().max(500).or(z.literal("")),
+});
+
 export const lectureNoteSchema = z.object({
   title: z.string().min(1).max(120),
   subject: z.string().max(80).optional().or(z.literal("")),

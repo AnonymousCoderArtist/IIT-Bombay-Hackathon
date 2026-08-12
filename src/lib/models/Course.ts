@@ -7,6 +7,7 @@ const courseSchema = new Schema(
     department: { type: String, trim: true },
     credits: { type: Number, default: 0 },
     description: { type: String },
+    whatsappGroupLink: { type: String, trim: true, default: "" },
   },
   { timestamps: true }
 );

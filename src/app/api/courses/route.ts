@@ -17,7 +17,12 @@ export async function GET() {
 
   const courses = await Course.find().sort({ code: 1 }).lean();
 
-  return NextResponse.json({ courses });
+  const populated = courses.map((course) => ({
+    ...course,
+    whatsappGroupLink: course.whatsappGroupLink ?? "",
+  }));
+
+  return NextResponse.json({ courses: populated });
 }
 
 export async function POST(request: Request) {

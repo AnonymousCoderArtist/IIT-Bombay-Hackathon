@@ -6,6 +6,10 @@ import { jsonError } from "@/lib/api-helpers";
 
 type Status = "present" | "absent" | "late" | "excused";
 
+function monthKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
 export async function GET(request: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) return jsonError("Unauthorized", 401);
@@ -67,7 +71,7 @@ export async function GET(request: NextRequest) {
 
   const monthly = month
     ? (() => {
-        const monthRows = rows.filter((r) => r.date.toISOString().slice(0, 7) === month);
+        const monthRows = rows.filter((r) => monthKey(r.date) === month);
         return {
           month,
           summary: summarize(monthRows),

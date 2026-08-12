@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Loader2, Plus, Users, Sparkles } from "lucide-react";
+import { Loader2, MessageCircle, Plus, Users, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +28,7 @@ type Club = {
   category?: string;
   memberCount: number;
   isMember: boolean;
+  whatsappGroupLink?: string;
 };
 
 export default function ClubsPage() {
@@ -131,24 +132,44 @@ export default function ClubsPage() {
                 </p>
 
                 {role === "student" ? (
-                  <Button
-                    variant={club.isMember ? "outline" : "default"}
-                    className="w-full"
-                    disabled={toggling === club._id}
-                    onClick={() => toggle(club)}
-                  >
-                    {toggling === club._id ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : club.isMember ? (
-                      "Leave club"
-                    ) : (
-                      "Join club"
+                  <div className="flex flex-col gap-2">
+                    {club.whatsappGroupLink && (
+                      <a
+                        href={club.whatsappGroupLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700"
+                      >
+                        <MessageCircle className="size-4" />
+                        Join WhatsApp Group
+                      </a>
                     )}
-                  </Button>
+                    <Button
+                      variant={club.isMember ? "outline" : "default"}
+                      className="w-full"
+                      disabled={toggling === club._id}
+                      onClick={() => toggle(club)}
+                    >
+                      {toggling === club._id ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : club.isMember ? (
+                        "Leave club"
+                      ) : (
+                        "Join club"
+                      )}
+                    </Button>
+                  </div>
                 ) : (
-                  <p className="text-xs text-muted-foreground">
-                    {club.memberCount} member{club.memberCount === 1 ? "" : "s"}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <WhatsAppLinkDialog
+                      clubId={club._id}
+                      currentLink={club.whatsappGroupLink}
+                      onSaved={load}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {club.memberCount} member{club.memberCount === 1 ? "" : "s"}
+                    </p>
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -238,6 +259,78 @@ function CreateClubDialog({ onCreated }: { onCreated: () => void }) {
             <Button type="submit" disabled={creating}>
               {creating && <Loader2 className="size-4 animate-spin" />}
               Create club
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function WhatsAppLinkDialog({
+  clubId,
+  currentLink,
+  onSaved,
+}: {
+  clubId: string;
+  currentLink?: string;
+  onSaved: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [link, setLink] = useState(currentLink ?? "");
+  const [saving, setSaving] = useState(false);
+
+  async function handleSave(event: React.FormEvent) {
+    event.preventDefault();
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/clubs/${clubId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ whatsappGroupLink: link.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Could not save group link");
+        return;
+      }
+      toast.success("WhatsApp group link saved");
+      setOpen(false);
+      onSaved();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger render={<Button variant="outline" size="sm" />}>
+        <MessageCircle className="size-4" />
+        {currentLink ? "Edit group link" : "Add group link"}
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>WhatsApp group link</DialogTitle>
+          <DialogDescription>
+            Students isse click karke group join kar payenge. WhatsApp group me jaake
+            &quot;Invite via link&quot; se link copy karke yahan paste karo. Link remove karna ho
+            toh khali chhod do.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSave} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="club-group-link">Invite link</Label>
+            <Input
+              id="club-group-link"
+              placeholder="https://chat.whatsapp.com/..."
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+            />
+          </div>
+          <DialogFooter showCloseButton>
+            <Button type="submit" disabled={saving}>
+              {saving && <Loader2 className="size-4 animate-spin" />}
+              Save link
             </Button>
           </DialogFooter>
         </form>

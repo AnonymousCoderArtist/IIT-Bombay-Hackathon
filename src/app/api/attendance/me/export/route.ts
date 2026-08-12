@@ -4,6 +4,12 @@ import { dbConnect } from "@/lib/db";
 import { AttendanceRecord } from "@/lib/models";
 import { jsonError } from "@/lib/api-helpers";
 
+function dateKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+    date.getDate()
+  ).padStart(2, "0")}`;
+}
+
 export async function GET() {
   const session = await auth();
   if (!session?.user?.id) return jsonError("Unauthorized", 401);
@@ -19,7 +25,7 @@ export async function GET() {
     const sessionInfo = record.sessionId as unknown as { subject?: string } | null;
     const marked = record.markedAt instanceof Date ? record.markedAt : new Date();
     return {
-      date: marked.toISOString().slice(0, 10),
+      date: dateKey(marked),
       subject: sessionInfo?.subject ?? "",
       status: record.status ?? "",
       markedAt: marked.toISOString(),

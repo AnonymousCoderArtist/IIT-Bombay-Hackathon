@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Plus, Building2, BookMarked, Trash2 } from "lucide-react";
+import { Loader2, MessageCircle, Plus, Building2, BookMarked, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,9 +10,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type Department = { _id: string; name: string; code: string; description?: string };
-type Course = { _id: string; name: string; code: string; department?: string; credits?: number; description?: string };
+type Course = { _id: string; name: string; code: string; department?: string; credits?: number; description?: string; whatsappGroupLink?: string };
 
 const emptyDept = { name: "", code: "", description: "" };
 const emptyCourse = { name: "", code: "", department: "", credits: "", description: "" };
@@ -25,6 +33,8 @@ export default function AdminAcademicsPage() {
   const [savingCourse, setSavingCourse] = useState(false);
   const [deptForm, setDeptForm] = useState(emptyDept);
   const [courseForm, setCourseForm] = useState(emptyCourse);
+  const [linkCourse, setLinkCourse] = useState<Course | null>(null);
+  const [groupLink, setGroupLink] = useState("");
 
   function loadAll() {
     Promise.all([
@@ -108,6 +118,29 @@ export default function AdminAcademicsPage() {
     }
     toast.success("Course deleted");
     loadAll();
+  }
+
+  async function saveCourseLink(event: React.FormEvent) {
+    event.preventDefault();
+    if (!linkCourse) return;
+    setSavingCourse(true);
+    try {
+      const res = await fetch(`/api/courses/${linkCourse._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ whatsappGroupLink: groupLink.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Could not save group link");
+        return;
+      }
+      toast.success("WhatsApp group link saved");
+      setLinkCourse(null);
+      loadAll();
+    } finally {
+      setSavingCourse(false);
+    }
   }
 
   return (
@@ -304,14 +337,27 @@ export default function AdminAcademicsPage() {
                           .join(" · ") || "No department"}
                       </p>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      className="text-destructive"
-                      onClick={() => deleteCourse(course._id)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => {
+                          setGroupLink(course.whatsappGroupLink ?? "");
+                          setLinkCourse(course);
+                        }}
+                        aria-label="Edit WhatsApp group link"
+                      >
+                        <MessageCircle className="size-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="text-destructive"
+                        onClick={() => deleteCourse(course._id)}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -319,6 +365,35 @@ export default function AdminAcademicsPage() {
           </Card>
         </div>
       )}
+
+      <Dialog open={!!linkCourse} onOpenChange={(next) => { if (!next) setLinkCourse(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>WhatsApp group link</DialogTitle>
+            <DialogDescription>
+              {linkCourse?.name} ke liye invite link paste karo. Students click karke group join
+              kar payenge. Link remove karna ho toh khali chhod do.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={saveCourseLink} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="course-group-link">Invite link</Label>
+              <Input
+                id="course-group-link"
+                placeholder="https://chat.whatsapp.com/..."
+                value={groupLink}
+                onChange={(e) => setGroupLink(e.target.value)}
+              />
+            </div>
+            <DialogFooter showCloseButton>
+              <Button type="submit" disabled={savingCourse}>
+                {savingCourse && <Loader2 className="size-4 animate-spin" />}
+                Save link
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

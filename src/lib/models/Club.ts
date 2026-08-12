@@ -7,6 +7,7 @@ const clubSchema = new Schema(
     category: { type: String, trim: true },
     coordinatorId: { type: Schema.Types.ObjectId, ref: "User" },
     members: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    whatsappGroupLink: { type: String, trim: true, default: "" },
   },
   { timestamps: true }
 );

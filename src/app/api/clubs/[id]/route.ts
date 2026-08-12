@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
 import { Club } from "@/lib/models";
+import { whatsappGroupLinkSchema } from "@/lib/validators";
 import { jsonError } from "@/lib/api-helpers";
 
 export async function POST(_: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -64,4 +66,46 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
   await club.save();
 
   return NextResponse.json({ message: "Left the club", memberCount: club.members.length });
+}
+
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return jsonError("Unauthorized", 401);
+  }
+
+  if (!["admin", "coordinator", "faculty"].includes(session.user.role)) {
+    return jsonError("Only coordinators, faculty and admins can update group links", 403);
+  }
+
+  let payload: unknown;
+  try {
+    payload = await request.json();
+  } catch {
+    return jsonError("Invalid request body", 400);
+  }
+
+  const parsed = whatsappGroupLinkSchema.safeParse(payload);
+
+  if (!parsed.success) {
+    const firstError = (parsed.error as ZodError).issues[0];
+    return jsonError(firstError.message, 400);
+  }
+
+  const { id } = await params;
+
+  await dbConnect();
+
+  const club = await Club.findByIdAndUpdate(
+    id,
+    { whatsappGroupLink: parsed.data.whatsappGroupLink },
+    { new: true }
+  );
+
+  if (!club) {
+    return jsonError("Club not found", 404);
+  }
+
+  return NextResponse.json({ club, message: "WhatsApp group link updated" });
 }

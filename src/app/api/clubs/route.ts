@@ -25,6 +25,7 @@ export async function GET() {
 
   const populated = clubs.map((club) => ({
     ...club,
+    whatsappGroupLink: club.whatsappGroupLink ?? "",
     memberCount: club.members.length,
     isMember: club.members.some((m: { toString: () => string }) => m.toString() === session.user.id),
   }));

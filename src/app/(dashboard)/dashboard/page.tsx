@@ -14,6 +14,7 @@ import {
   GraduationCap,
   BarChart3,
   FileText,
+  MessageCircle,
 } from "lucide-react";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
@@ -144,27 +145,129 @@ export default function DashboardHome() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                Your recent activity and updates will appear here as things happen.
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        {role === "student" ? (
+          <CampusGroupsCard />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent activity</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Your recent activity and updates will appear here as things happen.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {role === "admin" && <AnalyticsCharts data={data ?? {}} />}
     </div>
+  );
+}
+
+function CampusGroupsCard() {
+  const [groups, setGroups] = useState<{ name: string; kind: string; link: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      fetch("/api/clubs").then((res) => res.json()),
+      fetch("/api/courses").then((res) => res.json()),
+    ])
+      .then(([clubJson, courseJson]) => {
+        if (cancelled) return;
+        const clubs = (clubJson.clubs ?? [])
+          .filter((club: { whatsappGroupLink?: string }) => club.whatsappGroupLink)
+          .map((club: { name: string; whatsappGroupLink: string }) => ({
+            name: club.name,
+            kind: "Club",
+            link: club.whatsappGroupLink,
+          }));
+        const courses = (courseJson.courses ?? [])
+          .filter((course: { whatsappGroupLink?: string }) => course.whatsappGroupLink)
+          .map((course: { name: string; code?: string; whatsappGroupLink: string }) => ({
+            name: course.code ? `${course.name} (${course.code})` : course.name,
+            kind: "Course",
+            link: course.whatsappGroupLink,
+          }));
+        setGroups([...clubs, ...courses]);
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Campus WhatsApp groups</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-3/4" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (groups.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Campus WhatsApp groups</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Koi WhatsApp group link abhi add nahi hua. Faculty ya admin clubs aur courses me link
+            add karein to groups yahan dikhenge.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <MessageCircle className="size-5 text-green-600" />
+          Campus WhatsApp groups
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {groups.map((group) => (
+          <a
+            key={`${group.kind}-${group.name}-${group.link}`}
+            href={group.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/60"
+          >
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">{group.name}</p>
+              <p className="text-xs text-muted-foreground">{group.kind}</p>
+            </div>
+            <span className="shrink-0 rounded-full bg-green-600 px-3 py-1 text-xs font-medium text-white">
+              Join
+            </span>
+          </a>
+        ))}
+      </CardContent>
+    </Card>
   );
 }

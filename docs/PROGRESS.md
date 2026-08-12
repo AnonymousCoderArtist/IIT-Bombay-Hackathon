@@ -79,7 +79,7 @@
 
 ### 11. Analytics
 - [x] Role-aware analytics + admin charts
-- [ ] CSV/Excel export
+- [x] CSV/Excel export (attendance page pe download button)
 
 ### 12. Admin Panel
 - [x] User management (list, role change, status, delete)
@@ -125,8 +125,8 @@
 - [x] Admin audit logs
 - [x] API documentation (Swagger/OpenAPI — Python AI service me `/docs`)
 - [x] AI chatbot (campus FAQs, IIT Bombay RAG — Python service)
-- [ ] QR attendance scanner (faculty student ka QR scan kare)
-- [ ] Live chat (students ↔ faculty)
+- [x] QR attendance scanner (faculty student ka QR scan kare)
+- [x] Live chat (students ↔ faculty) — WhatsApp group links se replace kiya (faculty/admin link dalte hain, students click karke join karte hain)
 - [ ] Calendar sync
 - [ ] PWA support
 - [ ] Offline mode

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { Loader2, CalendarDays, Plus, ScanLine } from "lucide-react";
+import { Download, Loader2, CalendarDays, Plus, ScanLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -97,13 +97,21 @@ function StudentAttendanceView() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
+      <div className="flex flex-wrap justify-end gap-2">
         <Link href="/attendance/scan">
           <Button variant="outline" className="gap-2">
             <ScanLine className="size-4" />
             QR check-in
           </Button>
         </Link>
+        <Button
+          variant="outline"
+          className="gap-2"
+          onClick={() => window.open("/api/attendance/me/export", "_blank")}
+        >
+          <Download className="size-4" />
+          Export CSV
+        </Button>
       </div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
