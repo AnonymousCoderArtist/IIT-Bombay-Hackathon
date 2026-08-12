@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
-import { Settings } from "@/lib/models";
+import { Settings, User } from "@/lib/models";
 import { jsonError } from "@/lib/api-helpers";
 
 const settingsSchema = z.object({
@@ -48,7 +48,18 @@ export async function GET() {
     };
   }
 
-  return NextResponse.json({ settings });
+  const user = await User.findById(session.user.id).select("authProvider email name image").lean();
+
+  return NextResponse.json({
+    settings,
+    account: {
+      authProvider: user?.authProvider ?? "credentials",
+      email: user?.email ?? "",
+      name: user?.name ?? "",
+      image: user?.image ?? null,
+      googleConfigured: Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET),
+    },
+  });
 }
 
 export async function PATCH(request: Request) {

@@ -151,7 +151,7 @@ export default function AssistantPage() {
               className="flex-1"
               disabled={loading}
             />
-            <Button type="submit" size="icon" disabled={loading || !input.trim()}>
+            <Button type="submit" size="icon" disabled={loading || !input.trim()} aria-label="Send message">
               <Send className="size-4" />
             </Button>
           </form>

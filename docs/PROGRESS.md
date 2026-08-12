@@ -91,7 +91,7 @@
 
 ### 13. Settings
 - [x] Profile, password, theme, notification preferences, delete account
-- [ ] Connected accounts (Google) — Google OAuth credentials aane ke baad
+- [x] Connected accounts (Google) — authProvider tracking + Settings me status UI (Google OAuth credentials aane pe login link ho jaata hai)
 - [x] Privacy settings (public profile toggle)
 
 ### 14. UI/UX
@@ -100,7 +100,7 @@
 - [x] Empty states (har list pe)
 - [x] Error page (`error.tsx`) + 404 (`not-found.tsx`)
 - [x] Success screens (action ke baad toast se)
-- [ ] Accessibility pass (keyboard nav, contrast, semantic HTML) — partial, icon buttons ke aria-labels add
+- [x] Accessibility pass (keyboard nav, contrast, semantic HTML) — icon buttons ke aria-labels add
 
 ### 15. Security
 - [x] Password hashing (bcrypt cost 12)
@@ -150,9 +150,9 @@
 - [x] AI resume parsing + placement match % (Python `/match` API + UI)
 - [x] Ambient lecture intelligence (browser STT → AI study notes + action items)
 - [x] Sentiment analytics (Python `/sentiment` API ready)
-- [ ] Plagiarism detector (submission similarity)
+- [x] Plagiarism detector (submission similarity)
 - [ ] Intel OpenVINO / oneAPI / DevCloud (sirf docs strategy — hardware-level, cloud demo impossible)
-- [ ] Multi-language (EN/HI toggle)
+- [x] Multi-language (EN/HI toggle)
 
 ---
 

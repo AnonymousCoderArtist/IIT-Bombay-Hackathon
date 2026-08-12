@@ -53,6 +53,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error("EMAIL_NOT_VERIFIED");
           }
 
+          user.authProvider = "credentials";
           user.lastLoginAt = new Date();
           await user.save();
 
@@ -84,6 +85,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             existing.emailVerified = true;
             await existing.save();
           }
+          existing.authProvider = "google";
+          existing.status = "active";
+          await existing.save();
           return true;
         }
 
@@ -92,6 +96,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           email: user.email,
           image: user.image,
           emailVerified: true,
+          authProvider: "google",
           role: "student",
         });
       }

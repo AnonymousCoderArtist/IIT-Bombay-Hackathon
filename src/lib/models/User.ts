@@ -21,6 +21,7 @@ const userSchema = new Schema(
     resumeUrl: { type: String },
     bio: { type: String },
     emailVerified: { type: Boolean, default: false },
+    authProvider: { type: String, enum: ["credentials", "google"], default: "credentials" },
     status: { type: String, enum: ["active", "pending", "blocked"], default: "active" },
     lastLoginAt: { type: Date },
   },

@@ -256,7 +256,12 @@ export default function AdminUsersPage() {
                 <Dialog>
                   <DialogTrigger
                     render={
-                      <Button variant="ghost" size="sm" className="text-destructive">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive"
+                        aria-label={`Delete ${user.name}`}
+                      >
                         <Trash2 className="size-3.5" />
                       </Button>
                     }

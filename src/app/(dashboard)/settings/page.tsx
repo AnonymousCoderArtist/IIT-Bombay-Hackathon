@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2, Moon, Sun, Monitor, LogOut, BellRing } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -37,6 +38,13 @@ export default function SettingsPage() {
   const [pushBusy, setPushBusy] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [account, setAccount] = useState<{
+    authProvider: string;
+    email: string;
+    name: string;
+    image: string | null;
+    googleConfigured: boolean;
+  } | null>(null);
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -53,6 +61,7 @@ export default function SettingsPage() {
     fetch("/api/users/settings")
       .then((res) => res.json())
       .then((json) => {
+        if (json.account) setAccount(json.account);
         const settings = json.settings;
         if (!settings) return;
 
@@ -254,6 +263,7 @@ export default function SettingsPage() {
       <Tabs defaultValue="appearance">
         <TabsList>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
+          <TabsTrigger value="accounts">Accounts</TabsTrigger>
           <TabsTrigger value="password">Password</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="privacy">Privacy</TabsTrigger>
@@ -291,6 +301,58 @@ export default function SettingsPage() {
               <span className="ml-2 self-center text-sm text-muted-foreground">
                 Currently: {resolvedTheme}
               </span>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="accounts" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Connected accounts</CardTitle>
+              <CardDescription>
+                Apne account se linked sign-in methods.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-9 items-center justify-center rounded-full bg-muted text-sm font-medium">
+                    {account?.name
+                      ?.split(" ")
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join("")
+                      .toUpperCase() ?? account?.email?.[0]?.toUpperCase() ?? "?"}
+                  </span>
+                  <div>
+                    <p className="text-sm font-medium">{account?.name ?? "Account"}</p>
+                    <p className="text-xs text-muted-foreground">{account?.email ?? ""}</p>
+                  </div>
+                </div>
+                <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium capitalize">
+                  {account?.authProvider === "google" ? "Google" : "Email + Password"}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                <div>
+                  <p className="text-sm font-medium">Google sign-in</p>
+                  <p className="text-xs text-muted-foreground">
+                    {account?.googleConfigured
+                      ? account?.authProvider === "google"
+                        ? "Is account se Google login linked hai."
+                        : "Google login se sign in karke is email ko link kar sakte ho."
+                      : "Google OAuth configure nahi hai — admin se GOOGLE_CLIENT_ID/SECRET set karwao."}
+                  </p>
+                </div>
+                {account?.googleConfigured ? (
+                  <Badge variant={account?.authProvider === "google" ? "default" : "outline"}>
+                    {account?.authProvider === "google" ? "Linked" : "Not linked"}
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary">Not configured</Badge>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
