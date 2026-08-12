@@ -9,6 +9,7 @@ export async function GET(request: Request) {
   if (!session?.user?.id) {
     return new Response("Unauthorized", { status: 401 });
   }
+  const userId = session.user.id;
 
   await dbConnect();
 
@@ -19,7 +20,7 @@ export async function GET(request: Request) {
 
   async function check() {
     const count = await Notification.countDocuments({
-      userId: session.user.id,
+      userId,
       isRead: false,
     });
 

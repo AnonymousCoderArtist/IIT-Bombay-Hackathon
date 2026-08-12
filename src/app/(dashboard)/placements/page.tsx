@@ -106,10 +106,14 @@ function PlacementList({ role }: { role: string }) {
           profile_skills: studentSkills,
         }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as MatchResult;
       setAiResults((prev) => ({ ...prev, [placement._id]: data }));
     } catch {
-      setAiResults((prev) => ({ ...prev, [placement._id]: undefined }));
+      setAiResults((prev) => {
+        const next = { ...prev };
+        delete next[placement._id];
+        return next;
+      });
     }
   }
 
