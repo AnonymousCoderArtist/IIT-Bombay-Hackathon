@@ -106,8 +106,17 @@ function PlacementList({ role }: { role: string }) {
           profile_skills: studentSkills,
         }),
       });
-      const data = (await res.json()) as MatchResult;
-      setAiResults((prev) => ({ ...prev, [placement._id]: data }));
+      const json = (await res.json()) as MatchResult | { error?: string };
+      if (!res.ok || !("match_percent" in json)) {
+        setAiResults((prev) => {
+          const next = { ...prev };
+          delete next[placement._id];
+          return next;
+        });
+        toast.error("error" in json ? json.error : "AI match service unavailable");
+        return;
+      }
+      setAiResults((prev) => ({ ...prev, [placement._id]: json }));
     } catch {
       setAiResults((prev) => {
         const next = { ...prev };
