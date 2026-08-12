@@ -17,3 +17,4 @@ export { Club } from "./Club";
 export { Notice } from "./Notice";
 export { StudyMaterial } from "./StudyMaterial";
 export { Course } from "./Course";
+export { LectureNote } from "./LectureNote";

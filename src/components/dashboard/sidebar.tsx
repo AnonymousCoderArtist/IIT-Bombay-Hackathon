@@ -18,6 +18,8 @@ import {
   Sparkles,
   FileWarning,
   BookOpen,
+  Mic,
+  Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +29,7 @@ const roleLinks = {
     { href: "/attendance", label: "Attendance", icon: CalendarDays },
     { href: "/assignments", label: "Assignments", icon: ClipboardList },
     { href: "/materials", label: "Materials", icon: BookOpen },
+    { href: "/lecture-notes", label: "Lecture Notes", icon: Mic },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/placements", label: "Placements", icon: Briefcase },
     { href: "/clubs", label: "Clubs", icon: Sparkles },
@@ -37,6 +40,7 @@ const roleLinks = {
     { href: "/attendance", label: "Attendance", icon: CalendarDays },
     { href: "/assignments", label: "Assignments", icon: ClipboardList },
     { href: "/materials", label: "Materials", icon: BookOpen },
+    { href: "/lecture-notes", label: "Lecture Notes", icon: Mic },
     { href: "/notices", label: "Notices", icon: FileWarning },
     { href: "/events", label: "Events", icon: Megaphone },
     { href: "/placements", label: "Placements", icon: Briefcase },
@@ -65,6 +69,7 @@ const roleLinks = {
 const bottomLinks = [
   { href: "/profile", label: "Profile", icon: User },
   { href: "/notifications", label: "Notifications", icon: Bell },
+  { href: "/assistant", label: "AI Assistant", icon: Bot },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 

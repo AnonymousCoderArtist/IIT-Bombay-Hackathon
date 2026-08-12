@@ -1,0 +1,7 @@
+# Smart Campus AI service
+# .venv me packages installed hain — naya machine ho toh: pip install -r requirements.txt
+
+services/ai/.venv/
+services/ai/.env
+__pycache__/
+*.pyc

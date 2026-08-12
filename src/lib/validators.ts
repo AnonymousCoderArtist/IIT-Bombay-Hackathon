@@ -72,6 +72,18 @@ export const studyMaterialSchema = z.object({
   semester: z.coerce.number().min(1).max(12).optional(),
 });
 
+export const chatSchema = z.object({
+  question: z.string().min(2).max(2000),
+});
+
+export const lectureNoteSchema = z.object({
+  title: z.string().min(1).max(120),
+  subject: z.string().max(80).optional().or(z.literal("")),
+  transcript: z.string().max(50000),
+  durationSec: z.coerce.number().min(0).max(86400).optional(),
+  source: z.enum(["live-stt", "paste"]).optional(),
+});
+
 export const eventSchema = z.object({
   title: z.string().min(3).max(120),
   description: z.string().max(2000).optional().or(z.literal("")),

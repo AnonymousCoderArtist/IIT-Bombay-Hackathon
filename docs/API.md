@@ -284,6 +284,34 @@ Recent activity logs (paged). Admin only.
 
 Upload a file (multipart). `200` → `{ "url": "/uploads/..." }` (local dev) or a CDN URL.
 
+## AI (Python service — `services/ai/`)
+
+Next.js `/api/chat` aur `/api/lecture-notes` call karte hain. Python service
+direct bhi use kar sakte ho (FastAPI Swagger: `http://localhost:8000/docs`).
+
+### `POST /api/chat`
+
+Body: `{ "question": string }` → `200` `{ "answer", "sources": string[], "provider" }`
+IIT Bombay campus RAG — grounded answers with citations. Rate limited (30/min).
+
+### `GET/POST/DELETE /api/lecture-notes`
+
+GET → apne saved notes; POST body `{ title, subject?, transcript, durationSec?, source? }`
+→ structured study notes (summary, keyPoints, actionItems); DELETE `?id=` → note delete.
+
+### Python service direct
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `:8000/health` | Status + provider + KB size |
+| POST | `:8000/chat` | RAG chatbot (citations) |
+| POST | `:8000/summarize` | Transcript → summary + key points + action items |
+| POST | `:8000/match` | Job skills vs student skills → match % + gaps |
+| POST | `:8000/sentiment` | Feedback → positive/negative/neutral |
+
+> AI service down ho ya API key na ho toh sab gracefully fallback/mock hota hai —
+> app kabhi break nahi hota.
+
 ## Common status codes
 
 | Code | Meaning |

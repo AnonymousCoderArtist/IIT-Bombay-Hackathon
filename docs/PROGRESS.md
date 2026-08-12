@@ -123,8 +123,8 @@
 ## Tier 2 — PS Bonus Features
 
 - [x] Admin audit logs
-- [x] API documentation
-- [ ] AI chatbot (campus FAQs)
+- [x] API documentation (Swagger/OpenAPI — Python AI service me `/docs`)
+- [x] AI chatbot (campus FAQs, IIT Bombay RAG — Python service)
 - [ ] QR attendance scanner (faculty student ka QR scan kare)
 - [ ] Live chat (students ↔ faculty)
 - [ ] Calendar sync
@@ -145,10 +145,10 @@
 ## Tier 3 — Strategy X-Factor (Innovation)
 
 - [x] Command palette (Ctrl+K global search)
-- [ ] Campus Knowledge RAG assistant (chatbot + citations)
-- [ ] AI resume parsing + placement match %
-- [ ] Ambient lecture intelligence (transcribe → study notes + action items)
-- [ ] Sentiment analytics (student feedback)
+- [x] Campus Knowledge RAG assistant (IIT Bombay KB + citations — Python service)
+- [ ] AI resume parsing + placement match % (Python `/match` API ready, UI baaki)
+- [x] Ambient lecture intelligence (browser STT → AI study notes + action items)
+- [x] Sentiment analytics (Python `/sentiment` API ready)
 - [ ] Plagiarism detector (submission similarity)
 - [ ] Intel OpenVINO / oneAPI / DevCloud (sirf docs strategy — hardware-level, cloud demo impossible)
 - [ ] Multi-language (EN/HI toggle)

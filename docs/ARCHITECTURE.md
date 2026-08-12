@@ -21,6 +21,15 @@ flowchart TB
         UPLOAD["Local /uploads (dev)"]
     end
 
+    subgraph AI["Python AI Service (FastAPI)"]
+        RAG["RAG — IIT Bombay knowledge base (TF-IDF + cosine)"]
+        LLM["LLM provider (Gemini / DeepSeek / mock)"]
+        CHAT["POST /chat"]
+        SUM["POST /summarize"]
+        MATCH["POST /match"]
+        SENT["POST /sentiment"]
+    end
+
     LP --> AUTH
     DASH --> MW
     MW --> AUTH
@@ -28,6 +37,9 @@ flowchart TB
     API --> RL
     RL --> Data
     UI --> API
+    API -->|AI_SERVICE_URL| AI
+    AI --> LLM
+    CHAT --> RAG
 ```
 
 ## Stack
@@ -42,6 +54,7 @@ flowchart TB
 | Animation | framer-motion (landing page) |
 | Email | SMTP (Nodemailer) for OTP + notifications |
 | QR | `qrcode` package — HMAC-signed event passes |
+| AI | Python FastAPI microservice (`services/ai/`) — RAG + Gemini/DeepSeek (free tiers, mock fallback) |
 
 ## Flow overview
 
@@ -55,6 +68,10 @@ flowchart TB
    queries (e.g. analytics, assignments) shape the response per user.
 4. **Security:** bcrypt (cost 12), rate limiting on all auth endpoints + login,
    signed QR payloads, and server-side zod validation on every mutation.
+5. **AI:** The Next.js app calls the Python FastAPI service via `AI_SERVICE_URL`
+   (chat/summarize/match/sentiment). If the service is down or no LLM key is
+   configured, everything falls back to mock/local logic — the app never breaks.
+   Python service: `services/ai/` (venv, FastAPI, Swagger at `/docs`).
 
 ## Folder layout
 
@@ -75,6 +92,10 @@ src/
     mailer.ts            # SMTP transport
     api-helpers.ts       # rate limit, ip, logging helpers
     db.ts                # mongodb connection
+    ai.ts                # Python AI service client + LLM fallback
+  types/                 # global type declarations
   middleware.ts          # route protection
   auth.ts / auth.config.ts  # NextAuth setup
+services/
+  ai/                    # Python FastAPI AI service (RAG + LLM, venv)
 ```

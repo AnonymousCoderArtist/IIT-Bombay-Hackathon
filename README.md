@@ -50,6 +50,32 @@ npm run dev
 
 [http://localhost:3000](http://localhost:3000) pe kholo.
 
+### AI features (optional — chatbot, lecture notes)
+
+Python AI service (`services/ai/`) se RAG chatbot, lecture summarization, placement
+match aur sentiment analysis chalti hain. Service nahi chalayi toh bhi app chalti hai
+(mock fallback), bas AI responses mock honge.
+
+```bash
+# 1. Python service setup (pehli baar)
+cd services/ai
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+cp .env.example .env   # AI_PROVIDER + free API key daalo
+
+# 2. Service chalayo (port 8000)
+.venv/bin/uvicorn app.main:app --port 8000
+
+# 3. Root .env me link karo
+# AI_SERVICE_URL=http://localhost:8000
+```
+
+Free LLM keys:
+- **Gemini** — `AI_PROVIDER=gemini` + `GEMINI_API_KEY` ([aistudio.google.com/apikey](https://aistudio.google.com/apikey))
+- **DeepSeek** — `AI_PROVIDER=deepseek` + `DEEPSEEK_API_KEY`
+
+> AI service ke saare endpoints Swagger pe: `http://localhost:8000/docs`
+
 ## Test Credentials
 
 | Role | Email | Password |
@@ -167,6 +193,8 @@ for i in $(seq 1 6); do curl -s -o /dev/null -w "%{http_code} " \
 ## Pending
 
 - [ ] Google login enable karna — Google Cloud Console se OAuth Client banake `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` `.env` me daalo (redirect URI: `http://localhost:3000/api/auth/callback/google`). Jab tak credentials nahi hain, login sirf email/password se chalta hai.
+- [ ] AI ke liye free LLM key daalna (Gemini/DeepSeek) taaki chatbot + lecture notes real AI se chalein (mock se nahi).
+- [ ] Live deploy (Vercel) + demo video
 
 ## Deploy on Vercel
 
@@ -177,9 +205,12 @@ for i in $(seq 1 6); do curl -s -o /dev/null -w "%{http_code} " \
    - `AUTH_SECRET`
    - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
    - `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM`
-4. Deploy karo, done
+   - `GEMINI_API_KEY` + `AI_PROVIDER=gemini` (AI features ke liye)
+4. Python AI service ko [Render](https://render.com) ya Railway pe free deploy karke
+   `AI_SERVICE_URL` set karo (ya local demo me hi chalao)
+5. Deploy karo, done
 
-> Note: Vercel ke serverless filesystem pe files save nahi hoti, isliye resume/attachment upload ke liye Cloudinary ya Vercel Blob jaise service use karni padti hai.
+> Note: Vercel ke serverless filesystem pe files save nahi hoti, isliye resume/attachment upload ke liye Cloudinary ya Vercel Blob jaise service use karni padti hai. Python AI service alag service hai (AI_SERVICE_URL se connect).
 
 ## Environment Variables
 
