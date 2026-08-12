@@ -20,7 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { matchSkills, type MatchResult } from "@/lib/ai";
+import type { MatchResult } from "@/lib/ai";
 
 type Placement = {
   _id: string;
@@ -95,13 +95,22 @@ function PlacementList({ role }: { role: string }) {
   async function analyze(placement: Placement) {
     if (aiResults[placement._id] === "loading") return;
     setAiResults((prev) => ({ ...prev, [placement._id]: "loading" }));
-    const result = await matchSkills({
-      job_role: placement.jobRole,
-      job_skills: placement.skills ?? [],
-      job_requirements: placement.eligibility ?? "",
-      profile_skills: studentSkills,
-    });
-    setAiResults((prev) => ({ ...prev, [placement._id]: result }));
+    try {
+      const res = await fetch("/api/match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          job_role: placement.jobRole,
+          job_skills: placement.skills ?? [],
+          job_requirements: placement.eligibility ?? "",
+          profile_skills: studentSkills,
+        }),
+      });
+      const data = await res.json();
+      setAiResults((prev) => ({ ...prev, [placement._id]: data }));
+    } catch {
+      setAiResults((prev) => ({ ...prev, [placement._id]: undefined }));
+    }
   }
 
   async function handleApply(placementId: string) {
