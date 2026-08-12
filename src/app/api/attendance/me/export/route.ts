@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
 import { AttendanceRecord } from "@/lib/models";
+import { jsonError } from "@/lib/api-helpers";
 import fs from "fs";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
 
 export async function GET(request: Request) {
   const session = await auth();

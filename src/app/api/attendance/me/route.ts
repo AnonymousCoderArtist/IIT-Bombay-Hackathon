@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
 import { AttendanceSession, AttendanceRecord } from "@/lib/models";
 import { jsonError } from "@/lib/api-helpers";
 
-export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<Record<string, string>> }) {
   const session = await auth();
   if (!session?.user?.id) return jsonError("Unauthorized", 401);
 
@@ -17,7 +17,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
     .lean();
 
   if (!attendanceSession) {
-    return jsonError("Attendance session not found", 404);
+    return NextResponse.json({ error: "Attendance session not found", status: 404 }, { status: 404 });
   }
 
   const records = await AttendanceRecord.find({ sessionId: id }).lean();
@@ -25,7 +25,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   return NextResponse.json({ session: attendanceSession, records });
 }
 
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<Record<string, string>> }) {
   const session = await auth();
   if (!session?.user?.id) return jsonError("Unauthorized", 401);
 
@@ -75,7 +75,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const studentIds = Object.keys(statuses);
 
   if (studentIds.length > 0) {
-    await Notification.insertMany(
+    await (Notification as any).collection.insertMany(
       studentIds.map((studentId) => ({
         userId: studentId,
         title: "Attendance marked",

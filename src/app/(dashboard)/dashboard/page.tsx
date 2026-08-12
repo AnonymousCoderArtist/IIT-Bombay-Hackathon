@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
-import { CalendarWidget } from "@/components/dashboard/calendar-widget";
+import CalendarWidget from "@/components/dashboard/calendar-widget";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
