@@ -4,6 +4,7 @@ import re
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
+from .face import available as face_available, count as face_count, enroll as face_enroll, recognize as face_recognize
 from .llm import configured_provider, generate_text
 from .rag import rag
 
@@ -44,9 +45,23 @@ class PlagiarismRequest(BaseModel):
     texts: list[PlagiarismItem] = Field(min_length=2, max_length=200)
 
 
+class FaceEnrollRequest(BaseModel):
+    user_id: str = Field(min_length=1, max_length=100)
+    image: str = Field(min_length=16)
+
+
+class FaceRecognizeRequest(BaseModel):
+    image: str = Field(min_length=16)
+
+
 @app.get("/health")
 def health() -> dict[str, Any]:
-    return {"status": "ok", "provider": configured_provider(), "kb_chunks": len(rag.chunks)}
+    return {
+        "status": "ok",
+        "provider": configured_provider(),
+        "kb_chunks": len(rag.chunks),
+        "face": {"available": face_available(), "enrolled": face_count()},
+    }
 
 
 CHAT_SYSTEM = """Tum IIT Bombay ka Smart Campus AI assistant ho. Sirf diye gaye knowledge base se jawab do. Har jawab ke end me "[Source: ...]" likho jahan se info li. Agar knowledge base me nahi hai toh seedha bolo ki iska jawab mere paas nahi hai, guess mat karo. Hinglish/Hindi + English mix me concise jawab do."""
@@ -184,6 +199,26 @@ async def plagiarism(req: PlagiarismRequest) -> dict[str, Any]:
                 pairs.append({"a": req.texts[i].id, "b": req.texts[j].id, "similarity": sim, "reason": "text"})
     pairs.sort(key=lambda p: p["similarity"], reverse=True)
     return {"pairs": pairs}
+
+
+@app.post("/face/enroll")
+async def face_enroll_endpoint(req: FaceEnrollRequest) -> dict[str, Any]:
+    if not face_available():
+        raise HTTPException(status_code=503, detail="uniface install nahi hai - pip install 'uniface[cpu]'")
+    try:
+        return face_enroll(req.user_id, req.image)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/face/recognize")
+async def face_recognize_endpoint(req: FaceRecognizeRequest) -> dict[str, Any]:
+    if not face_available():
+        raise HTTPException(status_code=503, detail="uniface install nahi hai - pip install 'uniface[cpu]'")
+    try:
+        return face_recognize(req.image)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @app.post("/sentiment")

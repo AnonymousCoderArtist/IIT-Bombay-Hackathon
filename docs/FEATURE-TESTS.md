@@ -158,6 +158,134 @@ curl -b <cookie> http://localhost:3000/api/events/export
 - [ ] Refresh karne pe language persisted (localStorage `lang`)
 - [ ] Doosre tab me toggle → live sync (storage event)
 
+## 12. Face Recognition Attendance (UniFace)
+
+> Setup: Python service me `uniface` installed hona chahiye. Models first use par auto-download hote hain (~1-2 min).
+> Service chalana: `cd services/ai && .venv/bin/uvicorn app.main:app --port 8000`
+
+### Install (venv me)
+
+```bash
+cd services/ai
+# Python 3.14 venv pehle se hai (.venv) — usme install karo:
+.venv/bin/pip install "uniface[cpu]" opencv-python-headless
+# Verify:
+.venv/bin/python -c "import uniface; from uniface import FaceAnalyzer; print('uniface OK')"
+# (Optional) check health me face.available:
+curl http://localhost:8000/health   # → "face": {"available": true, ...}
+```
+
+> Note: `uniface` ya models missing ho toh bhi app kaam karta hai — face check-in 503 deta hai
+> aur QR/manual code check-in normal chalta rehta hai (face optional hai).
+
+### Python service
+- [ ] `curl http://localhost:8000/health` → `"face": {"available": true, ...}` (uniface installed)
+- [ ] `curl -X POST http://localhost:8000/face/enroll -H "Content-Type: application/json" -d '{"user_id":"test1","image":"<base64-photo>"}'` → 200 `{enrolled: true, dim: 512}`
+- [ ] Same photo se `recognize` → 200 `{matched: true, user_id: "test1", confidence: >0.5}`
+- [ ] Kisi aur photo se → `matched: false` (ya low confidence)
+- [ ] Garib/blank image → 422 with "chehra detect nahi hua"
+
+### Enroll (student)
+- [ ] Student login → `/profile` → **"Enroll face"** card dikhta hai
+- [ ] Click → camera khulta hai → photo capture karo → "Face enrolled" success card + toast
+- [ ] Enroll hone ke baad button ki jagah green "Face enrolled" status dikhta hai
+- [ ] Camera deny karo → error message + koi crash nahi
+
+### Face check-in (attendance)
+- [ ] Faculty → session → QR check-in dialog → student ko code do
+- [ ] Student → `/attendance/scan` → **"Face check-in"** card
+- [ ] Code paste karo (bin code submit kiye) → "Pehle check-in code paste karo" error
+- [ ] Code paste karke **"Face se check-in karo"** → camera → capture → "Attendance marked!"
+- [ ] Doosra student apna face (enrolled nahi ya match na ho) use kare → 401 "Face match nahi hua"
+- [ ] Faculty notification "... ne QR se attendance check-in kiya" (face wale bhi)
+- [ ] Face service down (uvicorn band) → QR/manual code se check-in still kaam karta hai (face optional hai)
+
+**API:**
+```bash
+curl -X POST http://localhost:3000/api/face/enroll -b <cookie> -H "Content-Type: application/json" -d '{"image":"<base64>"}'
+# → 200 {enrolled:true} | 401 (bina login) | 503 (AI_SERVICE_URL missing)
+
+curl -X POST http://localhost:3000/api/attendance/qr-checkin -b <cookie> \
+  -H "Content-Type: application/json" -d '{"token":"<code>","faceImage":"<base64>"}'
+# → 200 attendance marked | 401 face match nahi | 400 token invalid
+```
+
+## 13. Email Reminders
+
+### Assignments
+- [ ] Faculty → create assignment (department set karo, e.g. Computer Science)
+- [ ] SMTP configured nahi hai toh console me `[mail:<email>] New assignment: ...` preview log aata hai (mailer preview mode)
+- [ ] SMTP configured hai (SMTP_HOST/USER/PASS in `.env`) toh real email jaata hai with title + deadline + link
+- [ ] Department filter: us department ke students ko hi email + notification jaata hai
+- [ ] Bina department ke → saare students ko jaata hai
+
+### Events
+- [ ] Student event register kare → confirmation email (ticket ID ke saath)
+- [ ] Console me `[mail:<email>] Registered: <event>` preview log (SMTP set nahi toh)
+
+### Placements
+- [ ] Coordinator/Admin nayi placement post kare → saare students ko email (company, CTC, deadline, apply link)
+- [ ] Student apply kare → confirmation email ("Application submitted: <company>")
+
+**API/console:**
+```bash
+# Dev server logs me (SMTP set nahi toh):
+# [mail:student@smartcampus.edu] New assignment: Test Assignment
+# [mail:student@smartcampus.edu] Registered: Tech Fest
+# [mail:student@smartcampus.edu] Application submitted: Google
+```
+
+## 14. Live Updates (SSE — real-time unread badge)
+
+- [ ] 2 tabs me dashboard kholo (same user)
+- [ ] Tab A me koi action karo jo notification banaye (e.g. assignment submit)
+- [ ] Tab B ka notification bell badge ~5 sec me update ho jaata hai (bina refresh ke)
+- [ ] Notifications read karne pe badge gir jaata hai
+- [ ] Network tab me `/api/notifications/stream` SSE connection visible hai (event-stream)
+- [ ] Page close karne pe SSE connection cleanly band hota hai (koi error nahi)
+
+**API:**
+```bash
+curl -N -b <cookie> http://localhost:3000/api/notifications/stream
+# → data: {"unreadCount": 3}\n\n (jab count change ho)
+```
+
+## 15. Push Notifications (Web Push)
+
+> Setup (ek baar):
+> ```bash
+> npx web-push generate-vapid-keys --json
+> # output me publicKey aur privateKey ko .env me daalo:
+> VAPID_PUBLIC_KEY=<publicKey>
+> VAPID_PRIVATE_KEY=<privateKey>
+> NEXT_PUBLIC_VAPID_PUBLIC_KEY=<publicKey>  # same value
+> VAPID_SUBJECT=mailto:admin@smartcampus.edu
+> ```
+> Service worker registered hona chahiye (PWA setup se). Browser HTTPS/localhost pe hi push
+> allow karta hai.
+
+- [ ] Settings → Notifications tab → **Push notifications** toggle dikhta hai
+- [ ] VAPID keys set nahi → toggle pe "VAPID keys set nahi — admin se setup karwao" message
+- [ ] VAPID set hoke toggle ON karo → browser permission prompt → Allow
+- [ ] ON hone ke baad **"Test push"** button dikhta hai
+- [ ] Test push click → native OS notification "Smart Campus" aati hai
+- [ ] Notification click → notifications page khulta hai
+- [ ] Toggle OFF → push disabled (subscription delete)
+- [ ] Invalid subscription (server 410) → auto-cleanup + "dobara subscribe karo" message
+
+**API:**
+```bash
+# Subscription status + public key:
+curl -b <cookie> http://localhost:3000/api/push/subscribe
+# → { configured: true, vapidPublicKey: "..." }
+
+# Test push:
+curl -X POST -b <cookie> http://localhost:3000/api/push/test
+# → 200 { message: "Push notification bhej di gayi" } | 503 (VAPID missing) | 400 (subscribe nahi kiya)
+```
+
+---
+
 ## 11. Regression — core flows
 
 - [ ] Landing → register/verify → login (all 4 roles)

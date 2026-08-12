@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CheckCircle2, Loader2, ScanLine, XCircle } from "lucide-react";
+import { CheckCircle2, Loader2, ScanFace, ScanLine, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import FaceCaptureDialog from "@/components/dashboard/face-capture-dialog";
 
 const DETECTOR: BarcodeDetector | null =
   typeof window !== "undefined" && "BarcodeDetector" in window
@@ -25,6 +26,8 @@ export default function ScanPage() {
 
   const [state, setState] = useState<ScanState>("idle");
   const [manualCode, setManualCode] = useState("");
+  const [faceCode, setFaceCode] = useState("");
+  const [faceVerifying, setFaceVerifying] = useState(false);
   const [message, setMessage] = useState("");
 
   function stopCamera() {
@@ -128,6 +131,48 @@ export default function ScanPage() {
     await submitToken(token);
   }
 
+  async function handleFaceCapture(image: string) {
+    const token = faceCode.trim();
+    if (token.length < 10) {
+      toast.error("Pehle check-in code paste karo");
+      return;
+    }
+    if (submittedRef.current) return;
+    submittedRef.current = true;
+    setFaceVerifying(true);
+
+    try {
+      const res = await fetch("/api/attendance/qr-checkin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, faceImage: image }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setState("error");
+        setMessage(data.error ?? "Face check-in fail hua");
+        submittedRef.current = false;
+        return;
+      }
+
+      setState("success");
+      setMessage(data.message ?? "Attendance marked!");
+      if (data.alreadyMarked) {
+        toast.info(data.message);
+      } else {
+        toast.success(data.message);
+      }
+      setTimeout(() => router.push("/attendance"), 1800);
+    } catch {
+      setState("error");
+      setMessage("Face check-in request fail ho gaya");
+      submittedRef.current = false;
+    } finally {
+      setFaceVerifying(false);
+    }
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -219,6 +264,47 @@ export default function ScanPage() {
                 Submit check-in
               </Button>
             </form>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="space-y-4 pt-6">
+            <p className="font-medium">Face check-in</p>
+            <p className="text-sm text-muted-foreground">
+              Code paste karo, phir camera se face capture karo — attendance sirf aapke
+              enrolled face se mark hogi.
+            </p>
+            <div className="space-y-1.5">
+              <Label htmlFor="face-code">Check-in code</Label>
+              <Input
+                id="face-code"
+                value={faceCode}
+                onChange={(e) => setFaceCode(e.target.value)}
+                placeholder="Paste karo check-in code..."
+                className="font-mono text-xs"
+                disabled={state === "success"}
+              />
+            </div>
+            <FaceCaptureDialog
+              title="Face check-in"
+              description="Camera ke samne aao aur capture karo. Match hone pe attendance mark ho jayegi."
+              loading={faceVerifying}
+              onCapture={handleFaceCapture}
+              trigger={
+                <Button
+                  type="button"
+                  disabled={state === "success" || faceCode.trim().length < 10}
+                  className="w-full"
+                >
+                  {faceVerifying ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <ScanFace className="size-4" />
+                  )}
+                  {faceVerifying ? "Verifying..." : "Face se check-in karo"}
+                </Button>
+              }
+            />
           </CardContent>
         </Card>
       </div>

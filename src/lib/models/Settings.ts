@@ -13,6 +13,19 @@ const settingsSchema = new Schema(
       event: { type: Boolean, default: true },
       placement: { type: Boolean, default: true },
     },
+    pushSubscription: {
+      type: new Schema(
+        {
+          endpoint: { type: String, required: true },
+          keys: {
+            p256dh: { type: String, required: true },
+            auth: { type: String, required: true },
+          },
+        },
+        { _id: false }
+      ),
+      default: null,
+    },
   },
   { timestamps: true }
 );

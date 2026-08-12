@@ -68,6 +68,8 @@
 
 ### 9. Notifications
 - [x] Notification page + unread badge + mark-as-read
+- [x] Live unread badge (SSE real-time stream)
+- [x] Push notifications (Web Push — browser native)
 - [x] Generate hoti hain: assignment submit, submission grade, placement apply pe
 - [x] Auto-notify: attendance mark hone pe
 - [x] Auto-notify: event reminder (24h pehle, registered students)
@@ -127,20 +129,18 @@
 - [x] AI chatbot (campus FAQs, IIT Bombay RAG — Python service)
 - [x] QR attendance scanner (faculty student ka QR scan kare)
 - [x] Live chat (students ↔ faculty) — WhatsApp group links se replace kiya (faculty/admin link dalte hain, students click karke join karte hain)
-- [ ] Calendar sync
+- [x] Calendar sync (.ics export — events page download)
 - [x] PWA support (manifest + service worker)
 - [x] Offline mode (service worker cache + offline fallback)
 - [x] Multi-language support (i18n — landing page EN/HI toggle)
-- [ ] Face recognition attendance
+- [x] Face recognition attendance (UniFace — enroll + face check-in)
 - [x] AI assignment plagiarism detection (notes/GitHub/file similarity — Python + UI)
-- [ ] Email reminders
-- [ ] Push notifications
-- [ ] WebSockets (live updates)
+- [x] Email reminders (assignment/placement publish + event/application confirmations)
+- [x] Push notifications (Web Push — VAPID, subscribe + test in settings)
+- [x] Live updates (SSE — real-time unread notification badge)
 - [x] CSV/Excel export
 - [x] Dockerized deployment (Dockerfile, standalone output)
 - [x] CI/CD pipeline (.github/workflows)
-- [x] Calendar sync (.ics export — events page download)
-
 ---
 
 ## Tier 3 — Strategy X-Factor (Innovation)

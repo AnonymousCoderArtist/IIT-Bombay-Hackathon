@@ -28,13 +28,17 @@ export async function sendMail({ to, subject, text, html }: MailOptions) {
     return { delivered: false, preview: true };
   }
 
-  await transport.sendMail({
-    from: `"Smart Campus" <${fromEmail}>`,
-    to,
-    subject,
-    text,
-    html,
-  });
-
-  return { delivered: true, preview: false };
+  try {
+    await transport.sendMail({
+      from: `"Smart Campus" <${fromEmail}>`,
+      to,
+      subject,
+      text,
+      html,
+    });
+    return { delivered: true, preview: false };
+  } catch (err) {
+    console.log(`[mail:fail] ${to} ${subject} — ${(err as Error).message}`);
+    return { delivered: false, preview: false };
+  }
 }

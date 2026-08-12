@@ -33,10 +33,32 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
+
     fetch("/api/notifications")
       .then((res) => res.json())
-      .then((data) => setUnread(data.unreadCount ?? 0))
+      .then((data) => {
+        if (!cancelled) setUnread(data.unreadCount ?? 0);
+      })
       .catch(() => undefined);
+
+    const es = new EventSource("/api/notifications/stream");
+    es.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data) as { unreadCount: number };
+        if (!cancelled) setUnread(data.unreadCount);
+      } catch {
+        // ignore malformed frames
+      }
+    };
+    es.onerror = () => {
+      if (!cancelled) es.close();
+    };
+
+    return () => {
+      cancelled = true;
+      es.close();
+    };
   }, []);
 
   async function handleSignOut() {

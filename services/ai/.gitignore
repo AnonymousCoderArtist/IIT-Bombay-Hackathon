@@ -3,5 +3,6 @@
 
 services/ai/.venv/
 services/ai/.env
+services/ai/data/
 __pycache__/
 *.pyc

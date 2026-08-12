@@ -15,6 +15,47 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+self.addEventListener("push", (event) => {
+  let title = "Smart Campus";
+  let body = "Naya update hai — notifications check karo.";
+  let url = "/notifications";
+
+  try {
+    const data = event.data?.json();
+    if (data) {
+      if (data.title) title = data.title;
+      if (data.body) body = data.body;
+      if (data.url) url = data.url;
+    }
+  } catch {
+    // plain text ya empty payload
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: "/icons/icon.svg",
+      badge: "/icons/icon.svg",
+      data: { url },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url ?? "/notifications";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if ("focus" in client) {
+          return client.focus().catch(() => self.clients.openWindow(url));
+        }
+      }
+      return self.clients.openWindow(url);
+    })
+  );
+});
+
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;

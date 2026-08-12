@@ -13,6 +13,13 @@ cp .env.example .env   # AI_PROVIDER + API key daalo
 .venv/bin/uvicorn app.main:app --port 8000
 ```
 
+## Face recognition (UniFace)
+
+Attendance face check-in ke liye [UniFace](https://github.com/yakhyo/uniface) use hota hai
+(SCRFD detection + ArcFace embeddings). Models first use par auto-download hote hain
+(`~/.uniface/models`). Enrolled embeddings `services/ai/data/face_store.json` me save hote
+hain. `uniface` ya models missing ho toh endpoints 503 dete hain — app kabhi nahi tootta.
+
 ## Free LLM options
 
 - `AI_PROVIDER=gemini` + `GEMINI_API_KEY` — Google AI Studio se free key
@@ -31,6 +38,8 @@ deti hai, app kabhi toot-ta nahi.
 | POST | `/summarize` | Lecture transcript → structured study notes |
 | POST | `/match` | Student skills → placement match % |
 | POST | `/sentiment` | Feedback sentiment analysis |
+| POST | `/face/enroll` | Face photo → embedding store (UniFace) |
+| POST | `/face/recognize` | Face photo → identity match + confidence |
 
 FastAPI docs: `http://localhost:8000/docs` (Swagger/OpenAPI — PS bonus item).
 

@@ -74,10 +74,19 @@ export const studyMaterialSchema = z.object({
 
 export const qrCheckInSchema = z.object({
   token: z.string().min(10).max(500),
+  faceImage: z.string().min(16).max(10_000_000).optional(),
 });
 
 export const chatSchema = z.object({
   question: z.string().min(2).max(2000),
+});
+
+export const faceEnrollSchema = z.object({
+  image: z.string().min(16).max(10_000_000),
+});
+
+export const faceRecognizeSchema = z.object({
+  image: z.string().min(16).max(10_000_000),
 });
 
 export const whatsappGroupLinkSchema = z.object({

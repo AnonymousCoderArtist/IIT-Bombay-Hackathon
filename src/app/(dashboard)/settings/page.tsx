@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Moon, Sun, Monitor, LogOut } from "lucide-react";
+import { Loader2, Moon, Sun, Monitor, LogOut, BellRing } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +31,10 @@ export default function SettingsPage() {
   });
   const [emailOptIn, setEmailOptIn] = useState(true);
   const [publicProfile, setPublicProfile] = useState(true);
+  const [pushEnabled, setPushEnabled] = useState(false);
+  const [pushConfigured, setPushConfigured] = useState(false);
+  const [pushPublicKey, setPushPublicKey] = useState("");
+  const [pushBusy, setPushBusy] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
 
@@ -61,9 +65,20 @@ export default function SettingsPage() {
         if (typeof settings.publicProfile === "boolean") {
           setPublicProfile(settings.publicProfile);
         }
+        if (settings.pushSubscription) {
+          setPushEnabled(true);
+        }
         if (settings.theme) {
           setTheme(settings.theme);
         }
+      })
+      .catch(() => undefined);
+
+    fetch("/api/push/subscribe")
+      .then((res) => res.json())
+      .then((json) => {
+        setPushConfigured(Boolean(json.configured));
+        setPushPublicKey(json.vapidPublicKey ?? "");
       })
       .catch(() => undefined);
   }, [setTheme]);
@@ -89,6 +104,82 @@ export default function SettingsPage() {
   function toggleEmail(checked: boolean) {
     setEmailOptIn(checked);
     saveSettings({ emailOptIn: checked });
+  }
+
+  function urlBase64ToUint8Array(base64String: string) {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  async function handlePushToggle(checked: boolean) {
+    setPushBusy(true);
+    try {
+      if (!checked) {
+        await fetch("/api/push/subscribe", { method: "DELETE" });
+        setPushEnabled(false);
+        toast.success("Push notifications disabled");
+        return;
+      }
+
+      if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+        toast.error("Is browser me push supported nahi hai");
+        return;
+      }
+
+      if (!pushConfigured) {
+        toast.error("VAPID keys set nahi hain — admin se setup karwao");
+        return;
+      }
+
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") {
+        toast.error("Notification permission deny ho gayi");
+        return;
+      }
+
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(pushPublicKey),
+      });
+
+      const res = await fetch("/api/push/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sub.toJSON()),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Subscribe fail hua");
+        return;
+      }
+
+      setPushEnabled(true);
+      toast.success("Push notifications enabled");
+    } finally {
+      setPushBusy(false);
+    }
+  }
+
+  async function handleTestPush() {
+    setPushBusy(true);
+    try {
+      const res = await fetch("/api/push/test", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Test push fail hua");
+        return;
+      }
+      toast.success(data.message ?? "Push bhej di gayi");
+    } finally {
+      setPushBusy(false);
+    }
   }
 
   function togglePublicProfile(checked: boolean) {
@@ -287,6 +378,36 @@ export default function SettingsPage() {
                   <p className="text-xs text-muted-foreground">Receive updates in your inbox</p>
                 </div>
                 <Switch checked={emailOptIn} onCheckedChange={toggleEmail} />
+              </div>
+
+              <div className="flex items-center justify-between border-t pt-4">
+                <div>
+                  <p className="text-sm font-medium">Push notifications</p>
+                  <p className="text-xs text-muted-foreground">
+                    {pushConfigured
+                      ? "Browser me native notifications (Web Push)"
+                      : "VAPID keys set nahi — admin se setup karwao"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  {pushEnabled && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleTestPush}
+                      disabled={pushBusy}
+                    >
+                      <BellRing className="size-4" />
+                      Test push
+                    </Button>
+                  )}
+                  <Switch
+                    checked={pushEnabled}
+                    onCheckedChange={(checked) => void handlePushToggle(checked)}
+                    disabled={pushBusy}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>

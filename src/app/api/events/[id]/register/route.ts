@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
 import { Event, EventRegistration, User } from "@/lib/models";
 import { jsonError } from "@/lib/api-helpers";
+import { sendMail } from "@/lib/mailer";
 
 async function getEventWithRegistration(eventId: string, userId: string) {
   await dbConnect();
@@ -97,6 +98,16 @@ export async function POST(_: Request, { params }: { params: Promise<{ id: strin
   });
 
   await Event.updateOne({ _id: id }, { $inc: { registeredCount: 1 } });
+
+  const eventTitle = (event as { title?: string }).title ?? "event";
+  if (user?.email) {
+    await sendMail({
+      to: user.email,
+      subject: `Registered: ${eventTitle}`,
+      text: `Hi ${user.name ?? "Student"},\n\nAap ${eventTitle} ke liye register ho gaye ho.\n\nTicket ID: ${ticketId}\n\nQR pass apne dashboard me dekho.\n\n- Smart Campus`,
+      html: `<p>Hi ${user.name ?? "Student"},</p><p>Aap <strong>${eventTitle}</strong> ke liye register ho gaye ho.</p><p><strong>Ticket ID:</strong> ${ticketId}</p><p>QR pass apne dashboard me dekho.</p><p>- Smart Campus</p>`,
+    });
+  }
 
   return NextResponse.json(
     {

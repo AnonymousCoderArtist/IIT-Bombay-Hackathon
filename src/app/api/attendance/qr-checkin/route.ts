@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
 import { AttendanceSession, AttendanceRecord, Notification } from "@/lib/models";
 import { verifyCheckInToken } from "@/lib/qr-attendance";
+import { recognizeFace } from "@/lib/ai";
 import { jsonError, rateLimit, getClientIp } from "@/lib/api-helpers";
 import { qrCheckInSchema } from "@/lib/validators";
 
@@ -31,6 +32,16 @@ export async function POST(request: Request) {
   const sessionId = verifyCheckInToken(parsed.data.token);
   if (!sessionId) {
     return jsonError("QR code invalid ya expire ho gaya. Faculty se naya QR lo.", 400);
+  }
+
+  if (parsed.data.faceImage) {
+    const faceResult = await recognizeFace(parsed.data.faceImage);
+    if (!faceResult) {
+      return jsonError("Face service unavailable — QR ya manual code use karo", 503);
+    }
+    if (!faceResult.matched || faceResult.user_id !== session.user.id) {
+      return jsonError("Face match nahi hua. Pehle profile me face enroll karo aur dobara try karo.", 401);
+    }
   }
 
   await dbConnect();

@@ -230,6 +230,36 @@ function textSimilarity(a: string, b: string): number {
   return Math.round((overlap / Math.min(tokensA.size, tokensB.size)) * 100);
 }
 
+export type FaceEnrollResult = {
+  enrolled: boolean;
+  user_id: string;
+  dim: number;
+};
+
+export type FaceMatch = {
+  user_id: string;
+  confidence: number;
+};
+
+export type FaceRecognizeResult = {
+  matched: boolean;
+  user_id: string | null;
+  confidence: number;
+  matches: FaceMatch[];
+};
+
+export async function enrollFace(userId: string, image: string): Promise<FaceEnrollResult | null> {
+  return callPython<FaceEnrollResult>("/face/enroll", { user_id: userId, image });
+}
+
+export async function recognizeFace(image: string): Promise<FaceRecognizeResult | null> {
+  return callPython<FaceRecognizeResult>("/face/recognize", { image });
+}
+
+export function faceServiceConfigured(): boolean {
+  return Boolean(SERVICE_BASE);
+}
+
 export function aiConfigured(): boolean {
   return getProvider() !== "mock" || Boolean(SERVICE_BASE);
 }

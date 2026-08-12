@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Loader2, Upload, Save, LinkIcon } from "lucide-react";
+import { Loader2, Upload, Save, LinkIcon, ScanFace, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import FaceCaptureDialog from "@/components/dashboard/face-capture-dialog";
 
 type UserProfile = {
   _id: string;
@@ -45,6 +46,8 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [faceEnrolling, setFaceEnrolling] = useState(false);
+  const [faceEnrolled, setFaceEnrolled] = useState(false);
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
@@ -110,6 +113,26 @@ export default function ProfilePage() {
       }
     } finally {
       setUploading(false);
+    }
+  }
+
+  async function handleFaceCapture(image: string) {
+    setFaceEnrolling(true);
+    try {
+      const res = await fetch("/api/face/enroll", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Face enroll fail hua");
+        return;
+      }
+      setFaceEnrolled(true);
+      toast.success("Face enrolled — ab face check-in use kar sakte ho");
+    } finally {
+      setFaceEnrolling(false);
     }
   }
 
@@ -230,6 +253,40 @@ export default function ProfilePage() {
                 </p>
               )}
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Face enrollment</CardTitle>
+            <CardDescription>
+              Camera se photo lo — attendance face check-in ke liye use hogi.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {faceEnrolled ? (
+              <div className="flex items-center gap-3 rounded-lg border bg-green-50 p-4 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-300">
+                <CheckCircle2 className="size-5 shrink-0" />
+                <p>Face enrolled ho chuki hai. Face check-in ready hai!</p>
+              </div>
+            ) : (
+              <FaceCaptureDialog
+                title="Face enroll karo"
+                description="Camera ke samne seedha aao, achhi lighting me, bina glasses/hat ke — phir capture karo."
+                loading={faceEnrolling}
+                onCapture={handleFaceCapture}
+                trigger={
+                  <Button type="button" disabled={faceEnrolling}>
+                    {faceEnrolling ? <Loader2 className="size-4 animate-spin" /> : <ScanFace className="size-4" />}
+                    {faceEnrolling ? "Enrolling..." : "Enroll face"}
+                  </Button>
+                }
+              />
+            )}
+            <p className="text-xs text-muted-foreground">
+              AI face service (UniFace) se embedding store hoti hai. Face check-in me sirf
+              aapka apna face hi attendance mark kar sakta hai.
+            </p>
           </CardContent>
         </Card>
 

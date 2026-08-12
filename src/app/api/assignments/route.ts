@@ -5,6 +5,7 @@ import { dbConnect } from "@/lib/db";
 import { Assignment, Submission, Notification, User } from "@/lib/models";
 import { assignmentSchema } from "@/lib/validators";
 import { jsonError, logActivity } from "@/lib/api-helpers";
+import { sendMail } from "@/lib/mailer";
 
 export async function GET() {
   const session = await auth();
@@ -82,7 +83,7 @@ export async function POST(request: Request) {
   const students = await User.find({
     role: "student",
     ...(parsed.data.department ? { department: parsed.data.department } : {}),
-  }).select("_id");
+  }).select("_id email name");
 
   const notifications = students.map((student: { _id: unknown }) => ({
     userId: student._id,
@@ -95,6 +96,21 @@ export async function POST(request: Request) {
   if (notifications.length > 0) {
     await Notification.insertMany(notifications);
   }
+
+  const deadline = new Date(parsed.data.deadline);
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  await Promise.allSettled(
+    (students as { _id: unknown; email?: string; name?: string }[])
+      .filter((student) => Boolean(student.email))
+      .map((student) =>
+        sendMail({
+          to: student.email as string,
+          subject: `New assignment: ${parsed.data.title}`,
+          text: `Hi ${student.name ?? "Student"},\n\nNaya assignment publish hua hai:\n\n${parsed.data.title}\n${parsed.data.description ?? ""}\n\nDeadline: ${deadline.toLocaleString()}\n\nDetails aur submission: ${appUrl}/assignments/${assignment._id}\n\n- Smart Campus`,
+          html: `<p>Hi ${student.name ?? "Student"},</p><p>Naya assignment publish hua hai:</p><h3>${parsed.data.title}</h3><p>${parsed.data.description ?? ""}</p><p><strong>Deadline:</strong> ${deadline.toLocaleString()}</p><p><a href="${appUrl}/assignments/${assignment._id}">Assignment kholo</a></p><p>- Smart Campus</p>`,
+        })
+      )
+  );
 
   await logActivity("create_assignment", assignment._id.toString(), session.user.id);
 
