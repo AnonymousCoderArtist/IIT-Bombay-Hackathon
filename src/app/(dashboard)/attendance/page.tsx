@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Loader2, CalendarDays, Plus } from "lucide-react";
+import Link from "next/link";
+import { Loader2, CalendarDays, Plus, ScanLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -97,6 +98,14 @@ function StudentAttendanceView() {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-end">
+        <Link href="/attendance/scan">
+          <Button variant="outline" className="gap-2">
+            <ScanLine className="size-4" />
+            QR check-in
+          </Button>
+        </Link>
+      </div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[

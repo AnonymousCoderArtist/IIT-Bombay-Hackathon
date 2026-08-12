@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import QrCheckInDialog from "@/components/dashboard/qr-checkin-dialog";
 
 type Student = {
   _id: string;
@@ -137,10 +138,13 @@ export default function MarkSessionPage() {
             })}
           </p>
         </div>
-        <Button onClick={handleSave} disabled={saving}>
-          {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-          Save attendance
-        </Button>
+        <div className="flex items-center gap-2">
+          <QrCheckInDialog sessionId={params.id} />
+          <Button onClick={handleSave} disabled={saving}>
+            {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+            Save attendance
+          </Button>
+        </div>
       </div>
 
       <Card>

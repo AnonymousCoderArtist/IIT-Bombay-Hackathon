@@ -33,4 +33,11 @@ interface SpeechRecognitionConstructor {
 interface Window {
   SpeechRecognition?: SpeechRecognitionConstructor;
   webkitSpeechRecognition?: SpeechRecognitionConstructor;
+  BarcodeDetector?: {
+    new (options?: { formats: string[] }): BarcodeDetector;
+  };
+}
+
+interface BarcodeDetector {
+  detect: (source: HTMLVideoElement | HTMLImageElement) => Promise<{ rawValue: string }[]>;
 }

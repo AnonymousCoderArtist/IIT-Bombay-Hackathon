@@ -72,6 +72,10 @@ export const studyMaterialSchema = z.object({
   semester: z.coerce.number().min(1).max(12).optional(),
 });
 
+export const qrCheckInSchema = z.object({
+  token: z.string().min(10).max(500),
+});
+
 export const chatSchema = z.object({
   question: z.string().min(2).max(2000),
 });
