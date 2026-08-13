@@ -28,6 +28,8 @@ Anti-spoofing (MiniFASNet) har enroll/recognize pe liveness check karta hai —
 printed photo ya phone screen wali fake image reject hoti hai. Threshold
 `LIVENESS_THRESHOLD` env se tune karo (default 0.6). `uniface` ya models missing ho
 toh liveness skip hota hai aur service chalti rehti hai — app kabhi nahi tootta.
+Static photo (printed/screen) se test karna ho toh `FACE_LIVENESS_DISABLED=1` ke saath
+service start karo — liveness bypass hota hai, sirf testing ke liye.
 
 ## Free LLM options
 
