@@ -7,7 +7,7 @@ export function Rays({ className }: { className?: string }) {
   return (
     <div
       aria-hidden
-      className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
+      className={cn("pointer-events-none overflow-hidden", className)}
     >
       <div className="absolute -right-10 -top-12 h-[62%] w-[55%] opacity-35 dark:opacity-60">
         <Image

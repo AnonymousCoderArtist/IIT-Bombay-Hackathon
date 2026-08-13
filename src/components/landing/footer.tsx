@@ -37,6 +37,14 @@ export function Footer() {
         aria-hidden
         className="pointer-events-none absolute -bottom-64 left-1/2 z-0 h-[44rem] w-[84rem] max-w-none -translate-x-1/2 opacity-30"
       />
+      <Image
+        src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
+        alt=""
+        width={5824}
+        height={3264}
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-44 w-full object-cover object-bottom opacity-30"
+      />
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-5">
           <div className="lg:col-span-2">

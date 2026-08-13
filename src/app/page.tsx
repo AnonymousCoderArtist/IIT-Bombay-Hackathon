@@ -1,4 +1,5 @@
 import { GlowBackdrop } from "@/components/decor/glow-backdrop";
+import { Rays } from "@/components/decor/rays";
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
 import { Features } from "@/components/landing/features";
@@ -11,6 +12,7 @@ export default function LandingPage() {
   return (
     <>
       <GlowBackdrop className="fixed inset-0" />
+      <Rays className="fixed inset-0 -z-10" />
       <Navbar />
       <main className="flex-1">
         <Hero />

@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, CalendarCheck, ClipboardList, Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { Rays } from "@/components/decor/rays";
 import { useI18n } from "@/lib/i18n";
 
 const stats = [
@@ -25,7 +24,6 @@ export function Hero() {
   const { t } = useI18n();
   return (
     <section className="relative overflow-hidden">
-      <Rays className="-z-10" />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,color-mix(in_oklch,var(--primary)_14%,transparent),transparent)]"
@@ -80,6 +78,14 @@ export function Hero() {
             aria-hidden
             className="absolute -inset-4 -z-10 rounded-lg bg-linear-to-br from-primary/20 via-transparent to-[var(--violet-accent)]/20 blur-2xl"
           />
+          <Image
+            src="/glow-circle.svg"
+            alt=""
+            fill
+            sizes="600px"
+            aria-hidden
+            className="pointer-events-none absolute -inset-x-[90%] -inset-y-[85%] -z-10 h-full w-full object-cover opacity-45 mix-blend-multiply dark:opacity-55 dark:mix-blend-screen"
+          />
           <div className="rounded-lg border border-border bg-card/80 p-2 shadow-elevated backdrop-blur-sm">
             <div className="rounded-sm border bg-surface-secondary/60 p-6">
               <div className="flex items-center justify-between">
@@ -125,14 +131,6 @@ export function Hero() {
               </div>
             </div>
           </div>
-          <Image
-            src="/glow-circle.svg"
-            alt=""
-            fill
-            sizes="600px"
-            aria-hidden
-            className="pointer-events-none absolute -inset-x-[45%] -inset-y-[45%] z-10 h-full w-full object-cover opacity-25 mix-blend-multiply dark:opacity-35 dark:mix-blend-screen"
-          />
         </motion.div>
       </div>
     </section>
