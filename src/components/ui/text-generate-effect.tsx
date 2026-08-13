@@ -36,7 +36,7 @@ export const TextGenerateEffect = ({
   }, [animate, duration, filter, scope, reduceMotion]);
 
   return (
-    <div className={cn("font-bold", className)}>
+    <div ref={scope} className={cn("font-bold", className)}>
       <div className="mt-4">
         <div
           className={cn(
