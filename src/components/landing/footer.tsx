@@ -33,8 +33,17 @@ export function Footer() {
         aria-hidden
         className="pointer-events-none absolute -bottom-64 left-1/2 z-0 h-[44rem] w-[84rem] max-w-none -translate-x-1/2 opacity-30"
       />
+      <Image
+        src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
+        alt=""
+        width={5824}
+        height={3264}
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -bottom-4 -z-10 h-full w-full object-cover object-top opacity-70"
+      />
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <div className="grid gap-10 lg:grid-cols-5">
+        <div className="border border-border p-8 sm:p-10">
+          <div className="grid gap-10 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 font-semibold">
               <span className="flex size-9 items-center justify-center bg-primary text-primary-foreground shadow-sm shadow-primary/25">
@@ -78,20 +87,6 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="relative mt-14 overflow-hidden border border-border">
-          <Image
-            src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
-            alt=""
-            width={5824}
-            height={3264}
-            className="h-44 w-full object-cover object-top opacity-70"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(ellipse_80%_120%_at_50%_120%,color-mix(in_oklch,var(--primary)_28%,transparent),transparent)]"
-          />
-        </div>
-
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/70 pt-8 sm:flex-row">
           <p className="text-sm text-foreground/75">
             © {new Date().getFullYear()} Smart Campus. {t("footer.rights")}
@@ -104,6 +99,7 @@ export function Footer() {
               Terms
             </a>
           </div>
+        </div>
         </div>
       </div>
     </footer>
