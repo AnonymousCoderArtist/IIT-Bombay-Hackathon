@@ -163,6 +163,35 @@ Har role ke saath login karke is flow pe chalo. Ek tab mein app, ek tab mein API
 - Password change — Settings → Change Password (purana password + naya)
 - Logout → phir se login
 
+### Face Attendance testing (test card)
+
+Face check-in `services/ai/` (UniFace + MiniFASNet liveness) se chalti hai. Local test flow:
+
+```bash
+# 1. AI service start karo (port 8000) — liveness test ke liye off (static photo allow)
+cd services/ai
+FACE_LIVENESS_DISABLED=1 .venv/bin/uvicorn app.main:app --port 8000
+# (root .env me AI_SERVICE_URL=http://localhost:8000 hona chahiye)
+
+# 2. Ek face enroll karo (student account pe) — script student id + aaj ka session + token print karta hai
+npx tsx --env-file-if-exists=.env scripts/face-setup.ts
+```
+
+3. App me student login → `/attendance/scan` → **Face check-in** card me token paste karo
+   (script joh print karega) → "Face se check-in karo" → photo upload karo ya camera capture.
+4. `/attendance` pe jao → status `present` dikhega.
+
+> Token 30 min valid. Expire ho jaye toh step 2 dobara chalao. Liveness normally ON hoti hai
+> (printed/screen photo reject); test ke liye `FACE_LIVENESS_DISABLED=1` use karo.
+
+### AI Assistant (normal chat + IIT Bombay context)
+
+Assistant ek normal AI chatbot hai jo IIT Bombay ke context me baat karta hai — greetings aur
+general chit-chat bhi karta hai, campus-specific cheez KB se grounded jawab deti hai (sources ke saath).
+Mock mode me (AI service bina LLM key ke) general answers limited hain — **better answers ke liye
+Settings → AI me apne AI credentials daalo** (Gemini/DeepSeek/OpenAI-compatible). Tab assistant
+real LLM se chalti hai aur general + campus dono topics pe acchi jawab deti hai.
+
 ### Step 4 — API quick checks (curl)
 
 ```bash
@@ -192,25 +221,39 @@ for i in $(seq 1 6); do curl -s -o /dev/null -w "%{http_code} " \
 
 ## Pending
 
-- [ ] Google login enable karna — Google Cloud Console se OAuth Client banake `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` `.env` me daalo (redirect URI: `http://localhost:3000/api/auth/callback/google`). Jab tak credentials nahi hain, login sirf email/password se chalta hai.
+- [ ] Google login local fix — credentials `.env` me hain (client ID/secret set), lekin standalone server pe signin abhi `Configuration` error de raha hai. Alag branch me fix kiya ja raha hai (env injection + NextAuth action). Vercel pe env inject hota hai toh wahan clean chalne ke chances ache hain.
 - [ ] AI ke liye free LLM key daalna (Gemini/DeepSeek) taaki chatbot + lecture notes real AI se chalein (mock se nahi).
 - [ ] Live deploy (Vercel) + demo video
 
 ## Deploy on Vercel
 
-1. Repo ko GitHub pe push karo (already hai)
-2. [Vercel](https://vercel.com/new) pe "Import Project" → repo select karo
-3. Environment variables `.env` se daalo:
-   - `MONGODB_URI` (Atlas URL)
-   - `AUTH_SECRET`
-   - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
-   - `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM`
-   - `GEMINI_API_KEY` + `AI_PROVIDER=gemini` (AI features ke liye)
-4. Python AI service ko [Render](https://render.com) ya Railway pe free deploy karke
-   `AI_SERVICE_URL` set karo (ya local demo me hi chalao)
-5. Deploy karo, done
+`vercel.json` already present hai (Mumbai region `bom1`, Next.js auto-detect, `main` pe auto-deploy).
 
-> Note: Vercel ke serverless filesystem pe files save nahi hoti, isliye resume/attachment upload ke liye Cloudinary ya Vercel Blob jaise service use karni padti hai. Python AI service alag service hai (AI_SERVICE_URL se connect).
+1. Repo ko GitHub pe push karo → [Vercel](https://vercel.com/new) pe "Import Project" → repo select karo
+2. Build auto-detect ho jayega (`npm run build`)
+3. **Project Settings → Environment Variables** me ye daalo (`.env` wale hi hain, same values):
+
+   | Variable | Value | Note |
+   | -------- | ----- | ---- |
+   | `MONGODB_URI` | Atlas SRV string | `<db_password>` ko apna Atlas password se replace karo (localhost Vercel pe nahi chalega) |
+   | `AUTH_SECRET` | `openssl rand -base64 32` se | har deploy ke liye unique |
+   | `AUTH_TRUST_HOST` | `true` | Vercel pe zaroori |
+   | `AUTH_URL` | **khali chhodo** | Vercel trustHost se khud set karta hai |
+   | `GOOGLE_CLIENT_ID` | `.env` wala | same |
+   | `GOOGLE_CLIENT_SECRET` | `.env` wala | same |
+   | `AI_SERVICE_URL` | khali (mock) ya alag host | Python AI service alag deploy karke URL do |
+   | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` | optional | emails ke liye |
+   | `GEMINI_API_KEY` + `AI_PROVIDER=gemini` | optional | real AI chatbot ke liye |
+
+4. Deploy hone ke baad Google Cloud Console me redirect URI add karo:
+   `https://<vercel-domain>/api/auth/callback/google`
+5. Python AI service ko [Render](https://render.com) ya Railway pe free deploy karke `AI_SERVICE_URL` set karo
+   (nahi to app mock mode me chalti hai — AI features limited).
+
+> Note: Vercel ke serverless filesystem pe files save nahi hoti, isliye resume/attachment upload ke liye
+> Cloudinary ya Vercel Blob jaise service use karni padti hai. Python AI service alag service hai
+> (AI_SERVICE_URL se connect). Vercel env process me inject karta hai, toh `.env` auto-load na hone ka
+> issue nahi aata.
 
 ## Environment Variables
 
