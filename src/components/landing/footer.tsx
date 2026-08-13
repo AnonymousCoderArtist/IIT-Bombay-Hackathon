@@ -43,7 +43,7 @@ export function Footer() {
         width={5824}
         height={3264}
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-44 w-full object-cover object-bottom opacity-30"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-44 w-full object-cover object-bottom opacity-30"
       />
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-5">
