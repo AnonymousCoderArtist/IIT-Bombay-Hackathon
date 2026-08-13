@@ -8,6 +8,9 @@ import { Download, Loader2, CalendarDays, Plus, ScanLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -21,6 +24,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 type StudentAttendance = {
   summary: { total: number; present: number; late: number; excused: number; absent: number; percentage: number };
@@ -39,20 +43,50 @@ function currentMonth() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 }
 
+function buildTrend(
+  history: { status: string; sessionId: { date?: string } }[]
+): { month: string; percentage: number }[] {
+  const now = new Date();
+  const buckets = new Map<string, { label: string; total: number; present: number }>();
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    buckets.set(`${d.getFullYear()}-${d.getMonth()}`, {
+      label: d.toLocaleDateString("en-IN", { month: "short" }),
+      total: 0,
+      present: 0,
+    });
+  }
+
+  for (const record of history) {
+    const date = new Date(record.sessionId?.date ?? new Date());
+    const key = `${date.getFullYear()}-${date.getMonth()}`;
+    const bucket = buckets.get(key);
+    if (!bucket) continue;
+    bucket.total += 1;
+    if (record.status !== "absent") bucket.present += 1;
+  }
+
+  return Array.from(buckets.values()).map((b) => ({
+    month: b.label,
+    percentage: b.total === 0 ? 0 : Math.round((b.present / b.total) * 100),
+  }));
+}
+
 export default function AttendancePage() {
   const { data: session } = useSession();
   const role = session?.user?.role ?? "student";
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Attendance</h1>
-        <p className="text-muted-foreground">
-          {role === "faculty" || role === "admin"
+      <PageHeader
+        icon={<CalendarDays className="size-5" />}
+        title="Attendance"
+        subtitle={
+          role === "faculty" || role === "admin"
             ? "Create sessions and mark attendance for your classes."
-            : "Track your attendance across subjects."}
-        </p>
-      </div>
+            : "Track your attendance across subjects."
+        }
+      />
 
       {role === "faculty" || role === "admin" ? <FacultyAttendance /> : <StudentAttendanceView />}
     </div>
@@ -84,13 +118,11 @@ function StudentAttendanceView() {
   if (!data || data.summary.total === 0) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-          <CalendarDays className="size-10 text-muted-foreground" />
-          <p className="font-medium">No attendance recorded yet</p>
-          <p className="text-sm text-muted-foreground">
-            Once your faculty marks attendance, your analytics will show up here.
-          </p>
-        </CardContent>
+        <EmptyState
+          icon={CalendarDays}
+          title="No attendance recorded yet"
+          description="Once your faculty marks attendance, your analytics will show up here."
+        />
       </Card>
     );
   }
@@ -116,17 +148,17 @@ function StudentAttendanceView() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Overall", value: `${data.summary.percentage}%`, sub: `${data.summary.present + data.summary.late + data.summary.excused}/${data.summary.total} sessions` },
-            { label: "Present", value: data.summary.present },
-            { label: "Late", value: data.summary.late },
-            { label: "Absent", value: data.summary.absent },
+            { label: "Overall", value: `${data.summary.percentage}%`, sub: `${data.summary.present + data.summary.late + data.summary.excused}/${data.summary.total} sessions`, accent: "border-t-2 border-t-primary" },
+            { label: "Present", value: data.summary.present, accent: "border-t-2 border-t-emerald-500" },
+            { label: "Late", value: data.summary.late, accent: "border-t-2 border-t-amber-500" },
+            { label: "Absent", value: data.summary.absent, accent: "border-t-2 border-t-red-500" },
           ].map((stat) => (
-            <Card key={stat.label}>
+            <Card key={stat.label} className={stat.accent}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-muted-foreground">{stat.label}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="text-2xl font-bold tabular-nums">{stat.value}</p>
                 {stat.sub && <p className="mt-1 text-xs text-muted-foreground">{stat.sub}</p>}
               </CardContent>
             </Card>
@@ -145,6 +177,60 @@ function StudentAttendanceView() {
           />
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Attendance trend (last 6 months)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-56">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={buildTrend(data.history)}>
+                <defs>
+                  <linearGradient id="studentAtt" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis
+                  dataKey="month"
+                  stroke="var(--muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="var(--muted-foreground)"
+                  fontSize={12}
+                  unit="%"
+                  domain={[0, 100]}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--popover)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 12,
+                    fontSize: 12,
+                    boxShadow: "var(--shadow-elevated)",
+                  }}
+                  cursor={{ stroke: "var(--border-strong)" }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="percentage"
+                  name="Attendance %"
+                  stroke="var(--chart-1)"
+                  strokeWidth={2}
+                  fill="url(#studentAtt)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
 
       <Tabs defaultValue="subjects">
         <TabsList>
@@ -188,19 +274,7 @@ function StudentAttendanceView() {
                       })}
                     </p>
                   </div>
-                  <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
-                      record.status === "present"
-                        ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
-                        : record.status === "late"
-                          ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
-                          : record.status === "excused"
-                            ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
-                            : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
-                    }`}
-                  >
-                    {record.status}
-                  </span>
+                  <StatusBadge status={record.status} />
                 </div>
               ))}
             </CardContent>
@@ -210,29 +284,27 @@ function StudentAttendanceView() {
         <TabsContent value="monthly" className="mt-4 space-y-4">
           {!data.monthly || data.monthly.summary.total === 0 ? (
             <Card>
-              <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-                <CalendarDays className="size-10 text-muted-foreground" />
-                <p className="font-medium">No attendance for this month</p>
-                <p className="text-sm text-muted-foreground">
-                  Koi attendance session is month me nahi hua.
-                </p>
-              </CardContent>
+              <EmptyState
+                icon={CalendarDays}
+                title="No attendance for this month"
+                description="Koi attendance session is month me nahi hua."
+              />
             </Card>
           ) : (
             <>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {[
-                  { label: "Monthly %", value: `${data.monthly.summary.percentage}%`, sub: `${data.monthly.summary.present + data.monthly.summary.late + data.monthly.summary.excused}/${data.monthly.summary.total} sessions` },
-                  { label: "Present", value: data.monthly.summary.present },
-                  { label: "Late", value: data.monthly.summary.late },
-                  { label: "Absent", value: data.monthly.summary.absent },
+                  { label: "Monthly %", value: `${data.monthly.summary.percentage}%`, sub: `${data.monthly.summary.present + data.monthly.summary.late + data.monthly.summary.excused}/${data.monthly.summary.total} sessions`, accent: "border-t-2 border-t-primary" },
+                  { label: "Present", value: data.monthly.summary.present, accent: "border-t-2 border-t-emerald-500" },
+                  { label: "Late", value: data.monthly.summary.late, accent: "border-t-2 border-t-amber-500" },
+                  { label: "Absent", value: data.monthly.summary.absent, accent: "border-t-2 border-t-red-500" },
                 ].map((stat) => (
-                  <Card key={stat.label}>
+                  <Card key={stat.label} className={stat.accent}>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm text-muted-foreground">{stat.label}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-2xl font-bold">{stat.value}</p>
+                      <p className="text-2xl font-bold tabular-nums">{stat.value}</p>
                       {stat.sub && <p className="mt-1 text-xs text-muted-foreground">{stat.sub}</p>}
                     </CardContent>
                   </Card>
@@ -276,19 +348,7 @@ function StudentAttendanceView() {
                             })}
                           </p>
                         </div>
-                        <span
-                          className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
-                            day.status === "present"
-                              ? "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300"
-                              : day.status === "late"
-                                ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
-                                : day.status === "excused"
-                                  ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
-                                  : "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300"
-                          }`}
-                        >
-                          {day.status}
-                        </span>
+                        <StatusBadge status={day.status} />
                       </div>
                     ))}
                   </CardContent>
@@ -424,19 +484,17 @@ function FacultyAttendance() {
         </div>
       ) : sessions.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <CalendarDays className="size-10 text-muted-foreground" />
-            <p className="font-medium">No sessions yet</p>
-            <p className="text-sm text-muted-foreground">
-              Create your first attendance session to get started.
-            </p>
-          </CardContent>
+          <EmptyState
+            icon={CalendarDays}
+            title="No sessions yet"
+            description="Create your first attendance session to get started."
+          />
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sessions.map((s) => (
             <a key={s._id} href={`/attendance/${s._id}`}>
-              <Card className="transition-colors hover:bg-muted/40">
+              <Card className="transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-elevated">
                 <CardContent className="pt-6">
                   <div className="flex items-start justify-between">
                     <div>
@@ -445,7 +503,7 @@ function FacultyAttendance() {
                         {s.sessionType} · {new Date(s.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                       </p>
                     </div>
-                    <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium">
+                    <span className="rounded-full border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium tabular-nums">
                       {s.recordCount} marked
                     </span>
                   </div>

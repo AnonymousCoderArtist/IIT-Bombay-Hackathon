@@ -15,6 +15,7 @@ import {
   BarChart3,
   FileText,
   MessageCircle,
+  ArrowRight,
 } from "lucide-react";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
@@ -34,6 +35,14 @@ function attendancePct(data: AnalyticsData | null) {
   return attendance?.percentage ?? 0;
 }
 
+type CardDef = {
+  title: string;
+  value: string | number;
+  icon: typeof CalendarDays;
+  hint?: string;
+  accent: "primary" | "cyan" | "violet" | "emerald" | "amber";
+};
+
 export default function DashboardHome() {
   const { data: session } = useSession();
   const [data, setData] = useState<AnalyticsData | null>(null);
@@ -49,39 +58,39 @@ export default function DashboardHome() {
 
   const role = session?.user?.role ?? "student";
 
-  const studentCards = [
-    { title: "Attendance", value: `${attendancePct(data)}%`, icon: CalendarDays },
-    { title: "Assignments", value: value(data, "submissions"), hint: `of ${value(data, "totalAssignments")} total`, icon: ClipboardList },
-    { title: "Events registered", value: value(data, "eventsRegistered"), icon: Megaphone },
-    { title: "Unread notifications", value: value(data, "unreadNotifications"), icon: Bell },
+  const studentCards: CardDef[] = [
+    { title: "Attendance", value: `${attendancePct(data)}%`, icon: CalendarDays, accent: "primary" },
+    { title: "Assignments", value: value(data, "submissions"), hint: `of ${value(data, "totalAssignments")} total`, icon: ClipboardList, accent: "cyan" },
+    { title: "Events registered", value: value(data, "eventsRegistered"), icon: Megaphone, accent: "violet" },
+    { title: "Unread notifications", value: value(data, "unreadNotifications"), icon: Bell, accent: "amber" },
   ];
 
-  const facultyCards = [
-    { title: "Classes taken", value: value(data, "classes"), icon: CalendarDays },
-    { title: "Assignments", value: value(data, "assignments"), icon: ClipboardList },
-    { title: "Students", value: value(data, "students"), icon: Users },
-    { title: "Submissions", value: value(data, "submissions"), icon: FileText },
+  const facultyCards: CardDef[] = [
+    { title: "Classes taken", value: value(data, "classes"), icon: CalendarDays, accent: "primary" },
+    { title: "Assignments", value: value(data, "assignments"), icon: ClipboardList, accent: "cyan" },
+    { title: "Students", value: value(data, "students"), icon: Users, accent: "violet" },
+    { title: "Submissions", value: value(data, "submissions"), icon: FileText, accent: "emerald" },
   ];
 
-  const coordinatorCards = [
-    { title: "Events", value: value(data, "events"), icon: Megaphone },
-    { title: "Upcoming events", value: value(data, "upcomingEvents"), icon: CalendarDays },
-    { title: "Registrations", value: value(data, "registrations"), icon: Users },
-    { title: "Students", value: value(data, "students"), icon: GraduationCap },
+  const coordinatorCards: CardDef[] = [
+    { title: "Events", value: value(data, "events"), icon: Megaphone, accent: "primary" },
+    { title: "Upcoming events", value: value(data, "upcomingEvents"), icon: CalendarDays, accent: "cyan" },
+    { title: "Registrations", value: value(data, "registrations"), icon: Users, accent: "violet" },
+    { title: "Students", value: value(data, "students"), icon: GraduationCap, accent: "emerald" },
   ];
 
-  const adminCards = [
-    { title: "Students", value: value(data, "totalStudents"), icon: Users },
-    { title: "Faculty", value: value(data, "totalFaculty"), icon: GraduationCap },
-    { title: "Departments", value: value(data, "departments"), icon: Building2 },
-    { title: "Events", value: value(data, "events"), icon: Megaphone },
-    { title: "Attendance %", value: `${value(data, "attendancePercentage")}%`, icon: BarChart3 },
-    { title: "Assignments", value: value(data, "assignments"), icon: ClipboardList },
-    { title: "Placements", value: value(data, "placements"), icon: Briefcase },
-    { title: "Pending applications", value: value(data, "pendingApplications"), icon: FileText },
+  const adminCards: CardDef[] = [
+    { title: "Students", value: value(data, "totalStudents"), icon: Users, accent: "primary" },
+    { title: "Faculty", value: value(data, "totalFaculty"), icon: GraduationCap, accent: "cyan" },
+    { title: "Departments", value: value(data, "departments"), icon: Building2, accent: "violet" },
+    { title: "Events", value: value(data, "events"), icon: Megaphone, accent: "emerald" },
+    { title: "Attendance %", value: `${value(data, "attendancePercentage")}%`, icon: BarChart3, accent: "primary" },
+    { title: "Assignments", value: value(data, "assignments"), icon: ClipboardList, accent: "cyan" },
+    { title: "Placements", value: value(data, "placements"), icon: Briefcase, accent: "violet" },
+    { title: "Pending applications", value: value(data, "pendingApplications"), icon: FileText, accent: "amber" },
   ];
 
-  const cardsByRole: Record<string, typeof studentCards> = {
+  const cardsByRole: Record<string, CardDef[]> = {
     student: studentCards,
     faculty: facultyCards,
     coordinator: coordinatorCards,
@@ -108,15 +117,37 @@ export default function DashboardHome() {
     ],
   };
 
+  const today = new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">
-          Welcome back, {session?.user?.name?.split(" ")[0]}
-        </h1>
-        <p className="text-muted-foreground">
-          Here is what is happening on your campus today.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-medium text-muted-foreground">{today}</p>
+          <h1 className="mt-1 bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
+            Welcome back, {session?.user?.name?.split(" ")[0]}
+          </h1>
+          <p className="mt-1 text-muted-foreground">
+            Here is what is happening on your campus today.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {quickActions[role as keyof typeof quickActions]?.map((action) => (
+            <Link
+              key={action.href}
+              href={action.href}
+              className="group inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 text-sm font-medium shadow-card transition-all hover:border-primary/40 hover:text-primary"
+            >
+              {action.label}
+              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -127,23 +158,6 @@ export default function DashboardHome() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {(role === "student" || role === "coordinator") && <CalendarWidget />}
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent activity</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
-            {quickActions[role as keyof typeof quickActions]?.map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className="rounded-lg border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
-              >
-                {action.label}
-              </Link>
-            ))}
-          </CardContent>
-        </Card>
 
         {role === "student" ? (
           <CampusGroupsCard />
@@ -245,7 +259,9 @@ function CampusGroupsCard() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <MessageCircle className="size-5 text-green-600" />
+          <span className="flex size-6 items-center justify-center rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+            <MessageCircle className="size-3.5" />
+          </span>
           Campus WhatsApp groups
         </CardTitle>
       </CardHeader>
@@ -256,13 +272,13 @@ function CampusGroupsCard() {
             href={group.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/60"
+            className="group flex items-center justify-between gap-2 rounded-lg border border-border bg-surface px-3 py-2.5 transition-all hover:border-primary/40"
           >
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">{group.name}</p>
               <p className="text-xs text-muted-foreground">{group.kind}</p>
             </div>
-            <span className="shrink-0 rounded-full bg-green-600 px-3 py-1 text-xs font-medium text-white">
+            <span className="shrink-0 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600 transition-colors group-hover:bg-emerald-500/20 dark:text-emerald-400">
               Join
             </span>
           </a>

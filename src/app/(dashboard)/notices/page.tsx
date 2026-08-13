@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -66,15 +68,12 @@ export default function NoticesPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Notices</h1>
-          <p className="text-muted-foreground">
-            Campus announcements aur important updates.
-          </p>
-        </div>
-        {canPost && <CreateNoticeDialog onCreated={load} />}
-      </div>
+      <PageHeader
+        icon={<Megaphone className="size-5" />}
+        title="Notices"
+        subtitle="Campus announcements aur important updates."
+        actions={canPost && <CreateNoticeDialog onCreated={load} />}
+      />
 
       {loading ? (
         <div className="space-y-3">
@@ -83,13 +82,11 @@ export default function NoticesPage() {
         </div>
       ) : notices.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <Megaphone className="size-10 text-muted-foreground" />
-            <p className="font-medium">Koi notice nahi hai</p>
-            <p className="text-sm text-muted-foreground">
-              Faculty aur coordinators ke announcements yahan dikhenge.
-            </p>
-          </CardContent>
+        <EmptyState
+          icon={Megaphone}
+          title="Koi notice nahi hai"
+          description="Faculty aur coordinators ke announcements yahan dikhenge."
+        />
         </Card>
       ) : (
         <div className="space-y-3">

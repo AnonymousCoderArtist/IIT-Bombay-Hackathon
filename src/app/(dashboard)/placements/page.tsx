@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -45,17 +48,16 @@ export default function PlacementsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Placements</h1>
-          <p className="text-muted-foreground">
-            {role === "admin" || role === "coordinator"
-              ? "Post and manage placement opportunities."
-              : "Explore companies hiring from your campus."}
-          </p>
-        </div>
-        {(role === "admin" || role === "coordinator") && <CreatePlacementDialog />}
-      </div>
+      <PageHeader
+        icon={<Briefcase className="size-5" />}
+        title="Placements"
+        subtitle={
+          role === "admin" || role === "coordinator"
+            ? "Post and manage placement opportunities."
+            : "Explore companies hiring from your campus."
+        }
+        actions={(role === "admin" || role === "coordinator") && <CreatePlacementDialog />}
+      />
 
       <PlacementList role={role} />
     </div>
@@ -160,13 +162,11 @@ function PlacementList({ role }: { role: string }) {
   if (placements.length === 0) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-          <Briefcase className="size-10 text-muted-foreground" />
-          <p className="font-medium">No placements posted yet</p>
-          <p className="text-sm text-muted-foreground">
-            Placement drives and job openings will appear here.
-          </p>
-        </CardContent>
+        <EmptyState
+          icon={Briefcase}
+          title="No placements posted yet"
+          description="Placement drives and job openings will appear here."
+        />
       </Card>
     );
   }
@@ -204,11 +204,7 @@ function PlacementList({ role }: { role: string }) {
                   {role === "student" && (
                     <MatchBadge percent={matchPercent(placement)} />
                   )}
-                  {isClosed ? (
-                    <Badge variant="secondary">Closed</Badge>
-                  ) : (
-                    <Badge>{placement.status}</Badge>
-                  )}
+                  <StatusBadge status={isClosed ? "closed" : placement.status} />
                 </div>
               </div>
 

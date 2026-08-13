@@ -5,14 +5,31 @@ import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Moon, Sun, Monitor, LogOut, BellRing } from "lucide-react";
+import { Loader2, Moon, Sun, Monitor, LogOut, BellRing, Settings, Sparkles, KeyRound, Trash2, PlugZap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const GEMINI_MODELS = [
+  "gemini-2.5-pro",
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-2.0-flash-lite",
+  "gemini-1.5-pro",
+  "gemini-1.5-flash",
+];
 
 export default function SettingsPage() {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -45,6 +62,16 @@ export default function SettingsPage() {
     image: string | null;
     googleConfigured: boolean;
   } | null>(null);
+
+  const [aiProvider, setAiProvider] = useState<"openai" | "gemini">("openai");
+  const [aiBaseUrl, setAiBaseUrl] = useState("");
+  const [aiModel, setAiModel] = useState("");
+  const [aiApiKey, setAiApiKey] = useState("");
+  const [aiHasKey, setAiHasKey] = useState(false);
+  const [aiKeySuffix, setAiKeySuffix] = useState("");
+  const [aiSaving, setAiSaving] = useState(false);
+  const [aiTesting, setAiTesting] = useState(false);
+  const [aiTestMsg, setAiTestMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   async function handleSignOut() {
     setSigningOut(true);
@@ -80,6 +107,16 @@ export default function SettingsPage() {
         if (settings.theme) {
           setTheme(settings.theme);
         }
+        if (settings.ai) {
+          setAiProvider(settings.ai.provider === "gemini" ? "gemini" : "openai");
+          setAiBaseUrl(settings.ai.baseUrl ?? "");
+          setAiModel(settings.ai.model ?? "");
+          setAiHasKey(Boolean(settings.ai.hasKey));
+          setAiKeySuffix(settings.ai.keySuffix ?? "");
+        } else {
+          setAiHasKey(false);
+          setAiKeySuffix("");
+        }
       })
       .catch(() => undefined);
 
@@ -113,6 +150,100 @@ export default function SettingsPage() {
   function toggleEmail(checked: boolean) {
     setEmailOptIn(checked);
     saveSettings({ emailOptIn: checked });
+  }
+
+  async function handleAiSave() {
+    if (!aiModel.trim()) {
+      toast.error("Model select karo");
+      return;
+    }
+    if (aiProvider === "openai" && !aiBaseUrl.trim()) {
+      toast.error("Base URL daalo (jaise https://api.openai.com/v1)");
+      return;
+    }
+    if (!aiApiKey.trim() && !aiHasKey) {
+      toast.error("API key daalo — pehli baar configure kar rahe ho");
+      return;
+    }
+    setAiSaving(true);
+    try {
+      const res = await fetch("/api/users/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ai: {
+            provider: aiProvider,
+            baseUrl: aiProvider === "gemini" ? "" : aiBaseUrl.trim(),
+            model: aiModel.trim(),
+            apiKey: aiApiKey.trim() || undefined,
+          },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Save fail hua");
+        return;
+      }
+      if (aiApiKey.trim()) setAiKeySuffix(aiApiKey.trim().slice(-4));
+      setAiApiKey("");
+      setAiHasKey(true);
+      setAiTestMsg(null);
+      toast.success(`${aiProvider === "gemini" ? "Gemini" : "AI provider"} save ho gaya`);
+    } finally {
+      setAiSaving(false);
+    }
+  }
+
+  async function handleAiTest() {
+    if (!aiModel.trim()) {
+      toast.error("Model select karo");
+      return;
+    }
+    if (aiProvider === "openai" && !aiBaseUrl.trim()) {
+      toast.error("Base URL daalo");
+      return;
+    }
+    setAiTesting(true);
+    setAiTestMsg(null);
+    try {
+      const res = await fetch("/api/ai/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: aiProvider,
+          baseUrl: aiProvider === "gemini" ? undefined : aiBaseUrl.trim(),
+          model: aiModel.trim(),
+          apiKey: aiApiKey.trim() || undefined,
+        }),
+      });
+      const data = await res.json();
+      setAiTestMsg({ ok: res.ok, text: data.message ?? (res.ok ? "Connected" : "Failed") });
+    } catch {
+      setAiTestMsg({ ok: false, text: "Test service unreachable" });
+    } finally {
+      setAiTesting(false);
+    }
+  }
+
+  async function handleAiRemove() {
+    setAiSaving(true);
+    try {
+      await fetch("/api/users/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ai: null }),
+      });
+      setAiProvider("openai");
+      setAiBaseUrl("");
+      setAiModel("");
+      setAiApiKey("");
+      setAiHasKey(false);
+      setAiKeySuffix("");
+      setAiTestMsg(null);
+      toast.success("AI provider remove ho gaya");
+    } finally {
+      setAiSaving(false);
+    }
   }
 
   function urlBase64ToUint8Array(base64String: string) {
@@ -255,17 +386,19 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">Manage your account, appearance and preferences.</p>
-      </div>
+      <PageHeader
+        icon={<Settings className="size-5" />}
+        title="Settings"
+        subtitle="Manage your account, appearance and preferences."
+      />
 
-      <Tabs defaultValue="appearance">
+        <Tabs defaultValue="appearance">
         <TabsList>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="accounts">Accounts</TabsTrigger>
           <TabsTrigger value="password">Password</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
+          <TabsTrigger value="ai">AI</TabsTrigger>
           <TabsTrigger value="privacy">Privacy</TabsTrigger>
           <TabsTrigger value="danger">Danger zone</TabsTrigger>
         </TabsList>
@@ -471,6 +604,145 @@ export default function SettingsPage() {
                   />
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="ai" className="mt-6 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="size-4 text-primary" />
+                AI provider
+              </CardTitle>
+              <CardDescription>
+                Apna AI provider lagao — <b>Gemini</b> (sirf API key + model select) ya koi bhi{" "}
+                <b>OpenAI-compatible</b> endpoint (OpenAI, Groq, OpenRouter, Together, etc.). Iska
+                use AI assistant, lecture notes generation aur audio transcription me hoga. API key
+                sirf tumhare account me save hoti hai, kabhi server se wapas nahi bheji jaati.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {aiHasKey && (
+                <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-sm">
+                  <KeyRound className="size-4 text-primary" />
+                  <span className="text-muted-foreground">
+                    {aiProvider === "gemini" ? "Gemini" : "OpenAI-compatible"} configured
+                    {aiKeySuffix ? ` — key ends in ${aiKeySuffix}` : ""}. Naya key daalo to replace
+                    hoga.
+                  </span>
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <Label>Provider</Label>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <Button
+                    type="button"
+                    variant={aiProvider === "gemini" ? "default" : "outline"}
+                    onClick={() => {
+                      setAiProvider("gemini");
+                      setAiTestMsg(null);
+                    }}
+                    className="justify-start"
+                  >
+                    <Sparkles className="size-4" />
+                    Gemini
+                    <span className="ml-auto text-xs opacity-70">sirf API key chahiye</span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={aiProvider === "openai" ? "default" : "outline"}
+                    onClick={() => {
+                      setAiProvider("openai");
+                      setAiTestMsg(null);
+                    }}
+                    className="justify-start"
+                  >
+                    <PlugZap className="size-4" />
+                    OpenAI-compatible
+                    <span className="ml-auto text-xs opacity-70">base URL + key</span>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="ai-model">
+                  {aiProvider === "gemini" ? "Gemini model" : "Model name"}
+                </Label>
+                {aiProvider === "gemini" ? (
+                  <Select value={aiModel} onValueChange={(v) => v && setAiModel(v)}>
+                    <SelectTrigger id="ai-model" className="w-full">
+                      <SelectValue placeholder="Model select karo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GEMINI_MODELS.map((m) => (
+                        <SelectItem key={m} value={m}>
+                          {m}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    id="ai-model"
+                    placeholder="gpt-4o-mini / llama-3.1-70b / deepseek-chat"
+                    value={aiModel}
+                    onChange={(e) => setAiModel(e.target.value)}
+                  />
+                )}
+              </div>
+
+              {aiProvider === "openai" && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="ai-base-url">Base URL</Label>
+                  <Input
+                    id="ai-base-url"
+                    type="url"
+                    placeholder="https://api.openai.com/v1"
+                    value={aiBaseUrl}
+                    onChange={(e) => setAiBaseUrl(e.target.value)}
+                  />
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <Label htmlFor="ai-key">API key</Label>
+                <Input
+                  id="ai-key"
+                  type="password"
+                  placeholder={aiHasKey ? "Naya key daalo (optional)" : "sk-... / AIza..."}
+                  value={aiApiKey}
+                  onChange={(e) => setAiApiKey(e.target.value)}
+                  autoComplete="off"
+                />
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button onClick={handleAiSave} disabled={aiSaving}>
+                  {aiSaving ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+                  Save provider
+                </Button>
+                <Button variant="outline" onClick={handleAiTest} disabled={aiTesting}>
+                  {aiTesting ? <Loader2 className="size-4 animate-spin" /> : <PlugZap className="size-4" />}
+                  Test connection
+                </Button>
+                {aiHasKey && (
+                  <Button variant="destructive" onClick={handleAiRemove} disabled={aiSaving}>
+                    <Trash2 className="size-4" />
+                    Remove
+                  </Button>
+                )}
+              </div>
+              {aiTestMsg && (
+                <p
+                  className={`text-sm ${
+                    aiTestMsg.ok ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"
+                  }`}
+                >
+                  {aiTestMsg.ok ? "Connection OK — " : "Test fail — "}
+                  {aiTestMsg.text}
+                </p>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

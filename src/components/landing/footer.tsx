@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { GraduationCap, Code2, Globe, Send } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
@@ -13,15 +14,21 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t bg-muted/30">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+    <footer className="relative overflow-hidden border-t bg-muted/30">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_120%,color-mix(in_oklch,var(--primary)_12%,transparent),transparent)]"
+      />
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 font-semibold">
-              <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Link href="/" className="flex items-center gap-2.5 font-semibold">
+              <span className="flex size-9 items-center justify-center bg-primary text-primary-foreground shadow-sm shadow-primary/25">
                 <GraduationCap className="size-5" />
               </span>
-              Smart Campus
+              <span className="font-heading text-base font-bold tracking-tight">
+                Smart<span className="text-primary">Campus</span>
+              </span>
             </Link>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">{t("footer.tagline")}</p>
             <div className="mt-6 flex gap-3">
@@ -55,6 +62,22 @@ export function Footer() {
               </ul>
             </div>
           ))}
+        </div>
+
+        <div className="relative mt-14 overflow-hidden border border-border">
+          <Image
+            src="/footer-banner.png"
+            alt="Smart Campus"
+            width={2880}
+            height={1360}
+            loading="lazy"
+            sizes="(max-width: 1280px) 100vw, 1280px"
+            className="h-auto w-full"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-linear-to-t from-background/40 to-transparent"
+          />
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row">

@@ -16,7 +16,24 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6"];
+const COLORS = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+];
+
+const AXIS = { stroke: "var(--muted-foreground)", fontSize: 12 } as const;
+const GRID = { strokeDasharray: "3 3", stroke: "var(--border)" } as const;
+
+const TOOLTIP_STYLE = {
+  background: "var(--popover)",
+  border: "1px solid var(--border)",
+  borderRadius: 12,
+  fontSize: 12,
+  boxShadow: "var(--shadow-elevated)",
+} as const;
 
 type ChartData = {
   attendanceTrend?: { month: string; percentage: number }[];
@@ -40,26 +57,23 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
               <AreaChart data={charts.attendanceTrend ?? []}>
                 <defs>
                   <linearGradient id="att" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={12} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={12} unit="%" />
+                <CartesianGrid {...GRID} />
+                <XAxis dataKey="month" {...AXIS} tickLine={false} axisLine={false} />
+                <YAxis {...AXIS} unit="%" tickLine={false} axisLine={false} />
                 <Tooltip
-                  contentStyle={{
-                    background: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 8,
-                    fontSize: 12,
-                  }}
+                  contentStyle={TOOLTIP_STYLE}
+                  cursor={{ stroke: "var(--border-strong)" }}
                 />
                 <Area
                   type="monotone"
                   dataKey="percentage"
                   name="Attendance %"
-                  stroke="#6366f1"
+                  stroke="var(--chart-1)"
+                  strokeWidth={2}
                   fill="url(#att)"
                 />
               </AreaChart>
@@ -76,18 +90,19 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.departmentPerformance ?? []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={12} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={12} unit="%" />
+                <CartesianGrid {...GRID} />
+                <XAxis dataKey="name" {...AXIS} tickLine={false} axisLine={false} />
+                <YAxis {...AXIS} unit="%" tickLine={false} axisLine={false} />
                 <Tooltip
-                  contentStyle={{
-                    background: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 8,
-                    fontSize: 12,
-                  }}
+                  contentStyle={TOOLTIP_STYLE}
+                  cursor={{ fill: "color-mix(in oklch, var(--muted) 50%, transparent)" }}
                 />
-                <Bar dataKey="percentage" name="Attendance %" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <Bar
+                  dataKey="percentage"
+                  name="Attendance %"
+                  fill="var(--chart-1)"
+                  radius={[6, 6, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -109,18 +124,15 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
                   innerRadius={45}
                   outerRadius={80}
                   paddingAngle={3}
+                  stroke="none"
                 >
                   {(charts.placementStats ?? []).map((_, index) => (
                     <Cell key={index} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{
-                    background: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 8,
-                    fontSize: 12,
-                  }}
+                  contentStyle={TOOLTIP_STYLE}
+                  cursor={{ fill: "color-mix(in oklch, var(--muted) 50%, transparent)" }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -136,24 +148,26 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.eventParticipation ?? []} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} />
+                <CartesianGrid {...GRID} />
+                <XAxis type="number" {...AXIS} tickLine={false} axisLine={false} />
                 <YAxis
                   type="category"
                   dataKey="name"
-                  stroke="var(--muted-foreground)"
-                  fontSize={11}
+                  {...AXIS}
                   width={110}
+                  tickLine={false}
+                  axisLine={false}
                 />
                 <Tooltip
-                  contentStyle={{
-                    background: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 8,
-                    fontSize: 12,
-                  }}
+                  contentStyle={TOOLTIP_STYLE}
+                  cursor={{ fill: "color-mix(in oklch, var(--muted) 50%, transparent)" }}
                 />
-                <Bar dataKey="value" name="Registrations" fill="#22c55e" radius={[0, 4, 4, 0]} />
+                <Bar
+                  dataKey="value"
+                  name="Registrations"
+                  fill="var(--chart-2)"
+                  radius={[0, 6, 6, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>

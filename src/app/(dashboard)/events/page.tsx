@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -41,26 +43,27 @@ export default function EventsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Events</h1>
-          <p className="text-muted-foreground">
-            {role === "admin" || role === "coordinator"
-              ? "Manage campus events and registrations."
-              : "Discover and register for campus events."}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <a
-            href="/api/events/export"
-            className="inline-flex items-center gap-2 rounded-md border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <Download className="size-4" />
-            Calendar (.ics)
-          </a>
-          {(role === "admin" || role === "coordinator") && <CreateEventDialog />}
-        </div>
-      </div>
+      <PageHeader
+        icon={<CalendarDays className="size-5" />}
+        title="Events"
+        subtitle={
+          role === "admin" || role === "coordinator"
+            ? "Manage campus events and registrations."
+            : "Discover and register for campus events."
+        }
+        actions={
+          <>
+            <a
+              href="/api/events/export"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3.5 py-2 text-sm font-medium shadow-card transition-colors hover:bg-muted"
+            >
+              <Download className="size-4" />
+              Calendar (.ics)
+            </a>
+            {(role === "admin" || role === "coordinator") && <CreateEventDialog />}
+          </>
+        }
+      />
 
       <EventList role={role} />
     </div>
@@ -135,13 +138,11 @@ function EventList({ role }: { role: string }) {
   if (events.length === 0) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-          <CalendarDays className="size-10 text-muted-foreground" />
-          <p className="font-medium">No events yet</p>
-          <p className="text-sm text-muted-foreground">
-            Upcoming campus events will show up here.
-          </p>
-        </CardContent>
+        <EmptyState
+          icon={CalendarDays}
+          title="No events yet"
+          description="Upcoming campus events will show up here."
+        />
       </Card>
     );
   }
@@ -161,15 +162,15 @@ function EventList({ role }: { role: string }) {
                 <div>
                   <p className="font-medium">{event.title}</p>
                   <p className="mt-0.5 text-xs capitalize text-muted-foreground">
-                    <Badge variant="outline" className="mr-1.5">
-                      {event.status}
-                    </Badge>
-                    {start.toLocaleDateString("en-IN", {
-                      weekday: "short",
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
+                    <StatusBadge status={event.status} />
+                    <span className="ml-1.5">
+                      {start.toLocaleDateString("en-IN", {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
                   </p>
                 </div>
                 {event.seats > 0 && (

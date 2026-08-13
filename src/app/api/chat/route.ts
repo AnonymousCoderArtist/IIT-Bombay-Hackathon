@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { auth } from "@/auth";
-import { chatWithRag } from "@/lib/ai";
+import { chatWithRag, getUserAiConfig } from "@/lib/ai";
 import { chatSchema } from "@/lib/validators";
 import { jsonError, rateLimit, getClientIp } from "@/lib/api-helpers";
 
@@ -26,7 +26,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: firstError.message }, { status: 400 });
   }
 
-  const result = await chatWithRag(parsed.data.question);
+  const aiConfig = await getUserAiConfig(session.user.id);
+  const result = await chatWithRag(parsed.data.question, aiConfig ?? undefined);
 
   return NextResponse.json({ answer: result.answer, sources: result.sources, provider: result.provider });
 }

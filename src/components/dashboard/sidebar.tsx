@@ -75,52 +75,81 @@ const bottomLinks = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export function Sidebar({ mobile = false }: { mobile?: boolean }) {
+function NavItem({ href, label, icon: Icon }: { href: string; label: string; icon: typeof LayoutDashboard }) {
   const pathname = usePathname();
+  const active = pathname === href || pathname.startsWith(`${href}/`);
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+        active
+          ? "bg-linear-to-r from-primary/15 to-primary/5 text-foreground"
+          : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+      )}
+    >
+      {active && (
+        <span className="absolute inset-y-1.5 left-0 w-0.5 bg-primary" />
+      )}
+      <Icon
+        className={cn(
+          "size-4 transition-colors",
+          active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+        )}
+      />
+      {label}
+    </Link>
+  );
+}
+
+export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const { data: session } = useSession();
   const role = (session?.user?.role ?? "student") as keyof typeof roleLinks;
-
-  const links = [...roleLinks[role], ...bottomLinks];
 
   return (
     <aside
       className={cn(
-        "w-60 shrink-0 border-r bg-card",
+        "w-60 shrink-0 border-r border-border bg-sidebar",
         mobile ? "flex h-full flex-col" : "hidden md:flex md:flex-col"
       )}
     >
       <div className={cn(mobile ? "flex h-full flex-col" : "sticky top-0 flex h-screen flex-col")}>
-        <Link href="/dashboard" className="flex items-center gap-2 px-5 py-5 font-semibold">
-          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <GraduationCap className="size-4" />
+        <Link href="/dashboard" className="flex items-center gap-2.5 px-5 py-5">
+          <span className="relative flex size-9 items-center justify-center bg-primary text-primary-foreground shadow-sm shadow-primary/25">
+            <GraduationCap className="size-5" />
           </span>
-          Smart Campus
+          <span className="font-heading text-base font-bold tracking-tight">
+            Smart<span className="text-primary">Campus</span>
+          </span>
         </Link>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2">
-          {links.map((link) => {
-            const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                )}
-              >
-                <link.icon className="size-4" />
-                {link.label}
-              </Link>
-            );
-          })}
+          {roleLinks[role].map((link) => (
+            <NavItem key={link.href} {...link} />
+          ))}
         </nav>
 
-        <div className="border-t p-4 text-xs text-muted-foreground">
-          <p className="font-medium capitalize text-foreground">{role}</p>
-          <p className="mt-0.5">{session?.user?.email}</p>
+        <div className="space-y-1 border-t border-border px-3 py-3">
+          {bottomLinks.map((link) => (
+            <NavItem key={link.href} {...link} />
+          ))}
+        </div>
+
+        <div className="border-t border-border p-3">
+          <div className="flex items-center gap-3 rounded-xl border border-border bg-surface p-3">
+            <span className="flex size-8 shrink-0 items-center justify-center bg-primary text-xs font-bold text-primary-foreground">
+              {(session?.user?.name ?? "U")
+                .split(" ")
+                .map((part) => part[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase()}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium capitalize text-foreground">{role}</p>
+              <p className="truncate text-xs text-muted-foreground">{session?.user?.email}</p>
+            </div>
+          </div>
         </div>
       </div>
     </aside>

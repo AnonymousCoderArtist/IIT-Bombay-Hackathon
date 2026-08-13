@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -55,7 +55,10 @@ export default function CalendarWidget() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold">Upcoming events</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold tracking-tight">Upcoming events</h2>
+        <CalendarDays className="size-4 text-muted-foreground" />
+      </div>
 
       {loading ? (
         <div className="space-y-2">
@@ -68,7 +71,9 @@ export default function CalendarWidget() {
       ) : events.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-2 py-10 text-center">
-            <CalendarDays className="size-8 text-muted-foreground" />
+            <span className="flex size-11 items-center justify-center rounded-2xl border border-dashed border-border bg-muted/40 text-muted-foreground">
+              <CalendarDays className="size-5" />
+            </span>
             <p className="text-sm text-muted-foreground">Koi upcoming event nahi hai.</p>
           </CardContent>
         </Card>
@@ -78,14 +83,22 @@ export default function CalendarWidget() {
             <Card key={`${event.date}-${event.title}`}>
               <CardContent className="p-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-lg">
-                    📅
+                  <div className="flex size-10 shrink-0 items-center justify-center bg-primary/10 text-primary">
+                    <CalendarDays className="size-4" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{event.title}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
                       {formatDate(event.date)}
-                      {event.meta ? ` · ${event.meta}` : ""}
+                      {event.meta && (
+                        <>
+                          <span>·</span>
+                          <span className="inline-flex items-center gap-0.5 truncate">
+                            <MapPin className="size-3" />
+                            {event.meta}
+                          </span>
+                        </>
+                      )}
                     </p>
                   </div>
                 </div>

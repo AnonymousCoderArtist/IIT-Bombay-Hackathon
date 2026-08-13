@@ -4,10 +4,10 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { GraduationCap, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AuroraInput } from "@/components/ui/aurora-input";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { AuthCard, GradientSubmitButton, LabelInputContainer } from "@/components/auth/auth-card";
 
 export const dynamic = "force-dynamic";
 
@@ -58,26 +58,15 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
-      <Link href="/" className="mb-8 flex items-center gap-2 font-semibold">
-        <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <GraduationCap className="size-5" />
-        </span>
-        Smart Campus
-      </Link>
-
-      <div className="w-full max-w-sm space-y-6 rounded-2xl border bg-card p-8 shadow-sm">
-        <div className="space-y-1.5 text-center">
-          <h1 className="text-2xl font-bold tracking-tight">Set a new password</h1>
-          <p className="text-sm text-muted-foreground">
-            Enter the code from your email and a new password
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
+    <AuthShell>
+      <AuthCard
+        title="Set a new password"
+        subtitle="Enter the code from your email and a new password"
+      >
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          <LabelInputContainer>
             <Label htmlFor="code">Reset code</Label>
-            <Input
+            <AuroraInput
               id="code"
               inputMode="numeric"
               maxLength={6}
@@ -87,11 +76,11 @@ function ResetPasswordForm() {
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
               required
             />
-          </div>
+          </LabelInputContainer>
 
-          <div className="space-y-1.5">
+          <LabelInputContainer>
             <Label htmlFor="password">New password</Label>
-            <Input
+            <AuroraInput
               id="password"
               type="password"
               placeholder="At least 8 characters"
@@ -100,11 +89,11 @@ function ResetPasswordForm() {
               required
               minLength={8}
             />
-          </div>
+          </LabelInputContainer>
 
-          <div className="space-y-1.5">
+          <LabelInputContainer className="mb-4">
             <Label htmlFor="confirm">Confirm password</Label>
-            <Input
+            <AuroraInput
               id="confirm"
               type="password"
               placeholder="Repeat password"
@@ -113,21 +102,21 @@ function ResetPasswordForm() {
               required
               minLength={8}
             />
-          </div>
+          </LabelInputContainer>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading && <Loader2 className="size-4 animate-spin" />}
-            Reset password
-          </Button>
+          <GradientSubmitButton label="Reset password" loading={loading} />
         </form>
 
-        <p className="text-center text-sm text-muted-foreground">
-          <Link href="/login" className="font-medium text-foreground hover:underline">
+        <p className="mt-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
+          <Link
+            href="/login"
+            className="font-medium text-neutral-900 hover:underline dark:text-white"
+          >
             Back to sign in
           </Link>
         </p>
-      </div>
-    </div>
+      </AuthCard>
+    </AuthShell>
   );
 }
 

@@ -4,10 +4,10 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { GraduationCap, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AuroraInput } from "@/components/ui/aurora-input";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { AuthCard, GradientSubmitButton, LabelInputContainer } from "@/components/auth/auth-card";
 
 export const dynamic = "force-dynamic";
 
@@ -77,26 +77,19 @@ function VerifyEmailForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
-      <Link href="/" className="mb-8 flex items-center gap-2 font-semibold">
-        <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <GraduationCap className="size-5" />
-        </span>
-        Smart Campus
-      </Link>
-
-      <div className="w-full max-w-sm space-y-6 rounded-2xl border bg-card p-8 shadow-sm">
-        <div className="space-y-1.5 text-center">
-          <h1 className="text-2xl font-bold tracking-tight">Verify your email</h1>
-          <p className="text-sm text-muted-foreground">
+    <AuthShell>
+      <AuthCard
+        title="Verify your email"
+        subtitle={
+          <>
             We sent a 6-digit code to <span className="font-medium">{email || "your email"}</span>
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
+          </>
+        }
+      >
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <LabelInputContainer>
             <Label htmlFor="code">Verification code</Label>
-            <Input
+            <AuroraInput
               id="code"
               inputMode="numeric"
               maxLength={6}
@@ -106,15 +99,16 @@ function VerifyEmailForm() {
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
               required
             />
-          </div>
+          </LabelInputContainer>
 
-          <Button type="submit" className="w-full" disabled={loading || code.length !== 6}>
-            {loading && <Loader2 className="size-4 animate-spin" />}
-            Verify email
-          </Button>
+          <GradientSubmitButton
+            label="Verify email"
+            loading={loading}
+            disabled={code.length !== 6}
+          />
         </form>
 
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="mt-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
           {resent ? (
             <p>Code resent. Check your inbox.</p>
           ) : (
@@ -124,15 +118,24 @@ function VerifyEmailForm() {
                 type="button"
                 onClick={handleResend}
                 disabled={resending}
-                className="font-medium text-foreground hover:underline"
+                className="font-medium text-neutral-900 hover:underline dark:text-white"
               >
                 {resending ? "Sending..." : "Resend code"}
               </button>
             </>
           )}
         </div>
-      </div>
-    </div>
+
+        <p className="mt-4 text-center text-sm text-neutral-500 dark:text-neutral-400">
+          <Link
+            href="/login"
+            className="font-medium text-neutral-900 hover:underline dark:text-white"
+          >
+            Back to sign in
+          </Link>
+        </p>
+      </AuthCard>
+    </AuthShell>
   );
 }
 

@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -78,19 +80,20 @@ export default function ClubsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Clubs</h1>
-          <p className="text-muted-foreground">
-            {role === "admin" || role === "coordinator" || role === "faculty"
-              ? "Manage campus clubs and memberships."
-              : "Join clubs and be part of campus life."}
-          </p>
-        </div>
-        {(role === "admin" || role === "coordinator" || role === "faculty") && (
-          <CreateClubDialog onCreated={load} />
-        )}
-      </div>
+      <PageHeader
+        icon={<Users className="size-5" />}
+        title="Clubs"
+        subtitle={
+          role === "admin" || role === "coordinator" || role === "faculty"
+            ? "Manage campus clubs and memberships."
+            : "Join clubs and be part of campus life."
+        }
+        actions={
+          (role === "admin" || role === "coordinator" || role === "faculty") && (
+            <CreateClubDialog onCreated={load} />
+          )
+        }
+      />
 
       {loading ? (
         <div className="grid gap-4 md:grid-cols-2">
@@ -99,13 +102,11 @@ export default function ClubsPage() {
         </div>
       ) : clubs.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <Sparkles className="size-10 text-muted-foreground" />
-            <p className="font-medium">Abhi koi club nahi</p>
-            <p className="text-sm text-muted-foreground">
-              Campus clubs yahan dikhenge aur aap unse jud sakte ho.
-            </p>
-          </CardContent>
+        <EmptyState
+          icon={Sparkles}
+          title="Abhi koi club nahi"
+          description="Campus clubs yahan dikhenge aur aap unse jud sakte ho."
+        />
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">

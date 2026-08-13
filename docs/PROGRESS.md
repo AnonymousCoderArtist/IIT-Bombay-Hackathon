@@ -89,6 +89,7 @@
 
 ### 10. Search
 - [x] Global search — students, faculty, events, assignments, placements
+- [x] Command search outside-click se band (portal fix — topbar `backdrop-blur` ke containing block se overlay trap na ho)
 
 ### 11. Analytics
 - [x] Role-aware analytics + admin charts
@@ -112,6 +113,7 @@
 - [x] Error page (`error.tsx`) + 404 (`not-found.tsx`)
 - [x] Success screens (action ke baad toast se)
 - [x] Accessibility pass (keyboard nav, contrast, semantic HTML) — icon buttons ke aria-labels add
+- [x] **Premium UI redesign v2** (warm bone + charcoal palette, single gold accent, Manrope + Space Grotesk fonts, sharp 0.125rem radius system, no blue, gold login/register buttons + logo tiles + stats/testimonials grids, redesigned landing + auth, centralized design tokens; rainbow GlowingEffect aur Gemini showcase remove kiye)
 
 ### 15. Security
 - [x] Password hashing (bcrypt cost 12)
@@ -160,6 +162,12 @@
 - [x] Campus Knowledge RAG assistant (IIT Bombay KB + citations — Python service)
 - [x] AI resume parsing + placement match % (Python `/match` API + UI)
 - [x] Ambient lecture intelligence (browser STT → AI study notes + action items)
+- [x] Lecture notes audio upload → transcription (OpenAI-compatible `/audio/transcriptions`, user ke AI config se)
+- [x] User-owned AI provider — Settings > AI me **Gemini** (sirf key + model select dropdown) ya **OpenAI-compatible** (base URL + key + model); save/test/remove, key kabhi wapas expose nahi
+- [x] Student attendance page me 6-month attendance trend graph (client-side, history se)
+- [x] Attendance seed — 6 mahine ki history, charts/graphs me data dikhta hai
+- [x] Premium scrollbar styling (both themes)
+- [x] **Homepage + Auth premium redesign** — DottedGlowBackground (canvas), warm gold-tinted rays/glow (hue-rotate), radial-gradient backdrop, animated gradient text, TextGenerateEffect hero subtitle, sharper bento feature cards (gold hairline hover, tinted cells), stats/testimonials gap-px grids, footer-banner image, gold gradient auth buttons; reduced-motion support (CSS + canvas + text effect), landing/auth copy em-dash-free, unified CTA labels
 - [x] Sentiment analytics (Python `/sentiment` API ready)
 - [x] Plagiarism detector (submission similarity)
 - [ ] Intel OpenVINO / oneAPI / DevCloud (sirf docs strategy — hardware-level, cloud demo impossible)

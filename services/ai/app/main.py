@@ -23,11 +23,13 @@ app = FastAPI(
 
 class ChatRequest(BaseModel):
     question: str = Field(min_length=2, max_length=2000)
+    ai: dict[str, Any] | None = None
 
 
 class SummarizeRequest(BaseModel):
     title: str = Field(default="", max_length=200)
     transcript: str = Field(min_length=30, max_length=50000)
+    ai: dict[str, Any] | None = None
 
 
 class MatchRequest(BaseModel):
@@ -81,11 +83,11 @@ async def chat(req: ChatRequest) -> dict[str, Any]:
 
     context = "\n\n".join(f"Source: {r['source']}\n{r['text']}" for r in results)
 
-    if configured_provider() != "mock":
+    if configured_provider() != "mock" or req.ai:
         prompt = f"{CHAT_SYSTEM}\n\nKnowledge base:\n{context}\n\nQuestion: {req.question}"
         try:
-            answer = await generate_text(prompt)
-            return {"answer": answer, "sources": [r["source"] for r in results], "provider": configured_provider()}
+            answer = await generate_text(prompt, req.ai)
+            return {"answer": answer, "sources": [r["source"] for r in results], "provider": "custom" if req.ai else configured_provider()}
         except Exception:
             pass
 
@@ -109,11 +111,11 @@ Concise aur exam revision ke liye useful rakho."""
 
 @app.post("/summarize")
 async def summarize(req: SummarizeRequest) -> dict[str, Any]:
-    if configured_provider() == "mock":
+    if configured_provider() == "mock" and not req.ai:
         raise HTTPException(status_code=503, detail="AI provider configure nahi hai")
 
     prompt = f"{SUMMARY_SYSTEM}\n\nTranscript:\n{req.transcript}"
-    raw = await generate_text(prompt)
+    raw = await generate_text(prompt, req.ai)
 
     summary = re.search(r"SUMMARY:\s*(.*?)(?=KEY POINTS:|$)", raw, re.DOTALL | re.IGNORECASE)
     key_pts = re.search(r"KEY POINTS:\s*(.*?)(?=ACTION ITEMS:|$)", raw, re.DOTALL | re.IGNORECASE)

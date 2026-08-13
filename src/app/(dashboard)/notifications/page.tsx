@@ -5,8 +5,10 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Bell, CheckCheck, Loader2, FileText, CalendarCheck, Megaphone, Briefcase, AlertTriangle, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Notification = {
@@ -20,9 +22,9 @@ type Notification = {
 };
 
 const typeConfig = {
-  assignment: { icon: FileText, label: "Assignment", className: "bg-blue-500/10 text-blue-500" },
+  assignment: { icon: FileText, label: "Assignment", className: "bg-amber-500/10 text-amber-600 dark:text-amber-400" },
   attendance: { icon: CalendarCheck, label: "Attendance", className: "bg-emerald-500/10 text-emerald-500" },
-  event: { icon: Megaphone, label: "Event", className: "bg-purple-500/10 text-purple-500" },
+  event: { icon: Megaphone, label: "Event", className: "bg-orange-500/10 text-orange-600 dark:text-orange-400" },
   placement: { icon: Briefcase, label: "Placement", className: "bg-amber-500/10 text-amber-500" },
   alert: { icon: AlertTriangle, label: "Alert", className: "bg-red-500/10 text-red-500" },
   system: { icon: Info, label: "System", className: "bg-muted text-muted-foreground" },
@@ -85,20 +87,21 @@ export default function NotificationsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Notifications</h1>
-          <p className="text-muted-foreground">
-            {unread > 0 ? `${unread} unread notification${unread > 1 ? "s" : ""}` : "You're all caught up."}
-          </p>
-        </div>
-        {unread > 0 && (
-          <Button variant="outline" onClick={markAllRead} disabled={markingAll}>
-            {markingAll ? <Loader2 className="size-4 animate-spin" /> : <CheckCheck className="size-4" />}
-            Mark all read
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        icon={<Bell className="size-5" />}
+        title="Notifications"
+        subtitle={
+          unread > 0 ? `${unread} unread notification${unread > 1 ? "s" : ""}` : "You're all caught up."
+        }
+        actions={
+          unread > 0 && (
+            <Button variant="outline" onClick={markAllRead} disabled={markingAll}>
+              {markingAll ? <Loader2 className="size-4 animate-spin" /> : <CheckCheck className="size-4" />}
+              Mark all read
+            </Button>
+          )
+        }
+      />
 
       {loading ? (
         <div className="space-y-3">
@@ -108,13 +111,11 @@ export default function NotificationsPage() {
         </div>
       ) : notifications.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <Bell className="size-10 text-muted-foreground" />
-            <p className="font-medium">Koi notification nahi</p>
-            <p className="text-sm text-muted-foreground">
-              Deadlines, events aur placements ki updates yahan dikhengi.
-            </p>
-          </CardContent>
+        <EmptyState
+          icon={Bell}
+          title="Koi notification nahi"
+          description="Deadlines, events aur placements ki updates yahan dikhengi."
+        />
         </Card>
       ) : (
         <div className="space-y-3">
@@ -127,7 +128,7 @@ export default function NotificationsPage() {
                 key={notification._id}
                 href={notification.link ?? "#"}
                 onClick={() => !notification.isRead && markAsRead(notification._id)}
-                className={`block rounded-xl border bg-card p-4 transition-colors hover:bg-muted/40 ${
+                className={`block rounded-xl border bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-elevated ${
                   notification.isRead ? "opacity-60" : ""
                 }`}
               >

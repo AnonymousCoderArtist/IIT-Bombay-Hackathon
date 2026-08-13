@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CheckCircle2, Loader2, ScanFace, ScanLine, XCircle } from "lucide-react";
+import { CheckCircle2, Loader2, QrCode, ScanFace, ScanLine, XCircle } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -175,13 +176,11 @@ export default function ScanPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">QR Attendance Check-in</h1>
-        <p className="text-muted-foreground">
-          Faculty ka QR code scan karo (ya manual code paste karo) — attendance turant mark
-          ho jayegi.
-        </p>
-      </div>
+      <PageHeader
+        icon={<QrCode className="size-5" />}
+        title="QR Attendance Check-in"
+        subtitle="Faculty ka QR code scan karo (ya manual code paste karo) — attendance turant mark ho jayegi."
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>

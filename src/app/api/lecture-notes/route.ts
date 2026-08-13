@@ -4,7 +4,7 @@ import { dbConnect } from "@/lib/db";
 import { LectureNote } from "@/lib/models";
 import { auth } from "@/auth";
 import { lectureNoteSchema } from "@/lib/validators";
-import { summarizeLecture } from "@/lib/ai";
+import { summarizeLecture, getUserAiConfig } from "@/lib/ai";
 
 export async function GET(request: Request) {
   const session = await auth();
@@ -50,7 +50,8 @@ export async function POST(request: Request) {
   let keyPoints: string[] = [];
   let actionItems: string[] = [];
 
-  const result = await summarizeLecture(transcript);
+  const aiConfig = await getUserAiConfig(session.user.id);
+  const result = await summarizeLecture(transcript, aiConfig ?? undefined);
   if (result) {
     summary = result.summary;
     keyPoints = result.key_points;

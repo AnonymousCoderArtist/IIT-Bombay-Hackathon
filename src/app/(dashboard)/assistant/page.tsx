@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Bot, Loader2, Send, User } from "lucide-react";
+import { Bot, Loader2, Send, Sparkles, User } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -70,12 +71,11 @@ export default function AssistantPage() {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">AI Assistant</h1>
-        <p className="text-muted-foreground">
-          IIT Bombay campus knowledge RAG — LLM se grounded answers, citations ke saath.
-        </p>
-      </div>
+      <PageHeader
+        icon={<Sparkles className="size-5" />}
+        title="AI Assistant"
+        subtitle="IIT Bombay campus knowledge RAG — LLM se grounded answers, citations ke saath."
+      />
 
       <Card className="flex min-h-0 flex-1 flex-col">
         <CardContent className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden p-4">

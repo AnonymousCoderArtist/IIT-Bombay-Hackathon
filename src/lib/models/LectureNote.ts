@@ -10,7 +10,7 @@ const lectureNoteSchema = new Schema(
     keyPoints: [String],
     actionItems: [String],
     durationSec: { type: Number },
-    source: { type: String, enum: ["live-stt", "paste"], default: "live-stt" },
+    source: { type: String, enum: ["live-stt", "paste", "upload"], default: "live-stt" },
   },
   { timestamps: true }
 );

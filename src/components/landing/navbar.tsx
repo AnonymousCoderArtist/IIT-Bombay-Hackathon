@@ -25,13 +25,15 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <Link href="/" className="flex items-center gap-2.5 font-semibold">
+          <span className="flex size-9 items-center justify-center bg-primary text-primary-foreground shadow-sm shadow-primary/25">
             <GraduationCap className="size-5" />
           </span>
-          Smart Campus
+          <span className="font-heading text-base font-bold tracking-tight">
+            Smart<span className="text-primary">Campus</span>
+          </span>
         </Link>
 
         <div className="hidden items-center gap-6 md:flex">

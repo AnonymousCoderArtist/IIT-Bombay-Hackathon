@@ -2,6 +2,89 @@ const SERVICE_BASE = process.env.AI_SERVICE_URL ?? "";
 
 type Provider = "gemini" | "deepseek" | "mock";
 
+export type AiConfig = {
+  provider: "openai" | "gemini";
+  baseUrl: string;
+  apiKey: string;
+  model: string;
+};
+
+function getEnvAiConfig(): AiConfig | null {
+  const baseUrl = process.env.AI_OPENAI_BASE_URL?.trim();
+  const apiKey = process.env.AI_OPENAI_API_KEY?.trim();
+  const model = process.env.AI_OPENAI_MODEL?.trim();
+  if (baseUrl && apiKey && model) return { provider: "openai", baseUrl, apiKey, model };
+  return null;
+}
+
+export async function getUserAiConfig(userId: string): Promise<AiConfig | null> {
+  try {
+    const [{ dbConnect }, { Settings }] = await Promise.all([
+      import("@/lib/db"),
+      import("@/lib/models"),
+    ]);
+    await dbConnect();
+    const settings = (await Settings.findOne({ userId }).lean()) as
+      | { ai?: { provider?: string; baseUrl?: string; apiKey?: string; model?: string } }
+      | null;
+    const ai = settings?.ai;
+    if (ai?.apiKey && ai?.model) {
+      const provider = ai.provider === "gemini" ? "gemini" : "openai";
+      return {
+        provider,
+        baseUrl: ai.baseUrl ?? "",
+        apiKey: ai.apiKey,
+        model: ai.model,
+      };
+    }
+  } catch {
+    // DB hiccup — fall through to env config
+  }
+  return getEnvAiConfig();
+}
+
+async function callOpenAICompat(
+  prompt: string,
+  system: string | undefined,
+  config: AiConfig
+): Promise<string> {
+  const messages = system
+    ? [
+        { role: "system", content: system },
+        { role: "user", content: prompt },
+      ]
+    : [{ role: "user", content: prompt }];
+
+  const res = await fetch(`${config.baseUrl.replace(/\/+$/, "")}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.apiKey}`,
+    },
+    body: JSON.stringify({
+      model: config.model,
+      messages,
+      temperature: 0.4,
+      max_tokens: 1500,
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`OpenAI-compatible error ${res.status}: ${body.slice(0, 200)}`);
+  }
+
+  const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
+  const text = data.choices?.[0]?.message?.content?.trim();
+  if (!text) throw new Error("OpenAI-compatible API returned empty response");
+  return text;
+}
+
+async function callGeminiConfig(prompt: string, system: string | undefined, config: AiConfig): Promise<string> {
+  const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
+  return callGemini(fullPrompt, config.apiKey, config.model);
+}
+
 function getProvider(): Provider {
   const name = (process.env.AI_PROVIDER ?? "").toLowerCase() as Provider;
   if (name === "gemini" && process.env.GEMINI_API_KEY) return "gemini";
@@ -38,15 +121,15 @@ async function callPythonDetail<T>(path: string, payload: unknown): Promise<Call
   }
 }
 
-async function callGemini(prompt: string): Promise<string> {
+async function callGemini(prompt: string, apiKey: string, model: string): Promise<string> {
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.4, maxOutputTokens: 1200 },
+        generationConfig: { temperature: 0.4, maxOutputTokens: 1500 },
       }),
     }
   );
@@ -92,11 +175,21 @@ async function callDeepSeek(prompt: string): Promise<string> {
   return text;
 }
 
-export async function generateText(prompt: string, system?: string): Promise<string> {
+export async function generateText(
+  prompt: string,
+  system?: string,
+  aiConfig?: AiConfig
+): Promise<string> {
+  const config = aiConfig ?? getEnvAiConfig();
+  if (config) {
+    if (config.provider === "gemini") return callGeminiConfig(prompt, system, config);
+    return callOpenAICompat(prompt, system, config);
+  }
+
   const provider = getProvider();
   const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
 
-  if (provider === "gemini") return callGemini(fullPrompt);
+  if (provider === "gemini") return callGemini(fullPrompt, process.env.GEMINI_API_KEY ?? "", "gemini-2.0-flash");
   if (provider === "deepseek") return callDeepSeek(fullPrompt);
   return "";
 }
@@ -107,14 +200,29 @@ export type LectureSummary = {
   action_items: string[];
 };
 
-export async function summarizeLecture(transcript: string): Promise<LectureSummary | null> {
-  const fromPython = await callPython<LectureSummary>("/summarize", { title: "", transcript });
+export async function summarizeLecture(
+  transcript: string,
+  aiConfig?: AiConfig
+): Promise<LectureSummary | null> {
+  const fromPython = await callPython<LectureSummary>("/summarize", {
+    title: "",
+    transcript,
+    ai: aiConfig
+      ? {
+          provider: aiConfig.provider,
+          base_url: aiConfig.baseUrl,
+          api_key: aiConfig.apiKey,
+          model: aiConfig.model,
+        }
+      : undefined,
+  });
   if (fromPython) return fromPython;
 
   const raw = await generateText(
     `Convert this lecture transcript into structured study notes.\n\nTranscript:\n"""\n${transcript.slice(0, 20000)}\n"""\n\n` +
       `Respond in plain text with exactly these sections:\nSUMMARY: 2-3 line gist.\nKEY POINTS:\n- point one\n- point two\nACTION ITEMS:\n- action one`,
-    "You are a study assistant. Keep it concise and useful for exam revision."
+    "You are a study assistant. Keep it concise and useful for exam revision.",
+    aiConfig
   );
 
   if (!raw) return null;
@@ -140,13 +248,24 @@ export type ChatResult = {
   provider?: string;
 };
 
-export async function chatWithRag(question: string): Promise<ChatResult> {
-  const fromPython = await callPython<ChatResult>("/chat", { question });
+export async function chatWithRag(question: string, aiConfig?: AiConfig): Promise<ChatResult> {
+  const fromPython = await callPython<ChatResult>("/chat", {
+    question,
+    ai: aiConfig
+      ? {
+          provider: aiConfig.provider,
+          base_url: aiConfig.baseUrl,
+          api_key: aiConfig.apiKey,
+          model: aiConfig.model,
+        }
+      : undefined,
+  });
   if (fromPython) return fromPython;
 
   const raw = await generateText(
     `Question: ${question}`,
-    "You are the IIT Bombay Smart Campus AI assistant. Answer concisely from campus knowledge. If you don't know, say you don't have that information."
+    "You are the IIT Bombay Smart Campus AI assistant. Answer concisely from campus knowledge. If you don't know, say you don't have that information.",
+    aiConfig
   );
 
   if (raw) return { answer: raw, sources: [] };
@@ -281,8 +400,56 @@ export function faceServiceConfigured(): boolean {
   return Boolean(SERVICE_BASE);
 }
 
+export type AiTestResult = { ok: boolean; message: string };
+
+export async function testAiConnection(config: AiConfig): Promise<AiTestResult> {
+  try {
+    let text: string;
+    if (config.provider === "gemini") {
+      text = await callGemini("Reply with the single word OK", config.apiKey, config.model);
+    } else {
+      text = await callOpenAICompat("Reply with the single word OK", undefined, config);
+    }
+    const clean = text.replace(/\s+/g, " ").trim();
+    return { ok: true, message: clean.slice(0, 200) || "Connected successfully" };
+  } catch (err) {
+    return { ok: false, message: err instanceof Error ? err.message : "Connection failed" };
+  }
+}
+
+export async function transcribeAudio(
+  config: AiConfig,
+  file: { name: string; type: string; buffer: ArrayBuffer }
+): Promise<string> {
+  if (config.provider === "gemini") {
+    throw new Error(
+      "Gemini provider audio transcription support nahi karta — OpenAI-compatible provider use karo (jaise Groq whisper)"
+    );
+  }
+
+  const form = new FormData();
+  form.append("file", new Blob([file.buffer], { type: file.type || "audio/mpeg" }), file.name);
+  form.append("model", config.model);
+
+  const res = await fetch(`${config.baseUrl.replace(/\/+$/, "")}/audio/transcriptions`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${config.apiKey}` },
+    body: form,
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Transcription error ${res.status}: ${body.slice(0, 200)}`);
+  }
+
+  const data = (await res.json()) as { text?: string };
+  const text = data.text?.trim();
+  if (!text) throw new Error("Transcription returned empty text");
+  return text;
+}
+
 export function aiConfigured(): boolean {
-  return getProvider() !== "mock" || Boolean(SERVICE_BASE);
+  return getProvider() !== "mock" || Boolean(SERVICE_BASE) || Boolean(getEnvAiConfig());
 }
 
 export { aiConfigured as hasAI };

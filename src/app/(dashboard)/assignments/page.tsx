@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -39,17 +41,16 @@ export default function AssignmentsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Assignments</h1>
-          <p className="text-muted-foreground">
-            {role === "faculty" || role === "admin"
-              ? "Create assignments and review student submissions."
-              : "Track and submit your assignments on time."}
-          </p>
-        </div>
-        {(role === "faculty" || role === "admin") && <CreateAssignmentDialog />}
-      </div>
+      <PageHeader
+        icon={<ClipboardList className="size-5" />}
+        title="Assignments"
+        subtitle={
+          role === "faculty" || role === "admin"
+            ? "Create assignments and review student submissions."
+            : "Track and submit your assignments on time."
+        }
+        actions={(role === "faculty" || role === "admin") && <CreateAssignmentDialog />}
+      />
 
       <AssignmentList role={role} />
     </div>
@@ -82,15 +83,15 @@ function AssignmentList({ role }: { role: string }) {
   if (assignments.length === 0) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-          <ClipboardList className="size-10 text-muted-foreground" />
-          <p className="font-medium">No assignments yet</p>
-          <p className="text-sm text-muted-foreground">
-            {role === "faculty" || role === "admin"
+        <EmptyState
+          icon={ClipboardList}
+          title="No assignments yet"
+          description={
+            role === "faculty" || role === "admin"
               ? "Create your first assignment to get started."
-              : "New assignments from your faculty will appear here."}
-          </p>
-        </CardContent>
+              : "New assignments from your faculty will appear here."
+          }
+        />
       </Card>
     );
   }
@@ -104,7 +105,7 @@ function AssignmentList({ role }: { role: string }) {
 
         return (
           <Link key={assignment._id} href={`/assignments/${assignment._id}`}>
-            <Card className="h-full transition-colors hover:bg-muted/40">
+            <Card className="h-full transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-elevated">
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">

@@ -8,6 +8,9 @@ import { Users, Loader2, Search, Shield, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -49,9 +52,9 @@ type AdminUser = {
 };
 
 const roleBadge = {
-  student: "bg-blue-500/10 text-blue-500",
+  student: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
   faculty: "bg-emerald-500/10 text-emerald-500",
-  coordinator: "bg-purple-500/10 text-purple-500",
+  coordinator: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
   admin: "bg-amber-500/10 text-amber-500",
 } as const;
 
@@ -137,12 +140,11 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Users</h1>
-        <p className="text-muted-foreground">
-          Manage roles and access across the campus.
-        </p>
-      </div>
+      <PageHeader
+        icon={<Users className="size-5" />}
+        title="Users"
+        subtitle="Manage roles and access across the campus."
+      />
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-64 flex-1">
@@ -176,11 +178,11 @@ export default function AdminUsersPage() {
         </div>
       ) : users.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <Users className="size-10 text-muted-foreground" />
-            <p className="font-medium">Koi user nahi mila</p>
-            <p className="text-sm text-muted-foreground">Search ko tweak karke try karo.</p>
-          </CardContent>
+        <EmptyState
+          icon={Users}
+          title="Koi user nahi mila"
+          description="Search ko tweak karke try karo."
+        />
         </Card>
       ) : (
         <Card>
@@ -210,12 +212,7 @@ export default function AdminUsersPage() {
                   {user.role}
                 </Badge>
 
-                <Badge
-                  variant={user.status === "active" ? "outline" : "secondary"}
-                  className="capitalize"
-                >
-                  {user.status}
-                </Badge>
+                <StatusBadge status={user.status} />
 
                 <DropdownMenu>
                   <DropdownMenuTrigger render={<Button variant="outline" size="sm" />}>

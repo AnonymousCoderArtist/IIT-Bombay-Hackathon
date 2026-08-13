@@ -7,6 +7,18 @@ const settingsSchema = new Schema(
     emailOptIn: { type: Boolean, default: true },
     language: { type: String, default: "en" },
     publicProfile: { type: Boolean, default: true },
+    ai: {
+      type: new Schema(
+        {
+          provider: { type: String, enum: ["openai", "gemini"], default: "openai" },
+          baseUrl: { type: String, trim: true, default: "" },
+          apiKey: { type: String, default: "" },
+          model: { type: String, trim: true, default: "" },
+        },
+        { _id: false }
+      ),
+      default: null,
+    },
     notificationPrefs: {
       assignment: { type: Boolean, default: true },
       attendance: { type: Boolean, default: true },

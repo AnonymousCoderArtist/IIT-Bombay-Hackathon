@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ScrollText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -58,12 +60,11 @@ export default function AdminLogsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Activity Logs</h1>
-        <p className="text-muted-foreground">
-          A recent trail of important actions on the platform.
-        </p>
-      </div>
+      <PageHeader
+        icon={<ScrollText className="size-5" />}
+        title="Activity Logs"
+        subtitle="A recent trail of important actions on the platform."
+      />
 
       {loading ? (
         <div className="space-y-3">
@@ -73,13 +74,11 @@ export default function AdminLogsPage() {
         </div>
       ) : logs.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <ScrollText className="size-10 text-muted-foreground" />
-            <p className="font-medium">Abhi tak koi activity nahi</p>
-            <p className="text-sm text-muted-foreground">
-              Jaise hi users kuch karenge, logs yahan dikhenge.
-            </p>
-          </CardContent>
+        <EmptyState
+          icon={ScrollText}
+          title="Abhi tak koi activity nahi"
+          description="Jaise hi users kuch karenge, logs yahan dikhenge."
+        />
         </Card>
       ) : (
         <Card>

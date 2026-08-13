@@ -315,50 +315,69 @@ async function main() {
   );
   console.log("3 study materials ready");
 
-  console.log("\n--- Seeding attendance ---");
-  const sessions = await AttendanceSession.create([
-    {
-      subject: "DBMS",
-      facultyId,
-      department: "CS",
-      semester: 5,
-      date: new Date(Date.now() - 7 * 86400000),
-      sessionType: "theory",
-      status: "closed",
-    },
-    {
-      subject: "Operating Systems",
-      facultyId,
-      department: "CS",
-      semester: 5,
-      date: new Date(Date.now() - 4 * 86400000),
-      sessionType: "lab",
-      status: "closed",
-    },
-    {
-      subject: "DBMS",
-      facultyId,
-      department: "CS",
-      semester: 5,
-      date: new Date(Date.now() - 1 * 86400000),
-      sessionType: "theory",
-      status: "closed",
-    },
-  ]);
+  console.log("\n--- Seeding attendance (6 months history) ---");
+  function mulberry32(seed: number) {
+    let a = seed >>> 0;
+    return () => {
+      a += 0x6d2b79f5;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
 
-  let records = 0;
-  for (const session of sessions) {
-    for (let i = 0; i < studentIds.length; i++) {
-      const status = (i + sessionIndex(session)) % 4 === 0 ? "absent" : "present";
-      await AttendanceRecord.create({
-        sessionId: session._id,
-        studentId: studentIds[i],
-        status,
+  const rand = mulberry32(20260813);
+  const sessionTemplates = [
+    { subject: "DBMS", code: "CS301", type: "theory" },
+    { subject: "Operating Systems", code: "CS302", type: "theory" },
+    { subject: "Data Structures", code: "CS201", type: "lab" },
+    { subject: "Web Development", code: "CS401", type: "lab" },
+  ];
+  const monthlyRate = [88, 94, 82, 91, 86, 96];
+
+  const today = new Date();
+  let sessionCount = 0;
+  let recordCount = 0;
+
+  for (let m = 5; m >= 0; m--) {
+    const rate = monthlyRate[m];
+    const firstOfMonth = new Date(today.getFullYear(), today.getMonth() - m, 1);
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() - m + 1, 0).getDate();
+
+    for (let s = 0; s < 4; s++) {
+      const day = Math.min(1 + s * 6 + Math.floor(rand() * 2), daysInMonth);
+      const date = new Date(firstOfMonth);
+      date.setDate(day);
+      date.setHours(9 + s * 2, Math.floor(rand() * 45), 0, 0);
+      if (date.getTime() > today.getTime()) continue;
+
+      const template = sessionTemplates[(m + s) % sessionTemplates.length];
+      const session = await AttendanceSession.create({
+        subject: template.subject,
+        facultyId,
+        department: "CS",
+        semester: 5,
+        date,
+        sessionType: template.type,
+        status: "closed",
       });
-      records++;
+      sessionCount++;
+
+      for (const studentId of studentIds) {
+        const present = rand() * 100 < rate;
+        const markedAt = new Date(date.getTime() + Math.floor(rand() * 3600 * 1000));
+        await AttendanceRecord.create({
+          sessionId: session._id,
+          studentId,
+          status: present ? "present" : "absent",
+          markedAt,
+        });
+        recordCount++;
+      }
     }
   }
-  console.log(`${sessions.length} sessions, ${records} attendance records`);
+  console.log(`${sessionCount} sessions, ${recordCount} attendance records over 6 months`);
 
   console.log("\n--- Seeding submissions ---");
   for (let i = 0; i < assignmentDocs.length; i++) {
@@ -458,10 +477,6 @@ async function main() {
 
   await mongoose.disconnect();
   console.log("\nDone! Login with the test credentials above.\n");
-}
-
-function sessionIndex(session: { _id: unknown }) {
-  return String(session._id).charCodeAt(0) % 3;
 }
 
 main().catch((error) => {

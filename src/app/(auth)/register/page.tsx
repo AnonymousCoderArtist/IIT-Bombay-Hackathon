@@ -4,10 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { GraduationCap, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { AuroraInput } from "@/components/ui/aurora-input";
 import {
   Select,
   SelectContent,
@@ -15,6 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AuthShell } from "@/components/auth/auth-shell";
+import {
+  AuthCard,
+  BottomGradient,
+  LabelInputContainer,
+} from "@/components/auth/auth-card";
 
 const roles = [
   { value: "student", label: "Student" },
@@ -63,65 +68,51 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
-      <Link href="/" className="mb-8 flex items-center gap-2 font-semibold">
-        <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <GraduationCap className="size-5" />
-        </span>
-        Smart Campus
-      </Link>
-
-      <div className="w-full max-w-sm space-y-6 rounded-2xl border bg-card p-8 shadow-sm">
-        <div className="space-y-1.5 text-center">
-          <h1 className="text-2xl font-bold tracking-tight">Create your account</h1>
-          <p className="text-sm text-muted-foreground">Join your campus in minutes</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
+    <AuthShell>
+      <AuthCard
+        title="Create your account"
+        subtitle="Join your campus in minutes. Attendance, assignments, events sab ek jagah."
+      >
+        <form className="my-8" onSubmit={handleSubmit}>
+          <LabelInputContainer className="mb-4">
             <Label htmlFor="name">Full name</Label>
-            <Input
+            <AuroraInput
               id="name"
               placeholder="Aarav Kumar"
+              type="text"
               value={form.name}
               onChange={(e) => update("name", e.target.value)}
               required
               minLength={2}
             />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="email">Email Address</Label>
+            <AuroraInput
               id="email"
-              type="email"
               placeholder="you@college.edu"
+              type="email"
               value={form.email}
               onChange={(e) => update("email", e.target.value)}
               required
             />
-          </div>
-
-          <div className="space-y-1.5">
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input
+            <AuroraInput
               id="password"
-              type="password"
               placeholder="At least 8 characters"
+              type="password"
               value={form.password}
               onChange={(e) => update("password", e.target.value)}
               required
               minLength={8}
             />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>I am a</Label>
-            <Select
-              value={form.role}
-              onValueChange={(value) => update("role", value ?? "student")}
-            >
-              <SelectTrigger className="w-full">
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-8">
+            <Label htmlFor="role">I am a</Label>
+            <Select value={form.role} onValueChange={(value) => update("role", value ?? "student")}>
+              <SelectTrigger id="role" className="h-10 w-full rounded-md border-none bg-gray-50 dark:bg-zinc-800">
                 <SelectValue placeholder="Select role" />
               </SelectTrigger>
               <SelectContent>
@@ -132,21 +123,33 @@ export default function RegisterPage() {
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </LabelInputContainer>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading && <Loader2 className="size-4 animate-spin" />}
-            Create account
-          </Button>
+          <button
+            className="group/btn relative block h-10 w-full bg-primary font-medium text-primary-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_1px_2px_0_rgba(0,0,0,0.12)] transition-transform hover:brightness-105"
+            type="submit"
+            disabled={loading}
+          >
+            <span className="flex items-center justify-center gap-2">
+              {loading && <Loader2 className="size-4 animate-spin" />}
+              Sign up &rarr;
+            </span>
+            <BottomGradient />
+          </button>
+
+          <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
         </form>
 
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-neutral-500 dark:text-neutral-400">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-foreground hover:underline">
+          <Link
+            href="/login"
+            className="font-medium text-neutral-900 hover:underline dark:text-white"
+          >
             Sign in
           </Link>
         </p>
-      </div>
-    </div>
+      </AuthCard>
+    </AuthShell>
   );
 }

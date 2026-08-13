@@ -126,7 +126,7 @@ export default function MarkSessionPage() {
   const options: { value: string; label: string; classes: string }[] = [
     { value: "present", label: "Present", classes: "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/40 dark:text-green-300" },
     { value: "late", label: "Late", classes: "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-300" },
-    { value: "excused", label: "Excused", classes: "bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-300" },
+    { value: "excused", label: "Excused", classes: "bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-300" },
     { value: "absent", label: "Absent", classes: "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/40 dark:text-red-300" },
   ];
 

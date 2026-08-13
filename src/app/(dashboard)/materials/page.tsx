@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -117,19 +119,19 @@ export default function MaterialsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Study Materials</h1>
-          <p className="text-muted-foreground">
-            {canUpload
-              ? "Upload notes, slides aur reference material apne students ke liye."
-              : "Faculty ke notes aur reference materials browse karo."}
-          </p>
-        </div>
-        {canUpload && (
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger render={<Button />}>
-              <Plus className="size-4" />
+      <PageHeader
+        icon={<BookOpen className="size-5" />}
+        title="Study Materials"
+        subtitle={
+          canUpload
+            ? "Upload notes, slides aur reference material apne students ke liye."
+            : "Faculty ke notes aur reference materials browse karo."
+        }
+        actions={
+          canUpload && (
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger render={<Button />}>
+                <Plus className="size-4" />
               Upload material
             </DialogTrigger>
             <DialogContent>
@@ -215,8 +217,9 @@ export default function MaterialsPage() {
               </form>
             </DialogContent>
           </Dialog>
-        )}
-      </div>
+          )
+        }
+      />
 
       {loading ? (
         <div className="grid gap-4 md:grid-cols-2">
@@ -225,15 +228,15 @@ export default function MaterialsPage() {
         </div>
       ) : materials.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <BookOpen className="size-10 text-muted-foreground" />
-            <p className="font-medium">No study materials yet</p>
-            <p className="text-sm text-muted-foreground">
-              {canUpload
+          <EmptyState
+            icon={BookOpen}
+            title="No study materials yet"
+            description={
+              canUpload
                 ? "Apna pehla study material upload karo."
-                : "Faculty ke uploads yahan dikhenge."}
-            </p>
-          </CardContent>
+                : "Faculty ke uploads yahan dikhenge."
+            }
+          />
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">

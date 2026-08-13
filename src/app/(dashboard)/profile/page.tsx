@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Loader2, Upload, Save, LinkIcon, ScanFace, CheckCircle2 } from "lucide-react";
+import { Loader2, Upload, Save, LinkIcon, ScanFace, CheckCircle2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -190,10 +191,11 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
-        <p className="text-muted-foreground">Manage your personal and academic details.</p>
-      </div>
+      <PageHeader
+        icon={<User className="size-5" />}
+        title="Profile"
+        subtitle="Manage your personal and academic details."
+      />
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card>

@@ -12,7 +12,9 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
+  AudioLines,
 } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,13 +46,16 @@ export default function LectureNotesPage() {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
   const [transcript, setTranscript] = useState("");
+  const [source, setSource] = useState("live-stt");
   const [recording, setRecording] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
 
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const transcriptRef = useRef("");
   const recordingRef = useRef(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   function load() {
     fetch("/api/lecture-notes")
@@ -122,6 +127,38 @@ export default function LectureNotesPage() {
 
     recognition.start();
     toast.success("Recording shuru — lecture bolna shuru karo");
+    setSource("live-stt");
+  }
+
+  async function handleAudioUpload(file: File) {
+    if (file.size > 25 * 1024 * 1024) {
+      toast.error("Audio file 25MB se bada hai");
+      return;
+    }
+
+    setTranscribing(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/lecture-notes/transcribe", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error ?? "Transcription fail ho gayi");
+        return;
+      }
+
+      setTranscript((prev) => (prev ? prev + " " + data.transcript : data.transcript));
+      setSource("upload");
+      toast.success("Audio transcribe ho gaya!");
+    } catch {
+      toast.error("Transcription service unreachable");
+    } finally {
+      setTranscribing(false);
+    }
   }
 
   async function handleGenerate() {
@@ -144,7 +181,7 @@ export default function LectureNotesPage() {
           subject: subject.trim(),
           transcript: transcript.trim(),
           durationSec: 0,
-          source: "live-stt",
+          source,
         }),
       });
       const data = await res.json();
@@ -176,13 +213,11 @@ export default function LectureNotesPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Ambient Lecture Intelligence</h1>
-        <p className="text-muted-foreground">
-          Lecture record karo (browser STT) ya transcript paste karo — AI se structured study
-          notes, key points aur action items bante hain.
-        </p>
-      </div>
+      <PageHeader
+        icon={<Mic className="size-5" />}
+        title="Ambient Lecture Intelligence"
+        subtitle="Lecture record karo (browser STT), audio file upload karo ya transcript paste karo — AI se structured study notes, key points aur action items bante hain."
+      />
 
       <Card>
         <CardContent className="space-y-4 pt-6">
@@ -230,11 +265,32 @@ export default function LectureNotesPage() {
             <Button
               type="button"
               variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={generating || transcribing}
+            >
+              {transcribing ? <Loader2 className="size-4 animate-spin" /> : <AudioLines className="size-4" />}
+              {transcribing ? "Transcribing..." : "Upload audio"}
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg,.aac,.flac"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleAudioUpload(file);
+                e.target.value = "";
+              }}
+            />
+            <Button
+              type="button"
+              variant="outline"
               onClick={() => {
                 navigator.clipboard
                   ?.readText()
                   .then((t) => {
                     if (t) setTranscript((prev) => prev + " " + t);
+                    setSource("paste");
                     toast.success("Transcript pasted");
                   })
                   .catch(() => toast.error("Clipboard read nahi ho paya"));
@@ -346,7 +402,8 @@ export default function LectureNotesPage() {
 
                     <div className="mt-auto flex items-center justify-between pt-3">
                       <span className="text-xs text-muted-foreground">
-                        {note.transcript?.length ?? 0} chars · {note.source === "paste" ? "pasted" : "recorded"}
+                        {note.transcript?.length ?? 0} chars ·{" "}
+                        {note.source === "paste" ? "pasted" : note.source === "upload" ? "uploaded" : "recorded"}
                       </span>
                       {note.keyPoints && note.keyPoints.length > 3 && (
                         <Button variant="ghost" size="sm" onClick={() => setExpanded(open ? null : note._id)}>

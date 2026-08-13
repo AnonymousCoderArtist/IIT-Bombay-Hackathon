@@ -98,7 +98,7 @@ export const lectureNoteSchema = z.object({
   subject: z.string().max(80).optional().or(z.literal("")),
   transcript: z.string().max(50000),
   durationSec: z.coerce.number().min(0).max(86400).optional(),
-  source: z.enum(["live-stt", "paste"]).optional(),
+  source: z.enum(["live-stt", "paste", "upload"]).optional(),
 });
 
 export const eventSchema = z.object({
