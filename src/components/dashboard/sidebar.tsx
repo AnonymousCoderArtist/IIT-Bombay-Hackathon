@@ -88,9 +88,6 @@ function NavItem({ href, label, icon: Icon }: { href: string; label: string; ico
           : "text-muted-foreground hover:translate-x-0.5 hover:bg-muted/60 hover:text-foreground"
       )}
     >
-      {active && (
-        <span className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
-      )}
       <Icon
         className={cn(
           "size-4 transition-all duration-200",

@@ -14,8 +14,8 @@ export function Footer() {
   ];
 
   const socials = [
-    { icon: Code2, hover: "hover:text-primary hover:border-primary/50" },
-    { icon: Globe, hover: "hover:text-amber-600 hover:border-amber-500/50 dark:hover:text-amber-400" },
+    { icon: Code2, hover: "hover:text-teal-600 hover:border-teal-500/50 dark:hover:text-teal-400" },
+    { icon: Globe, hover: "hover:text-primary hover:border-primary/50" },
     { icon: Send, hover: "hover:text-orange-600 hover:border-orange-500/50 dark:hover:text-orange-400" },
   ];
 
@@ -71,7 +71,7 @@ export function Footer() {
             <div key={column.title}>
               <h3 className="flex items-center gap-2 font-semibold">
                 <span
-                  className={`size-1.5 rounded-full ${["bg-primary", "bg-amber-500", "bg-orange-500"][colIndex % 3]}`}
+                  className={`size-1.5 rounded-full ${["bg-primary", "bg-amber-500", "bg-teal-500"][colIndex % 3]}`}
                 />
                 {column.title}
               </h3>

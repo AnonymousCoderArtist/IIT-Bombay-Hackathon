@@ -130,7 +130,7 @@ export default function DashboardHome() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-medium text-muted-foreground">{today}</p>
-          <h1 className="mt-1 bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
+          <h1 className="mt-1 bg-linear-to-t from-foreground/55 to-foreground bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
             Welcome back, {session?.user?.name?.split(" ")[0]}
           </h1>
           <p className="mt-1 text-muted-foreground">

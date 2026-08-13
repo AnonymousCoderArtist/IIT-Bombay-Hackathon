@@ -81,20 +81,11 @@ export function Hero() {
             className="absolute -inset-4 -z-10 rounded-lg bg-linear-to-br from-primary/20 via-transparent to-[var(--violet-accent)]/20 blur-2xl"
           />
           <div className="rounded-lg border border-border bg-card/80 p-2 shadow-elevated backdrop-blur-sm">
-            <div className="relative overflow-hidden rounded-sm border bg-surface-secondary/60 p-6">
-              <Image
-                src="/glow-circle.svg"
-                alt=""
-                fill
-                sizes="600px"
-                aria-hidden
-                className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-50 mix-blend-screen dark:opacity-40"
-              />
-              <div className="relative z-10">
-                <div className="flex items-center justify-between">
+            <div className="rounded-sm border bg-surface-secondary/60 p-6">
+              <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Good morning, Aarav</p>
-                  <p className="text-lg font-semibold">Semester 5 · Computer Science</p>
+                  <p className="text-lg font-semibold bg-linear-to-t from-foreground/45 to-foreground bg-clip-text text-transparent">Semester 5 · Computer Science</p>
                 </div>
               </div>
 
@@ -121,7 +112,7 @@ export function Hero() {
                       <span
                         className={`flex size-7 items-center justify-center rounded-md ${
                           item.tone === "accent"
-                            ? "bg-primary/10 text-primary"
+                            ? "bg-teal-500/10 text-teal-600 dark:text-teal-400"
                             : "bg-muted text-muted-foreground"
                         }`}
                       >
@@ -132,9 +123,16 @@ export function Hero() {
                   );
                 })}
               </div>
-              </div>
             </div>
           </div>
+          <Image
+            src="/glow-circle.svg"
+            alt=""
+            fill
+            sizes="600px"
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-10 h-full w-full rounded-lg object-cover opacity-45 mix-blend-multiply dark:opacity-60 dark:mix-blend-screen"
+          />
         </motion.div>
       </div>
     </section>
