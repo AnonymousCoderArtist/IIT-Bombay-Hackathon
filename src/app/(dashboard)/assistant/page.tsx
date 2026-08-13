@@ -13,6 +13,7 @@ type Message = {
   role: "user" | "bot";
   text: string;
   sources?: string[];
+  provider?: string;
 };
 
 const SUGGESTIONS = [
@@ -62,7 +63,13 @@ export default function AssistantPage() {
 
       setMessages((prev) => [
         ...prev,
-        { id: crypto.randomUUID(), role: "bot", text: data.answer, sources: data.sources },
+        {
+          id: crypto.randomUUID(),
+          role: "bot",
+          text: data.answer,
+          sources: data.sources,
+          provider: data.provider,
+        },
       ]);
     } finally {
       setLoading(false);
@@ -103,6 +110,12 @@ export default function AssistantPage() {
                   {m.sources && m.sources.length > 0 && (
                     <p className="mt-2 text-xs text-muted-foreground">
                       Sources: {m.sources.join(", ")}
+                    </p>
+                  )}
+                  {m.role === "bot" && m.provider === "mock" && (
+                    <p className="mt-2 text-xs text-muted-foreground/80">
+                      Mock mode — zyada accha jawab paane ke liye Settings › AI me apne AI
+                      credentials add karo.
                     </p>
                   )}
                 </div>

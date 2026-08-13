@@ -72,14 +72,58 @@ def health() -> dict[str, Any]:
     }
 
 
-CHAT_SYSTEM = """Tum IIT Bombay ka Smart Campus AI assistant ho. Sirf diye gaye knowledge base se jawab do. Har jawab ke end me "[Source: ...]" likho jahan se info li. Agar knowledge base me nahi hai toh seedha bolo ki iska jawab mere paas nahi hai, guess mat karo. Hinglish/Hindi + English mix me concise jawab do."""
+CHAT_SYSTEM = """Tum IIT Bombay ke Smart Campus AI assistant ho — ek normal, friendly AI jo IIT Bombay ke context me baat karta hai. Jab knowledge base se info use karo toh jawab ke end me "[Source: ...]" likho. General baatein (greetings, chit-chat, college life, motivation) bhi normal AI ki tarah friendly kar sakte ho, IIT Bombay ke mahaul se personalize karke. Agar koi campus-specific cheez KB me nahi hai toh honestly batao aur closest campus context me guide karo. Hinglish/Hindi + English mix me concise jawab do."""
+
+GENERAL_SYSTEM = """Tum IIT Bombay ke Smart Campus AI assistant ho. Ye sawaal campus knowledge base me nahi hai, phir bhi normal AI ki tarah friendly jawab do — IIT Bombay ke context se personalize karke. Hinglish/Hindi + English mix me concise rakho. Harmful ya unsafe sawaal pe seedha mana karo."""
+
+GREETING_REPLY = (
+    "Namaste! Main IIT Bombay ka Smart Campus AI assistant hoon. Attendance, placements, hostels, "
+    "clubs, fests, academic rules ya kisi bhi campus cheez ke baare me puchho — IIT Bombay ke hisaab se "
+    "jawab dunga. General baatein bhi kar sakte hain, to batao kya puchhna hai?"
+)
+
+GENERAL_FALLBACK = (
+    "Yeh topic mere IIT Bombay campus knowledge base me nahi hai, lekin main normal chat bhi kar sakta hoon. "
+    "Campus events, placements, clubs, hostels, attendance, departments aur IIT Bombay ki activities ke baare me "
+    "puchho — wahan main solid jawab dunga. (General topics pe aur accha jawab paane ke liye Settings > AI me "
+    "apne AI credentials add kar sakte ho.)"
+)
+
+GREETING_EXACT = {
+    "hi", "hello", "hey", "heyy", "hii", "hiii", "namaste", "namaskar", "hola", "yo", "sup",
+    "salaam", "adaab", "kaise ho", "kese ho", "kya haal", "how are you",
+    "good morning", "good afternoon", "good evening", "good night", "gud morning",
+}
+
+GREETING_PREFIX = ("hi ", "hello ", "hey ", "namaste ", "namaskar ", "hola ", "kaise ho", "kese ho", "kya haal", "how are you", "good morning", "good afternoon", "good evening", "good night")
+
+
+def _is_greeting(text: str) -> bool:
+    t = " ".join(text.strip().lower().replace("!", " ").replace("?", " ").replace(",", " ").replace(".", " ").split())
+    if t in GREETING_EXACT:
+        return True
+    return any(t.startswith(prefix) for prefix in GREETING_PREFIX)
+
+
+async def _general_chat(req: ChatRequest) -> dict[str, Any]:
+    if configured_provider() != "mock" or req.ai:
+        prompt = f"{GENERAL_SYSTEM}\n\nQuestion: {req.question}"
+        try:
+            answer = await generate_text(prompt, req.ai)
+            return {"answer": answer, "sources": [], "provider": "custom" if req.ai else configured_provider()}
+        except Exception:
+            pass
+    return {"answer": GENERAL_FALLBACK, "sources": [], "provider": "mock"}
 
 
 @app.post("/chat")
 async def chat(req: ChatRequest) -> dict[str, Any]:
-    results = rag.retrieve(req.question, top_k=4)
+    if _is_greeting(req.question):
+        return {"answer": GREETING_REPLY, "sources": [], "provider": configured_provider()}
+
+    results = rag.retrieve(req.question, top_k=4, threshold=0.12)
     if not results:
-        return {"answer": "Is sawal ka jawab mere campus knowledge base me nahi hai.", "sources": [], "provider": configured_provider()}
+        return await _general_chat(req)
 
     context = "\n\n".join(f"Source: {r['source']}\n{r['text']}" for r in results)
 

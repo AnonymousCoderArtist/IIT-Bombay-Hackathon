@@ -97,12 +97,11 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
                   contentStyle={TOOLTIP_STYLE}
                   cursor={{ fill: "color-mix(in oklch, var(--muted) 50%, transparent)" }}
                 />
-                <Bar
-                  dataKey="percentage"
-                  name="Attendance %"
-                  fill="var(--chart-1)"
-                  radius={[6, 6, 0, 0]}
-                />
+                <Bar dataKey="percentage" name="Attendance %" radius={[6, 6, 0, 0]}>
+                  {(charts.departmentPerformance ?? []).map((_, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -162,12 +161,11 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
                   contentStyle={TOOLTIP_STYLE}
                   cursor={{ fill: "color-mix(in oklch, var(--muted) 50%, transparent)" }}
                 />
-                <Bar
-                  dataKey="value"
-                  name="Registrations"
-                  fill="var(--chart-2)"
-                  radius={[0, 6, 6, 0]}
-                />
+                <Bar dataKey="value" name="Registrations" radius={[0, 6, 6, 0]}>
+                  {(charts.eventParticipation ?? []).map((_, index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
