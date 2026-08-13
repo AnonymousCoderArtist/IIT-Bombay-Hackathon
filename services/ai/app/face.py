@@ -13,13 +13,28 @@ except ImportError:
     FaceAnalyzer = None
     _AVAILABLE = False
 
+try:
+    from uniface.detection import RetinaFace
+    from uniface.spoofing import MiniFASNet
+
+    _SPOOF_AVAILABLE = True
+except ImportError:
+    RetinaFace = None
+    MiniFASNet = None
+    _SPOOF_AVAILABLE = False
+
 _analyzer: FaceAnalyzer | None = None
 _analyzer_lock = threading.Lock()
+
+_spoofer: MiniFASNet | None = None
+_detector: RetinaFace | None = None
+_spoof_lock = threading.Lock()
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 STORE_PATH = os.path.join(DATA_DIR, "face_store.json")
 
 DEFAULT_THRESHOLD = 0.45
+LIVENESS_THRESHOLD = float(os.environ.get("LIVENESS_THRESHOLD", "0.6"))
 
 
 def _get_analyzer() -> FaceAnalyzer:
@@ -84,12 +99,57 @@ def _embedding(image: np.ndarray) -> np.ndarray | None:
     return emb / norm if norm > 0 else emb
 
 
+def _get_spoof_models():
+    global _spoofer, _detector
+    if not _SPOOF_AVAILABLE:
+        return None, None
+    with _spoof_lock:
+        if _spoofer is None:
+            _detector = RetinaFace()
+            _spoofer = MiniFASNet()
+        return _detector, _spoofer
+
+
+def _is_live(image: np.ndarray) -> tuple[bool, float]:
+    detector, spoofer = _get_spoof_models()
+    if detector is None or spoofer is None:
+        return True, 1.0
+
+    faces = detector.detect(image)
+    if not faces:
+        return True, 1.0
+
+    def area(f) -> float:
+        x1, y1, x2, y2 = f.bbox[:4]
+        return float(max(0, x2 - x1) * max(0, y2 - y1))
+
+    face = max(faces, key=area)
+    try:
+        result = spoofer.predict(image, face.bbox)
+        return bool(result.is_real), float(getattr(result, "confidence", 0.0))
+    except Exception:
+        return True, 1.0
+
+
+def _ensure_live(image: np.ndarray) -> None:
+    if _SPOOF_AVAILABLE:
+        is_real, confidence = _is_live(image)
+        if not is_real or confidence < LIVENESS_THRESHOLD:
+            raise ValueError("fake image detect hui - mobile/printed photo allowed nahi, real face dikhao")
+
+
 def available() -> bool:
     return _AVAILABLE
 
 
+def spoof_available() -> bool:
+    return _SPOOF_AVAILABLE
+
+
 def enroll(user_id: str, image: str) -> dict:
-    emb = _embedding(_decode_image(image))
+    img = _decode_image(image)
+    _ensure_live(img)
+    emb = _embedding(img)
     if emb is None:
         raise ValueError("chehra detect nahi hua - dobara try karo")
 
@@ -102,7 +162,9 @@ def enroll(user_id: str, image: str) -> dict:
 
 
 def recognize(image: str, threshold: float = DEFAULT_THRESHOLD) -> dict:
-    emb = _embedding(_decode_image(image))
+    img = _decode_image(image)
+    _ensure_live(img)
+    emb = _embedding(img)
     if emb is None:
         raise ValueError("chehra detect nahi hua - camera ke samne aao")
 

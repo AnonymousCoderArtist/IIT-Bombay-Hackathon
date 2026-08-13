@@ -1,6 +1,0 @@
-fastapi>=0.115
-uvicorn[standard]>=0.30
-httpx>=0.27
-numpy>=2.0
-uniface[cpu]>=0.1
-opencv-python-headless>=4.8

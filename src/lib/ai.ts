@@ -10,7 +10,14 @@ function getProvider(): Provider {
 }
 
 async function callPython<T>(path: string, payload: unknown): Promise<T | null> {
-  if (!SERVICE_BASE) return null;
+  const r = await callPythonDetail<T>(path, payload);
+  return r.ok ? r.data : null;
+}
+
+type CallResult<T> = { ok: true; data: T } | { ok: false; error: string };
+
+async function callPythonDetail<T>(path: string, payload: unknown): Promise<CallResult<T>> {
+  if (!SERVICE_BASE) return { ok: false, error: "AI service URL configured nahi hai" };
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 8000);
@@ -21,10 +28,13 @@ async function callPython<T>(path: string, payload: unknown): Promise<T | null> 
       signal: controller.signal,
     });
     clearTimeout(timer);
-    if (!res.ok) return null;
-    return (await res.json()) as T;
+    if (!res.ok) {
+      const body = (await res.json().catch(() => null)) as { detail?: string } | null;
+      return { ok: false, error: body?.detail ?? `Service error ${res.status}` };
+    }
+    return { ok: true, data: (await res.json()) as T };
   } catch {
-    return null;
+    return { ok: false, error: "AI service unreachable" };
   }
 }
 
@@ -236,6 +246,25 @@ export type FaceEnrollResult = {
   dim: number;
 };
 
+export class FaceServiceError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "FaceServiceError";
+  }
+}
+
+export async function enrollFace(userId: string, image: string): Promise<FaceEnrollResult | null> {
+  const r = await callPythonDetail<FaceEnrollResult>("/face/enroll", { user_id: userId, image });
+  if (r.ok) return r.data;
+  throw new FaceServiceError(r.error);
+}
+
+export async function recognizeFace(image: string): Promise<FaceRecognizeResult | null> {
+  const r = await callPythonDetail<FaceRecognizeResult>("/face/recognize", { image });
+  if (r.ok) return r.data;
+  throw new FaceServiceError(r.error);
+}
+
 export type FaceMatch = {
   user_id: string;
   confidence: number;
@@ -247,14 +276,6 @@ export type FaceRecognizeResult = {
   confidence: number;
   matches: FaceMatch[];
 };
-
-export async function enrollFace(userId: string, image: string): Promise<FaceEnrollResult | null> {
-  return callPython<FaceEnrollResult>("/face/enroll", { user_id: userId, image });
-}
-
-export async function recognizeFace(image: string): Promise<FaceRecognizeResult | null> {
-  return callPython<FaceRecognizeResult>("/face/recognize", { image });
-}
 
 export function faceServiceConfigured(): boolean {
   return Boolean(SERVICE_BASE);

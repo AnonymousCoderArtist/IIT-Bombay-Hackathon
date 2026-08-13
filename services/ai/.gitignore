@@ -1,8 +1,9 @@
-# Smart Campus AI service
-# .venv me packages installed hain — naya machine ho toh: pip install -r requirements.txt
+# Smart Campus AI service — uv managed
+# uv.lock commit rakho taaki deps reproducible rahein.
+# Naya machine: `uv sync` karke chal jayega (pyproject.toml dekh ke).
 
-services/ai/.venv/
-services/ai/.env
-services/ai/data/
+.venv/
+.env
+data/
 __pycache__/
 *.pyc

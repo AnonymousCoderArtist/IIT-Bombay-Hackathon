@@ -271,8 +271,8 @@ export default function ScanPage() {
           <CardContent className="space-y-4 pt-6">
             <p className="font-medium">Face check-in</p>
             <p className="text-sm text-muted-foreground">
-              Code paste karo, phir camera se face capture karo — attendance sirf aapke
-              enrolled face se mark hogi.
+              Code paste karo, phir camera se face capture karo ya photo upload karo —
+              attendance sirf aapke enrolled face se mark hogi.
             </p>
             <div className="space-y-1.5">
               <Label htmlFor="face-code">Check-in code</Label>
@@ -287,7 +287,7 @@ export default function ScanPage() {
             </div>
             <FaceCaptureDialog
               title="Face check-in"
-              description="Camera ke samne aao aur capture karo. Match hone pe attendance mark ho jayegi."
+              description="Camera se capture karo ya photo upload karo. Match hone pe attendance mark ho jayegi."
               loading={faceVerifying}
               onCapture={handleFaceCapture}
               trigger={

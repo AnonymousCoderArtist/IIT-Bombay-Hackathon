@@ -28,7 +28,7 @@ type SessionDetail = {
 type MarkSessionPageData = {
   session: SessionDetail;
   students: Student[];
-  records: { studentId: string; status: string }[];
+  records: { studentId: string; status: string; photoUrl?: string }[];
 };
 
 export default function MarkSessionPage() {
@@ -38,6 +38,7 @@ export default function MarkSessionPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [statuses, setStatuses] = useState<Record<string, string>>({});
+  const [photos, setPhotos] = useState<Record<string, string>>({});
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
@@ -56,7 +57,13 @@ export default function MarkSessionPage() {
         const existing = Object.fromEntries(
           records.map((r: { studentId: string; status: string }) => [r.studentId, r.status])
         );
+        const photoMap = Object.fromEntries(
+          records
+            .filter((r: { photoUrl?: string }) => Boolean(r.photoUrl))
+            .map((r: { studentId: string; photoUrl?: string }) => [r.studentId, r.photoUrl as string])
+        );
 
+        setPhotos(photoMap);
         setStatuses(existing);
         setData({
           session: sessionJson.session,
@@ -188,12 +195,30 @@ export default function MarkSessionPage() {
                     key={student._id}
                     className="flex flex-wrap items-center justify-between gap-3 rounded-lg border p-3"
                   >
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium">{student.name}</p>
-                      <p className="truncate text-xs text-muted-foreground">
-                        {student.rollNumber ? `${student.rollNumber} · ` : ""}
-                        {student.email}
-                      </p>
+                    <div className="flex items-center gap-3">
+                      {photos[student._id] && (
+                        <a
+                          href={photos[student._id]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Face check-in photo verify karo"
+                          className="shrink-0"
+                        >
+                          <img
+                            src={photos[student._id]}
+                            alt={`${student.name} check-in photo`}
+                            className="h-10 w-10 rounded-md border object-cover"
+                          />
+                          <span className="sr-only">Open check-in photo</span>
+                        </a>
+                      )}
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium">{student.name}</p>
+                        <p className="truncate text-xs text-muted-foreground">
+                          {student.rollNumber ? `${student.rollNumber} · ` : ""}
+                          {student.email}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex gap-1.5">
                       {options.map((o) => (

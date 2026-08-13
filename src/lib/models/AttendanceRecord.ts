@@ -10,6 +10,7 @@ const attendanceRecordSchema = new Schema(
       default: "present",
     },
     markedAt: { type: Date, default: Date.now },
+    photoUrl: { type: String },
   },
   { timestamps: true }
 );

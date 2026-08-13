@@ -4,7 +4,8 @@ import { auth } from "@/auth";
 import { dbConnect } from "@/lib/db";
 import { AttendanceSession, AttendanceRecord, Notification } from "@/lib/models";
 import { verifyCheckInToken } from "@/lib/qr-attendance";
-import { recognizeFace } from "@/lib/ai";
+import { recognizeFace, FaceServiceError } from "@/lib/ai";
+import { saveBase64Image } from "@/lib/save-image";
 import { jsonError, rateLimit, getClientIp } from "@/lib/api-helpers";
 import { qrCheckInSchema } from "@/lib/validators";
 
@@ -34,13 +35,27 @@ export async function POST(request: Request) {
     return jsonError("QR code invalid ya expire ho gaya. Faculty se naya QR lo.", 400);
   }
 
+  let photoUrl: string | undefined;
   if (parsed.data.faceImage) {
-    const faceResult = await recognizeFace(parsed.data.faceImage);
+    let faceResult;
+    try {
+      faceResult = await recognizeFace(parsed.data.faceImage);
+    } catch (err) {
+      if (err instanceof FaceServiceError) {
+        return jsonError(err.message, 422);
+      }
+      return jsonError("Face service unavailable — QR ya manual code use karo", 503);
+    }
     if (!faceResult) {
       return jsonError("Face service unavailable — QR ya manual code use karo", 503);
     }
     if (!faceResult.matched || faceResult.user_id !== session.user.id) {
       return jsonError("Face match nahi hua. Pehle profile me face enroll karo aur dobara try karo.", 401);
+    }
+    try {
+      photoUrl = await saveBase64Image(parsed.data.faceImage, "faces");
+    } catch {
+      photoUrl = undefined;
     }
   }
 
@@ -75,7 +90,14 @@ export async function POST(request: Request) {
 
   await AttendanceRecord.updateOne(
     { sessionId, studentId: session.user.id },
-    { $set: { status: "present", markedAt: new Date() }, $setOnInsert: { sessionId, studentId: session.user.id } },
+    {
+      $set: {
+        status: "present",
+        markedAt: new Date(),
+        ...(photoUrl ? { photoUrl } : {}),
+      },
+      $setOnInsert: { sessionId, studentId: session.user.id },
+    },
     { upsert: true }
   );
 

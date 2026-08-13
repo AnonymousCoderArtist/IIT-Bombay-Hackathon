@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { auth } from "@/auth";
 import { jsonError } from "@/lib/api-helpers";
-import { enrollFace, faceServiceConfigured } from "@/lib/ai";
+import { enrollFace, FaceServiceError, faceServiceConfigured } from "@/lib/ai";
 import { faceEnrollSchema } from "@/lib/validators";
 
 export async function POST(request: Request) {
@@ -26,7 +26,15 @@ export async function POST(request: Request) {
     return jsonError(firstError.message, 400);
   }
 
-  const result = await enrollFace(session.user.id, parsed.data.image);
+  let result;
+  try {
+    result = await enrollFace(session.user.id, parsed.data.image);
+  } catch (err) {
+    if (err instanceof FaceServiceError) {
+      return jsonError(err.message, 422);
+    }
+    return jsonError("Face service unavailable — dobara try karo", 503);
+  }
   if (!result) {
     return jsonError("Face service unavailable — dobara try karo", 503);
   }

@@ -4,7 +4,13 @@ import re
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from .face import available as face_available, count as face_count, enroll as face_enroll, recognize as face_recognize
+from .face import (
+    available as face_available,
+    count as face_count,
+    enroll as face_enroll,
+    recognize as face_recognize,
+    spoof_available,
+)
 from .llm import configured_provider, generate_text
 from .rag import rag
 
@@ -60,7 +66,7 @@ def health() -> dict[str, Any]:
         "status": "ok",
         "provider": configured_provider(),
         "kb_chunks": len(rag.chunks),
-        "face": {"available": face_available(), "enrolled": face_count()},
+        "face": {"available": face_available(), "enrolled": face_count(), "liveness": spoof_available()},
     }
 
 

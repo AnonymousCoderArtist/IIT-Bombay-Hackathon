@@ -260,7 +260,7 @@ export default function ProfilePage() {
           <CardHeader>
             <CardTitle>Face enrollment</CardTitle>
             <CardDescription>
-              Camera se photo lo — attendance face check-in ke liye use hogi.
+              Camera se photo lo ya image upload karo — attendance face check-in ke liye use hogi.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -272,7 +272,7 @@ export default function ProfilePage() {
             ) : (
               <FaceCaptureDialog
                 title="Face enroll karo"
-                description="Camera ke samne seedha aao, achhi lighting me, bina glasses/hat ke — phir capture karo."
+                description="Camera se capture karo ya photo upload karo — achhi lighting me, bina glasses/hat ke."
                 loading={faceEnrolling}
                 onCapture={handleFaceCapture}
                 trigger={
