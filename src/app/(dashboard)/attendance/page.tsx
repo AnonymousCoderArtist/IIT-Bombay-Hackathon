@@ -148,12 +148,12 @@ function StudentAttendanceView() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="grid flex-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Overall", value: `${data.summary.percentage}%`, sub: `${data.summary.present + data.summary.late + data.summary.excused}/${data.summary.total} sessions`, accent: "border-t-2 border-t-primary" },
-            { label: "Present", value: data.summary.present, accent: "border-t-2 border-t-emerald-500" },
-            { label: "Late", value: data.summary.late, accent: "border-t-2 border-t-amber-500" },
-            { label: "Absent", value: data.summary.absent, accent: "border-t-2 border-t-red-500" },
+            { label: "Overall", value: `${data.summary.percentage}%`, sub: `${data.summary.present + data.summary.late + data.summary.excused}/${data.summary.total} sessions`, accent: "border-primary/40 bg-primary/10" },
+            { label: "Present", value: data.summary.present, accent: "border-emerald-500/40 bg-emerald-500/10" },
+            { label: "Late", value: data.summary.late, accent: "border-amber-500/40 bg-amber-500/10" },
+            { label: "Absent", value: data.summary.absent, accent: "border-red-500/40 bg-red-500/10" },
           ].map((stat) => (
-            <Card key={stat.label} className={stat.accent}>
+            <Card key={stat.label} className={`transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elevated ${stat.accent}`}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-muted-foreground">{stat.label}</CardTitle>
               </CardHeader>
@@ -294,12 +294,12 @@ function StudentAttendanceView() {
             <>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {[
-                  { label: "Monthly %", value: `${data.monthly.summary.percentage}%`, sub: `${data.monthly.summary.present + data.monthly.summary.late + data.monthly.summary.excused}/${data.monthly.summary.total} sessions`, accent: "border-t-2 border-t-primary" },
-                  { label: "Present", value: data.monthly.summary.present, accent: "border-t-2 border-t-emerald-500" },
-                  { label: "Late", value: data.monthly.summary.late, accent: "border-t-2 border-t-amber-500" },
-                  { label: "Absent", value: data.monthly.summary.absent, accent: "border-t-2 border-t-red-500" },
+                  { label: "Monthly %", value: `${data.monthly.summary.percentage}%`, sub: `${data.monthly.summary.present + data.monthly.summary.late + data.monthly.summary.excused}/${data.monthly.summary.total} sessions`, accent: "border-primary/40 bg-primary/10" },
+                  { label: "Present", value: data.monthly.summary.present, accent: "border-emerald-500/40 bg-emerald-500/10" },
+                  { label: "Late", value: data.monthly.summary.late, accent: "border-amber-500/40 bg-amber-500/10" },
+                  { label: "Absent", value: data.monthly.summary.absent, accent: "border-red-500/40 bg-red-500/10" },
                 ].map((stat) => (
-                  <Card key={stat.label} className={stat.accent}>
+                  <Card key={stat.label} className={`transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elevated ${stat.accent}`}>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-sm text-muted-foreground">{stat.label}</CardTitle>
                     </CardHeader>

@@ -82,19 +82,19 @@ function NavItem({ href, label, icon: Icon }: { href: string; label: string; ico
     <Link
       href={href}
       className={cn(
-        "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+        "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
         active
           ? "bg-linear-to-r from-primary/15 to-primary/5 text-foreground"
-          : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+          : "text-muted-foreground hover:translate-x-0.5 hover:bg-muted/60 hover:text-foreground"
       )}
     >
       {active && (
-        <span className="absolute inset-y-1.5 left-0 w-0.5 bg-primary" />
+        <span className="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
       )}
       <Icon
         className={cn(
-          "size-4 transition-colors",
-          active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+          "size-4 transition-all duration-200",
+          active ? "text-primary" : "text-muted-foreground group-hover:scale-110 group-hover:text-foreground"
         )}
       />
       {label}

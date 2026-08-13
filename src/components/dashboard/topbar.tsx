@@ -135,7 +135,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
         <Link
           href="/notifications"
-          className="relative flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="relative flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-all duration-200 hover:scale-105 hover:bg-muted hover:text-foreground"
           aria-label="Notifications"
         >
           <Bell className="size-5" />

@@ -80,10 +80,10 @@ export default function CalendarWidget() {
       ) : (
         <div className="grid gap-3 md:grid-cols-2">
           {events.map((event) => (
-            <Card key={`${event.date}-${event.title}`}>
+            <Card key={`${event.date}-${event.title}`} className="group transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-elevated">
               <CardContent className="p-3">
                 <div className="flex items-center gap-3">
-                  <div className="flex size-10 shrink-0 items-center justify-center bg-primary/10 text-primary">
+                  <div className="flex size-10 shrink-0 items-center justify-center bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary/15">
                     <CalendarDays className="size-4" />
                   </div>
                   <div className="min-w-0 flex-1">

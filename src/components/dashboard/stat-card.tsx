@@ -22,7 +22,7 @@ const ACCENT_CLASSES: Record<NonNullable<StatCardProps["accent"]>, string> = {
 
 export function StatCard({ title, value, icon: Icon, hint, loading, accent = "primary" }: StatCardProps) {
   return (
-    <Card className="group relative overflow-hidden">
+    <Card className="group relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/35 hover:shadow-elevated">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>

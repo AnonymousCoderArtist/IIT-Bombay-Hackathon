@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, CalendarCheck, ClipboardList, Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -77,11 +78,20 @@ export function Hero() {
         >
           <div
             aria-hidden
-            className="absolute -inset-4 -z-10 rounded-lg bg-linear-to-br from-primary/15 via-transparent to-[var(--violet-accent)]/15 blur-2xl"
+            className="absolute -inset-4 -z-10 rounded-lg bg-linear-to-br from-primary/20 via-transparent to-[var(--violet-accent)]/20 blur-2xl"
           />
           <div className="rounded-lg border border-border bg-card/80 p-2 shadow-elevated backdrop-blur-sm">
-            <div className="rounded-sm border bg-surface-secondary/60 p-6">
-              <div className="flex items-center justify-between">
+            <div className="relative overflow-hidden rounded-sm border bg-surface-secondary/60 p-6">
+              <Image
+                src="/glow-circle.svg"
+                alt=""
+                fill
+                sizes="600px"
+                aria-hidden
+                className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-50 mix-blend-screen dark:opacity-40"
+              />
+              <div className="relative z-10">
+                <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Good morning, Aarav</p>
                   <p className="text-lg font-semibold">Semester 5 · Computer Science</p>
@@ -121,6 +131,7 @@ export function Hero() {
                     </div>
                   );
                 })}
+              </div>
               </div>
             </div>
           </div>

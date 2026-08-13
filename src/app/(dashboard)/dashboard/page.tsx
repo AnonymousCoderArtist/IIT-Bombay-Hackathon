@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   CalendarDays,
   ClipboardList,
@@ -150,11 +151,24 @@ export default function DashboardHome() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.div
+        initial="hidden"
+        animate="show"
+        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
         {cardsByRole[role]?.map((card) => (
-          <StatCard key={card.title} {...card} loading={loading} />
+          <motion.div
+            key={card.title}
+            variants={{
+              hidden: { opacity: 0, y: 16 },
+              show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+            }}
+          >
+            <StatCard {...card} loading={loading} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {(role === "student" || role === "coordinator") && <CalendarWidget />}
