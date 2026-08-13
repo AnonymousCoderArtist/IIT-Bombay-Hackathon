@@ -25,10 +25,6 @@ export function Footer() {
         aria-hidden
         className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_115%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent)]"
       />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-linear-to-r from-transparent via-primary/60 to-transparent"
-      />
       <Image
         src="/glow-circle.svg"
         alt=""
@@ -43,7 +39,7 @@ export function Footer() {
         width={5824}
         height={3264}
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -bottom-10 -z-10 h-full w-full object-cover object-top opacity-100"
+        className="pointer-events-none absolute inset-x-0 -bottom-4 -z-10 h-full w-full object-cover object-top opacity-70"
       />
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-5">
