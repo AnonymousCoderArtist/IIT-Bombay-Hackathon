@@ -131,7 +131,7 @@ export function Hero() {
             fill
             sizes="600px"
             aria-hidden
-            className="pointer-events-none absolute inset-0 z-10 h-full w-full rounded-lg object-cover opacity-45 mix-blend-multiply dark:opacity-60 dark:mix-blend-screen"
+            className="pointer-events-none absolute -inset-x-[45%] -inset-y-[45%] z-10 h-full w-full object-cover opacity-25 mix-blend-multiply dark:opacity-35 dark:mix-blend-screen"
           />
         </motion.div>
       </div>

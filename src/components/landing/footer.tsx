@@ -21,25 +21,21 @@ export function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t">
-      <Image
-        src="/footer-banner.png"
-        alt=""
-        fill
-        sizes="100vw"
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center opacity-70"
-      />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_115%,color-mix(in_oklch,var(--primary)_28%,transparent),transparent)]"
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_115%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent)]"
       />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-linear-to-r from-transparent via-primary/60 to-transparent"
       />
-      <div
+      <Image
+        src="/glow-circle.svg"
+        alt=""
+        width={1676}
+        height={1676}
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-linear-to-b from-background/95 via-background/55 to-background/90"
+        className="pointer-events-none absolute -bottom-64 left-1/2 z-0 h-[44rem] w-[84rem] max-w-none -translate-x-1/2 opacity-30"
       />
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-5">
