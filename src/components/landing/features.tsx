@@ -72,7 +72,7 @@ export function Features() {
       description: t("f2.desc"),
       span: "md:col-span-4",
       extra: (
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.3fr] lg:items-center">
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.4fr] lg:items-center">
           <div>
             <div className="flex items-end gap-3">
               <span className="font-heading text-4xl font-extrabold tabular-nums text-primary">92%</span>
@@ -96,18 +96,39 @@ export function Features() {
                 <TrendingUp className="size-3.5" /> +7% vs last week
               </span>
             </div>
-            <div className="mt-3 flex h-24 items-end gap-3">
+            <svg viewBox="0 0 200 72" className="mt-3 w-full" role="img" aria-label="Weekly attendance trend">
+              <defs>
+                <linearGradient id="attFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#c5ae79" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#c5ae79" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              {[
+                [8, 34],
+                [56, 14],
+                [104, 28],
+                [152, 6],
+                [192, 44],
+              ].map(([x, y]) => (
+                <circle key={x} cx={x} cy={y} r="2.5" fill="#c5ae79" />
+              ))}
+              <path
+                d="M8 34 C 32 8, 32 28, 56 14 S 80 40, 104 28 S 128 0, 152 6 S 176 52, 192 44"
+                fill="none"
+                stroke="#c5ae79"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <path
+                d="M8 34 C 32 8, 32 28, 56 14 S 80 40, 104 28 S 128 0, 152 6 S 176 52, 192 44 L 192 72 L 8 72 Z"
+                fill="url(#attFill)"
+              />
+            </svg>
+            <div className="flex justify-between px-0.5">
               {attendanceWeek.map((item) => (
-                <div key={item.day} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5">
-                  <span className="text-[0.65rem] tabular-nums text-muted-foreground">{item.value}%</span>
-                  <span
-                    style={{ height: `${item.value}%` }}
-                    className={`w-full rounded-md ${
-                      item.value >= 90 ? "bg-primary" : "bg-primary/35"
-                    }`}
-                  />
-                  <span className="text-[0.7rem] text-muted-foreground">{item.day}</span>
-                </div>
+                <span key={item.day} className="text-[0.7rem] text-muted-foreground">
+                  {item.day}
+                </span>
               ))}
             </div>
           </div>
