@@ -76,28 +76,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     ...authConfig.callbacks,
     async signIn({ user, account }) {
-      if (account?.provider === "google") {
+      if (account?.provider === "google" && user.email) {
         await dbConnect();
-        const existing = await User.findOne({ email: user.email });
-
-        if (existing) {
-          if (!existing.emailVerified) {
-            existing.emailVerified = true;
-            await existing.save();
-          }
-          existing.authProvider = "google";
-          existing.status = "active";
-          await existing.save();
-          return true;
-        }
-
-        await User.create({
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          emailVerified: true,
-          authProvider: "google",
-          role: "student",
+        const update = {
+          $set: {
+            name: user.name,
+            image: user.image,
+            emailVerified: true,
+            authProvider: "google",
+            status: "active",
+            lastLoginAt: new Date(),
+          },
+          $setOnInsert: { role: "student" },
+        };
+        await User.findOneAndUpdate({ email: user.email }, update, {
+          upsert: true,
+          new: true,
         });
       }
 
