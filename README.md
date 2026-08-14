@@ -4,6 +4,22 @@ Ek hi platform pe campus ki saari cheezein — attendance, assignments, events, 
 
 Built for **DevFusion 4.0: The Developers Hackathon**.
 
+## Unique Features
+
+- **Face Recognition Attendance** — camera ya photo upload se check-in with liveness detection (printed/screen photos reject), face enrollment + token based QR check-in
+- **AI Campus Assistant** — RAG chatbot jo IIT Bombay campus FAQs ka grounded answer deta hai (sources ke saath), greetings + normal chit-chat bhi, per-user AI settings
+- **QR Attendance Scanner** — check-in token + QR system
+- **AI Lecture Notes** — audio/voice se transcription + summarization
+- **AI Placement Match** — resume/job matching + sentiment analysis
+- **AI Plagiarism Detection** — assignment submissions me similarity check
+- **Web Push Notifications** — browser push (VAPID) + real-time alerts
+- **QR Event Passes** — event registration pe QR pass download
+- **Smart Analytics Dashboards** — attendance %, department performance, placement stats, charts
+- **Global Search** — students, faculty, events, assignments, placements ek hi search me
+- **OTP Email Verification + Forgot Password** — secure signup/recovery flow
+- **Dark/Light Mode + Smooth Animations** — Framer Motion + shadcn/ui
+- **Admin Audit Logs** — sensitive admin actions logged
+
 ## Live App
 
 - **Live URL:** https://iit-bombay-hackathon-1r7i.vercel.app
@@ -34,16 +50,65 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 - **Auth:** NextAuth v5 — Email + OTP, Google OAuth, JWT sessions
 - **Extras:** QR event passes, email via SMTP, activity logs, dark/light mode
 
-## Features
+## All Features
 
-- Role-based dashboards (Student / Faculty / Coordinator / Admin)
-- Attendance — faculty creates sessions, students get subject-wise analytics
-- Assignments — upload with deadline + rubric, submit (file / GitHub link), grade with feedback
-- Events — register, cancel, QR pass download
+**Authentication & Security**
+- Email + password signup/login with OTP email verification
+- Google OAuth login/signup (auto user creation)
+- Forgot password via OTP + email verification
+- JWT session auth, secure cookies, protected routes
+- bcrypt password hashing, input validation, rate limiting
+- Role-based access (Student / Faculty / Coordinator / Admin)
+- Admin audit logging for sensitive actions
+
+**Student Portal**
+- Dashboard — attendance %, assignment deadlines, upcoming events
+- Attendance — subject-wise percentage, history, monthly reports
+- Assignments — submit solution (file / GitHub link), late submission status
+- Events — register, cancel, view ticket, download QR pass
 - Placements — company listings, apply with resume, application status
-- Notifications — assignments, attendance, events, placements, alerts
-- Global search + analytics charts
-- Admin panel — user management, roles, activity logs
+- Clubs — join/leave memberships
+- Notifications — real-time with unread badge
+- Profile — picture, phone, roll number, department, semester, skills, LinkedIn, GitHub, resume, bio
+
+**Faculty Portal**
+- Create assignments (deadline, attachments, rubric)
+- Take attendance — create session, mark present/absent
+- Review submissions, grade with marks + feedback
+- Plagiarism check on submissions
+- Publish notices, upload study material
+
+**Coordinator Portal**
+- Manage events (banner, venue, deadline, seats, speakers)
+- Manage placements (company, role, eligibility, CTC, deadline)
+- Manage clubs, announcements
+
+**Admin Portal**
+- User management — list, change role/status, delete
+- Departments + courses management
+- Analytics — students, faculty, events, attendance %, assignment stats, placement statistics, charts
+- Activity logs, announcements, reports
+
+**Notifications**
+- Real-time — assignment due, attendance marked, event reminder, placement open, system alerts
+
+**Analytics**
+- Monthly attendance, department performance, assignment completion, placement statistics, event participation
+
+**Settings**
+- Profile, change password, theme (dark/light), notification preferences, connected accounts, delete account
+
+**AI Features**
+- RAG campus chatbot (IIT Bombay context, sources ke saath)
+- Lecture transcription + summarization
+- Placement matching + sentiment analysis
+- Plagiarism detection
+- Per-user AI credentials (Settings → AI)
+
+**Platform**
+- Global search, QR event passes, QR attendance, face recognition, push notifications
+- Responsive mobile-first UI, dark/light mode, loading skeletons, empty states, toasts, Framer Motion animations
+- Dockerized deployment, CI/CD (Vercel auto-deploy), API docs (Swagger)
 
 ## Quick Start
 
