@@ -154,10 +154,13 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
                 className="flex h-9 items-center gap-2 rounded-lg px-1.5 text-sm font-medium transition-colors hover:bg-muted"
               >
                 <Avatar className="size-8">
-                  <AvatarImage src={session?.user?.image ?? ""} alt={session?.user?.name ?? ""} />
-                  <AvatarFallback className="bg-primary text-xs font-semibold text-primary-foreground">
-                    {initials}
-                  </AvatarFallback>
+                  {session?.user?.image ? (
+                    <AvatarImage src={session.user.image} alt={session.user.name ?? "User"} />
+                  ) : (
+                    <AvatarFallback className="bg-primary text-xs font-semibold text-primary-foreground">
+                      {initials}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <span className="hidden max-w-28 truncate sm:block">{session?.user?.name}</span>
               </button>
