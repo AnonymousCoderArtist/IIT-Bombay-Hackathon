@@ -12,6 +12,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <DashboardProviders>
       <div className="relative flex min-h-screen">
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url(/black-background-and-golden-waves-and-bubbles-photo.jpg)",
+            opacity: 0.15,
+          }}
+        />
         <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_-10%,color-mix(in_oklch,var(--primary)_12%,transparent),transparent)]" />
         <div className="hidden md:block">
           <Sidebar />

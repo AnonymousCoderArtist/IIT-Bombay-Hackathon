@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 
@@ -14,6 +15,18 @@ export function Stats() {
 
   return (
     <section className="relative overflow-hidden py-16">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-20 dark:opacity-25"
+      >
+        <Image
+          src="/golden-spiral.png"
+          alt=""
+          width={3000}
+          height={4800}
+          className="max-h-full w-full object-cover"
+        />
+      </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid grid-cols-2 gap-8 lg:grid-cols-4 lg:gap-4">
           {stats.map((stat, i) => (

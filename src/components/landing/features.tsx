@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 import { Check, Clock, MapPin, TrendingUp, Users } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import LayoutDashboardIcon from "@/components/ui/layout-dashboard-icon";
 import AlarmClockPlusIcon from "@/components/ui/alarm-clock-plus-icon";
 import FileDescriptionIcon from "@/components/ui/file-description-icon";
@@ -17,11 +17,11 @@ const roles = [
 ];
 
 const attendanceMonths = [
-  { day: "Mar", value: 84 },
-  { day: "Apr", value: 90 },
-  { day: "May", value: 88 },
-  { day: "Jun", value: 95 },
-  { day: "Jul", value: 92 },
+  { day: "Mar", value: 62 },
+  { day: "Apr", value: 95 },
+  { day: "May", value: 58 },
+  { day: "Jun", value: 88 },
+  { day: "Jul", value: 45 },
   { day: "Aug", value: 97 },
 ];
 
@@ -98,7 +98,7 @@ export function Features() {
                 <TrendingUp className="size-3.5" /> +7% vs last month
               </span>
             </div>
-            <div className="mt-3 h-28">
+            <div className="mt-3 h-32">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={attendanceMonths}>
                   <defs>
@@ -107,8 +107,9 @@ export function Features() {
                       <stop offset="100%" stopColor="#c5ae79" stopOpacity={0} />
                     </linearGradient>
                   </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                   <XAxis dataKey="day" tickLine={false} axisLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
-                  <YAxis hide domain={[0, 100]} />
+                  <YAxis hide domain={[40, 100]} />
                   <Tooltip
                     contentStyle={{
                       background: "var(--popover)",
@@ -126,6 +127,7 @@ export function Features() {
                     strokeWidth={2.5}
                     fill="url(#attFill)"
                     activeDot={{ r: 4, fill: "#c5ae79", strokeWidth: 2 }}
+                    animationDuration={1200}
                   />
                 </AreaChart>
               </ResponsiveContainer>
