@@ -126,8 +126,14 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6">
-      <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick} aria-label="Open navigation menu">
-        <Menu className="size-5" />
+      <Button
+        variant="ghost"
+        size="icon"
+        className="group/btn md:hidden transition-transform duration-200 hover:scale-105 hover:bg-muted"
+        onClick={onMenuClick}
+        aria-label="Open navigation menu"
+      >
+        <Menu className="size-5 transition-transform duration-200 group-hover/btn:scale-110" />
       </Button>
 
       <CommandSearch />

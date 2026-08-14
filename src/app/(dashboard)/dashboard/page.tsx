@@ -129,7 +129,7 @@ export default function DashboardHome() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-primary">
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-primary" suppressHydrationWarning>
             {today}
           </p>
           <h1 className="mt-2 font-serif text-4xl tracking-tight text-balance sm:text-5xl">

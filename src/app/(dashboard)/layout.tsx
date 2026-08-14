@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/sidebar";
@@ -12,13 +13,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <DashboardProviders>
       <div className="relative flex min-h-screen">
-        <div
+        <Image
+          src="/black-background-and-golden-waves-and-bubbles-photo.jpg"
+          alt=""
+          fill
+          priority
           aria-hidden
-          className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url(/black-background-and-golden-waves-and-bubbles-photo.jpg)",
-            opacity: 0.25,
-          }}
+          className="pointer-events-none fixed inset-0 z-0 h-full w-full object-cover opacity-25"
         />
         <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_-10%,color-mix(in_oklch,var(--primary)_12%,transparent),transparent)]" />
         <div className="hidden md:block">
