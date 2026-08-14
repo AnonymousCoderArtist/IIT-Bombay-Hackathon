@@ -27,6 +27,8 @@ export function Hero() {
           alt=""
           width={5824}
           height={3264}
+          priority
+          loading="eager"
           className="h-full w-full object-cover object-[center_65%]"
         />
         <div className="absolute inset-0 bg-background/30" />

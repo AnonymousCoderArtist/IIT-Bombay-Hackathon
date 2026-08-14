@@ -2,6 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 import { Check, Clock, MapPin, TrendingUp, Users } from "lucide-react";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import LayoutDashboardIcon from "@/components/ui/layout-dashboard-icon";
 import AlarmClockPlusIcon from "@/components/ui/alarm-clock-plus-icon";
 import FileDescriptionIcon from "@/components/ui/file-description-icon";
@@ -15,12 +16,13 @@ const roles = [
   { name: "Admin", active: false },
 ];
 
-const attendanceWeek = [
-  { day: "Mon", value: 88 },
-  { day: "Tue", value: 95 },
-  { day: "Wed", value: 91 },
-  { day: "Thu", value: 100 },
-  { day: "Fri", value: 86 },
+const attendanceMonths = [
+  { day: "Mar", value: 84 },
+  { day: "Apr", value: 90 },
+  { day: "May", value: 88 },
+  { day: "Jun", value: 95 },
+  { day: "Jul", value: 92 },
+  { day: "Aug", value: 97 },
 ];
 
 const tasks = [
@@ -90,46 +92,43 @@ export function Features() {
           <div>
             <div className="flex items-center justify-between">
               <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                This week
+                Last 6 months
               </p>
               <span className="flex items-center gap-1 text-xs text-primary">
-                <TrendingUp className="size-3.5" /> +7% vs last week
+                <TrendingUp className="size-3.5" /> +7% vs last month
               </span>
             </div>
-            <svg viewBox="0 0 200 72" className="mt-3 w-full" role="img" aria-label="Weekly attendance trend">
-              <defs>
-                <linearGradient id="attFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#c5ae79" stopOpacity="0.35" />
-                  <stop offset="100%" stopColor="#c5ae79" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              {[
-                [8, 34],
-                [56, 14],
-                [104, 28],
-                [152, 6],
-                [192, 44],
-              ].map(([x, y]) => (
-                <circle key={x} cx={x} cy={y} r="2.5" fill="#c5ae79" />
-              ))}
-              <path
-                d="M8 34 C 32 8, 32 28, 56 14 S 80 40, 104 28 S 128 0, 152 6 S 176 52, 192 44"
-                fill="none"
-                stroke="#c5ae79"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              />
-              <path
-                d="M8 34 C 32 8, 32 28, 56 14 S 80 40, 104 28 S 128 0, 152 6 S 176 52, 192 44 L 192 72 L 8 72 Z"
-                fill="url(#attFill)"
-              />
-            </svg>
-            <div className="flex justify-between px-0.5">
-              {attendanceWeek.map((item) => (
-                <span key={item.day} className="text-[0.7rem] text-muted-foreground">
-                  {item.day}
-                </span>
-              ))}
+            <div className="mt-3 h-28">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={attendanceMonths}>
+                  <defs>
+                    <linearGradient id="attFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#c5ae79" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="#c5ae79" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="day" tickLine={false} axisLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
+                  <YAxis hide domain={[0, 100]} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 10,
+                      fontSize: 12,
+                    }}
+                    labelFormatter={(label) => `${label}`}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="value"
+                    name="Attendance"
+                    stroke="#c5ae79"
+                    strokeWidth={2.5}
+                    fill="url(#attFill)"
+                    activeDot={{ r: 4, fill: "#c5ae79", strokeWidth: 2 }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
