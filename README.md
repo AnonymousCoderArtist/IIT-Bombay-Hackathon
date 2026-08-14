@@ -33,6 +33,20 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 - Global search + analytics charts
 - Admin panel — user management, roles, activity logs
 
+## Screenshots
+
+![Landing](public/screenshots/landing.png)
+
+![Student Dashboard](public/screenshots/dashboard.png)
+
+| Login | Events |
+| ----- | ------ |
+| ![Login](public/screenshots/login.png) | ![Events](public/screenshots/events.png) |
+
+| Attendance | Placements | Assignments |
+| ---------- | ---------- | ----------- |
+| ![Attendance](public/screenshots/attendance.png) | ![Placements](public/screenshots/placements.png) | ![Assignments](public/screenshots/assignments.png) |
+
 ## Quick Start
 
 Pehle kuch cheezein chahiye:
@@ -318,15 +332,24 @@ platform with auth, notifications, dashboards, analytics and responsive design.
 ## Environment Variables
 
 `MONGODB_URI`, `AUTH_SECRET`, Google OAuth credentials aur SMTP details — full list `.env.example` mein hai.
+Credential placement guide (kaha kya update karna hai) — [`docs/CREDENTIALS.md`](docs/CREDENTIALS.md).
 
-## Deliverables
+## Deliverables (PS-1 Expected Deliverables)
 
-- Source code + live app (Vercel)
-- README (yehi hai)
-- Test credentials (upar)
-- Env template (`.env.example`)
-- Database schema — `src/lib/models/`
-- License — [MIT](LICENSE)
+| PS-1 Expected Deliverable | Status | Where |
+| ------------------------- | ------ | ----- |
+| Source code (GitHub) | ✅ | [github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon](https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon) |
+| Live deployed application | ✅ | [https://iit-bombay-hackathon-1r7i.vercel.app](https://iit-bombay-hackathon-1r7i.vercel.app) |
+| README with setup instructions | ✅ | yehi file |
+| API documentation | ✅ | [`docs/API.md`](docs/API.md) + AI service Swagger (`http://localhost:8000/docs`) |
+| Database schema / ER diagram | ✅ | [`docs/ERD.md`](docs/ERD.md) + `src/lib/models/` |
+| Architecture diagram | ✅ | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
+| Test credentials | ✅ | [Test Credentials](#test-credentials) section |
+| Environment variable template | ✅ | `.env.example` |
+| License file | ✅ | [MIT](LICENSE) |
+| Demo video (3–5 min) | ⏳ pending | — |
+
+Full feature test guide: [`docs/TESTING.md`](docs/TESTING.md)
 
 ## License
 
