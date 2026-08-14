@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,19 @@ export function Hero() {
   const { t } = useI18n();
   return (
     <section className="relative overflow-hidden">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72"
+      >
+        <Image
+          src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
+          alt=""
+          width={5824}
+          height={3264}
+          className="h-full w-full object-cover object-top opacity-40 dark:opacity-50 mix-blend-screen"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-background via-background/40 to-transparent" />
+      </div>
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:pb-28 lg:pt-20">
         <div className="mx-auto max-w-4xl text-center">
           <motion.div
@@ -31,7 +45,7 @@ export function Hero() {
 
             <h1 className="mt-8 text-5xl leading-[1.05] text-balance sm:text-6xl lg:text-7xl">
               {t("hero.title1")}{" "}
-              <em className="font-serif-italic font-light text-primary">
+              <em className="font-serif italic text-primary">
                 {t("hero.title2")}
               </em>
             </h1>
@@ -92,7 +106,7 @@ export function Hero() {
                   </p>
                   <p className="mt-1.5 font-heading text-lg text-foreground">
                     Aarav ·{" "}
-                    <span className="font-serif italic font-light text-primary">Sem 5 CSE</span>
+                    <span className="font-serif italic text-primary">Sem 5 CSE</span>
                   </p>
                 </div>
                 <span className="relative flex size-2">
