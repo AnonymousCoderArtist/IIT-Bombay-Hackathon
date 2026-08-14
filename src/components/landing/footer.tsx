@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Logo } from "@/components/logo";
 import { useI18n } from "@/lib/i18n";
 import GithubIcon from "@/components/ui/github-icon";
@@ -22,7 +23,15 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative overflow-hidden border-t border-border/60">
+    <footer className="relative overflow-hidden">
+      <Image
+        src="/black-background-and-golden-waves-and-bubbles-photo.jpg"
+        alt=""
+        aria-hidden
+        width={625}
+        height={350}
+        className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover object-center opacity-20 dark:opacity-25"
+      />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-80 bg-[radial-gradient(ellipse_70%_60%_at_50%_120%,color-mix(in_oklch,var(--primary)_10%,transparent),transparent)]"

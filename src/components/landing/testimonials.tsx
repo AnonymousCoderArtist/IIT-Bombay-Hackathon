@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 const testimonials = [
   {
     name: "Lokesh Lal",
@@ -26,7 +28,19 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="border-y border-border/60 py-24 lg:py-28">
+    <section id="testimonials" className="relative overflow-hidden py-24 lg:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 flex items-end justify-end"
+      >
+        <Image
+          src="/black-background-and-golden-waves-and-bubbles-photo.jpg"
+          alt=""
+          width={625}
+          height={350}
+          className="h-full w-full object-cover object-right opacity-20 dark:opacity-25"
+        />
+      </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">

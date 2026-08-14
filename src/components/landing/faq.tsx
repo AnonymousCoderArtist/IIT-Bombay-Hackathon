@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import DownChevronIcon from "@/components/ui/down-chevron";
@@ -38,7 +39,19 @@ export function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-24 lg:py-28">
+    <section id="faq" className="relative overflow-hidden py-24 lg:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
+      >
+        <Image
+          src="/golden-background.jpeg"
+          alt=""
+          width={640}
+          height={359}
+          className="h-full w-full object-cover opacity-25 dark:opacity-30"
+        />
+      </div>
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="text-center">
           <span className="text-xs font-medium tracking-[0.3em] uppercase text-primary">

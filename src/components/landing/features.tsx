@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 import { Check, Clock, MapPin, TrendingUp, Users } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -216,7 +217,19 @@ export function Features() {
   ];
 
   return (
-    <section id="features" className="relative border-y border-border/60 py-24 lg:py-28">
+    <section id="features" className="relative overflow-hidden py-24 lg:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bottom-0 -z-10"
+      >
+        <Image
+          src="/golden-spiral-sm.jpeg"
+          alt=""
+          width={365}
+          height={261}
+          className="h-full w-full object-cover object-bottom opacity-25 dark:opacity-30"
+        />
+      </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
