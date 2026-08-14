@@ -25,12 +25,12 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden">
       <Image
-        src="/black-background-and-golden-waves-and-bubbles-photo.jpg"
+        src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
         alt=""
         aria-hidden
-        width={625}
-        height={350}
-        className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover object-center opacity-20 dark:opacity-25"
+        width={5824}
+        height={3264}
+        className="pointer-events-none absolute inset-x-0 bottom-[-8rem] -z-10 h-96 w-full object-cover object-center opacity-25 dark:opacity-30"
       />
       <div
         aria-hidden

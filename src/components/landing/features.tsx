@@ -225,9 +225,9 @@ export function Features() {
         <Image
           src="/golden-spiral.png"
           alt=""
-          width={3000}
-          height={4800}
-          className="h-full w-full object-cover opacity-15 mix-blend-screen dark:opacity-20"
+          width={4800}
+          height={3000}
+          className="h-full w-full -rotate-90 scale-125 object-cover opacity-15 mix-blend-screen dark:opacity-20"
         />
       </div>
       <div
