@@ -6,7 +6,9 @@ import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Bell, LogOut, Menu, Monitor, Moon, Sun, User, Settings } from "lucide-react";
+import { Menu, Monitor, Moon, Sun, User, Settings } from "lucide-react";
+import FilledBellIcon from "@/components/ui/filled-bell-icon";
+import LogoutIcon from "@/components/ui/logout-icon";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -138,7 +140,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
           className="relative flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-all duration-200 hover:scale-105 hover:bg-muted hover:text-foreground"
           aria-label="Notifications"
         >
-          <Bell className="size-5" />
+          <FilledBellIcon size={20} />
           {unread > 0 && (
             <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-semibold text-white ring-2 ring-background">
               {unread > 9 ? "9+" : unread}
@@ -185,7 +187,7 @@ export function Topbar({ onMenuClick }: { onMenuClick: () => void }) {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut}>
-                <LogOut className="size-4" />
+                <LogoutIcon size={16} />
                 Sign out
               </DropdownMenuItem>
             </DropdownMenuGroup>

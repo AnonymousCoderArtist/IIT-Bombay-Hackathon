@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import DownChevronIcon from "@/components/ui/down-chevron";
 
 const faqs = [
   {
@@ -41,7 +41,12 @@ export function Faq() {
     <section id="faq" className="border-t bg-muted/30 py-20">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{t("faq.title")}</h2>
+          <span className="text-xs font-medium tracking-[0.3em] uppercase text-primary">
+            FAQ
+          </span>
+          <h2 className="mt-4 text-4xl font-heading tracking-tight sm:text-5xl">
+            {t("faq.title")}
+          </h2>
           <p className="mt-4 text-muted-foreground">{t("faq.subtitle")}</p>
         </div>
 
@@ -55,7 +60,7 @@ export function Faq() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="overflow-hidden rounded-xl border bg-card"
+                className="overflow-hidden rounded-xl border bg-card transition-colors duration-300 hover:border-primary/30"
               >
                 <button
                   type="button"
@@ -64,12 +69,13 @@ export function Faq() {
                   aria-expanded={isOpen}
                 >
                   {faq.question}
-                  <ChevronDown
-                    className={`size-4 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                  <DownChevronIcon
+                    size={16}
+                    className={`shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                   />
                 </button>
                 {isOpen && (
-                  <p className="border-t px-5 py-4 text-sm text-muted-foreground">
+                  <p className="border-t border-border/70 px-5 py-4 text-sm text-muted-foreground">
                     {faq.answer}
                   </p>
                 )}

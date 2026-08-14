@@ -14,7 +14,7 @@ export function Rays({ className }: { className?: string }) {
           src="/rays-purple.svg"
           alt=""
           fill
-          className="object-contain mix-blend-plus-lighter [filter:hue-rotate(115deg)_saturate(1.3)]"
+          className="object-contain mix-blend-plus-lighter [filter:hue-rotate(70deg)_saturate(1.6)_brightness(1.1)]"
         />
       </div>
       <div className="absolute right-[6%] top-[-5%] hidden w-[20%] -rotate-[11deg] md:block">
@@ -23,7 +23,7 @@ export function Rays({ className }: { className?: string }) {
           alt=""
           width={214}
           height={296}
-          className="h-auto w-full mix-blend-plus-lighter [filter:hue-rotate(115deg)_saturate(1.3)]"
+          className="h-auto w-full mix-blend-plus-lighter [filter:hue-rotate(70deg)_saturate(1.6)_brightness(1.1)]"
         />
       </div>
       <div className="absolute right-[1%] top-[-13%] hidden md:block">
@@ -32,7 +32,7 @@ export function Rays({ className }: { className?: string }) {
           alt=""
           width={200}
           height={300}
-          className="h-[19rem] w-[13rem] rotate-[40deg] object-contain mix-blend-plus-lighter [filter:hue-rotate(115deg)_saturate(1.3)]"
+          className="h-[19rem] w-[13rem] rotate-[40deg] object-contain mix-blend-plus-lighter [filter:hue-rotate(70deg)_saturate(1.6)_brightness(1.1)]"
         />
       </div>
       <Image
@@ -40,7 +40,7 @@ export function Rays({ className }: { className?: string }) {
         alt=""
         width={1280}
         height={720}
-        className="absolute -right-1/4 -top-1/3 h-[130%] w-auto object-cover opacity-20 blur-2xl dark:opacity-30 [filter:hue-rotate(115deg)_saturate(1.3)]"
+        className="absolute -right-1/4 -top-1/3 h-[130%] w-auto object-cover opacity-20 blur-2xl dark:opacity-30 [filter:hue-rotate(70deg)_saturate(1.6)_brightness(1.1)]"
       />
     </div>
   );

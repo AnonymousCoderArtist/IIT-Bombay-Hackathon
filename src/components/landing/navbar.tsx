@@ -26,28 +26,28 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-transparent backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/70 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2.5 font-semibold">
+        <Link href="/" className="flex items-center gap-2.5">
           <Logo className="h-8 w-8 sm:h-9 sm:w-9" />
-          <span className="font-heading text-base font-bold tracking-tight">
+          <span className="font-heading text-base tracking-tight">
             Smart<span className="text-primary">Campus</span>
           </span>
         </Link>
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-8 md:flex">
           {links.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="relative text-sm text-muted-foreground transition-colors hover:text-foreground after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
             >
               {link.label}
             </a>
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="icon"
@@ -84,7 +84,7 @@ export function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t bg-background px-4 py-4 md:hidden">
+        <div className="border-t border-border/60 bg-background/95 px-4 py-4 backdrop-blur-xl md:hidden">
           <div className="flex flex-col gap-3">
             {links.map((link) => (
               <a

@@ -15,7 +15,7 @@ export function Stats() {
   return (
     <section className="relative overflow-hidden py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid grid-cols-2 gap-px overflow-hidden border border-border bg-border lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border lg:grid-cols-4">
           {stats.map((stat) => (
             <motion.div
               key={stat.label}
@@ -25,7 +25,7 @@ export function Stats() {
               transition={{ duration: 0.4 }}
               className="bg-surface px-4 py-10 text-center"
             >
-              <p className="text-4xl font-bold tracking-tight tabular-nums text-primary">
+              <p className="font-heading text-4xl font-extrabold tracking-tight tabular-nums text-primary">
                 {stat.value}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>

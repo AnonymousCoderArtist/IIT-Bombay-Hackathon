@@ -1,23 +1,37 @@
 import type { Metadata } from "next";
-import { Manrope, Space_Grotesk, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ServiceWorkerRegister } from "@/components/sw-register";
 import "./globals.css";
 
-const manrope = Manrope({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const helveticaMd = localFont({
+  src: "../../public/HelveticaNowDisplay-Md.woff2",
+  weight: "500",
+  variable: "--font-sans",
+  display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-inter-tight",
-  subsets: ["latin"],
+const helveticaXbd = localFont({
+  src: "../../public/HelveticaNowDisplay-XBd.woff2",
+  weight: "800",
+  variable: "--font-heading",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const saolRegular = localFont({
+  src: "../../public/SaolDisplay-Regular.woff2",
+  weight: "400",
+  variable: "--font-serif",
+  display: "swap",
+});
+
+const saolItalic = localFont({
+  src: "../../public/SaolDisplay-LightItalic.woff2",
+  weight: "300",
+  style: "italic",
+  variable: "--font-serif-italic",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${manrope.variable} ${spaceGrotesk.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${helveticaMd.variable} ${helveticaXbd.variable} ${saolRegular.variable} ${saolItalic.variable} h-full antialiased`}
     >
       <head>
         <link rel="manifest" href="/manifest.json" />

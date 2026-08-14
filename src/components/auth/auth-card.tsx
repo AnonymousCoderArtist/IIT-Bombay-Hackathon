@@ -24,7 +24,7 @@ export function GradientSubmitButton({
     <button
       type="submit"
       disabled={loading || disabled}
-      className="group/btn relative block h-10 w-full bg-primary font-medium text-primary-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_1px_2px_0_rgba(0,0,0,0.12)] transition-transform hover:brightness-105 disabled:opacity-60"
+      className="group/btn relative block h-10 w-full rounded-lg bg-primary font-medium text-primary-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_1px_2px_0_rgba(0,0,0,0.12)] transition-all hover:brightness-105 hover:shadow-[0_4px_16px_color-mix(in_oklch,var(--primary)_30%,transparent)] disabled:opacity-60"
     >
       <span className="flex items-center justify-center gap-2">
         {loading && <Loader2 className="size-4 animate-spin" />}
@@ -45,10 +45,13 @@ export function AuthCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative mx-auto w-full max-w-md border border-border/60 bg-card/90 p-6 backdrop-blur-xl md:p-8">
+    <div className="relative mx-auto w-full max-w-md rounded-xl border border-border/70 bg-card/90 p-6 shadow-elevated backdrop-blur-xl md:p-8">
       <div className="relative">
-        <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">{title}</h2>
-        <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">{subtitle}</p>
+        <span className="text-xs font-medium uppercase tracking-[0.3em] text-primary">
+          Smart Campus
+        </span>
+        <h2 className="mt-2 text-2xl font-heading tracking-tight text-foreground">{title}</h2>
+        <p className="mt-2 max-w-sm text-sm text-muted-foreground">{subtitle}</p>
         {children}
       </div>
     </div>
@@ -82,11 +85,11 @@ export function GoogleButton({
     <button
       onClick={onClick}
       disabled={loading}
-      className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 border border-border bg-surface px-4 font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-60"
+      className="group/btn relative flex h-10 w-full items-center justify-start space-x-2 rounded-lg border border-border bg-surface px-4 font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-60"
       type="button"
     >
       {loading ? (
-        <Loader2 className="size-4 animate-spin text-neutral-800 dark:text-neutral-300" />
+        <Loader2 className="size-4 animate-spin text-foreground" />
       ) : (
         <svg className="size-4" viewBox="0 0 24 24" aria-hidden>
           <path
@@ -107,7 +110,7 @@ export function GoogleButton({
           />
         </svg>
       )}
-      <span className="text-sm text-neutral-700 dark:text-neutral-300">{label}</span>
+      <span className="text-sm text-foreground">{label}</span>
       <BottomGradient />
     </button>
   );
