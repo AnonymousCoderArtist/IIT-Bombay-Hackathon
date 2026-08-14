@@ -27,9 +27,9 @@ export function Hero() {
           alt=""
           width={5824}
           height={3264}
-          className="h-full w-full object-cover object-top opacity-40 dark:opacity-50 mix-blend-screen"
+          className="h-full w-full object-cover object-top opacity-70 dark:opacity-60"
         />
-        <div className="absolute inset-0 bg-linear-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
       </div>
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:pb-28 lg:pt-20">
         <div className="mx-auto max-w-4xl text-center">
@@ -45,7 +45,7 @@ export function Hero() {
 
             <h1 className="mt-8 text-5xl leading-[1.05] text-balance sm:text-6xl lg:text-7xl">
               {t("hero.title1")}{" "}
-              <em className="font-serif italic text-primary">
+              <em className="font-serif font-semibold italic text-primary">
                 {t("hero.title2")}
               </em>
             </h1>
