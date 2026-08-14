@@ -20,16 +20,16 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[26rem]"
+        className="pointer-events-none absolute inset-0 -z-10"
       >
         <Image
           src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
           alt=""
           width={5824}
           height={3264}
-          className="h-full w-full object-cover object-center opacity-60 dark:opacity-50"
+          className="h-full w-full object-cover object-[center_65%]"
         />
-        <div className="absolute inset-0 bg-linear-to-b from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-background/55" />
       </div>
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:pb-28 lg:pt-20">
         <div className="mx-auto max-w-4xl text-center">
@@ -38,8 +38,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center gap-2.5 rounded-full border border-primary/25 bg-primary/8 px-4 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-primary">
-              <span className="size-1.5 rounded-full bg-primary" />
+            <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/8 px-4 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-primary">
               {t("hero.badge")}
             </span>
 
