@@ -3,6 +3,10 @@
 > Har feature ka step-by-step test. **Steps** follow karo → **Expected** result milna chahiye.
 > Test credentials saare niche hain. Bug milne pe: page + kya kiya + kya aaya — note karke batao.
 
+> **Status note:** Email + password login/sign-up **tested & working**. **Google Sign-in / Sign-up
+> NOT tested** (flow wired hai — client ID/secret + redirect URI set — par end-to-end verify nahi
+> hua). Google wale steps abhi skip karo, email login use karo.
+
 ## Test credentials
 
 | Role | Email | Password |

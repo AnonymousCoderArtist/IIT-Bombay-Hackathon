@@ -4,6 +4,17 @@ Ek hi platform pe campus ki saari cheezein — attendance, assignments, events, 
 
 Built for **DevFusion 4.0: The Developers Hackathon**.
 
+## Live App
+
+- **Live URL:** https://iit-bombay-hackathon-1r7i.vercel.app
+- Auto-deploy on `main` push (Vercel, Mumbai region)
+
+> **Auth status (important):** Email + password login & sign-up are **tested and working**
+> (OTP verification via dev-server log or SMTP). **Google Sign-in and Google Sign-up are NOT
+> tested** on the live deploy — the Google OAuth flow is wired (client ID/secret set + redirect
+> URI), but end-to-end Google login/sign-up verification is pending. Until then, use email login
+> with the test credentials below.
+
 ## Tech Stack
 
 - **Frontend:** Next.js 16, React 19, Tailwind CSS, shadcn/ui, Framer Motion
@@ -219,13 +230,62 @@ for i in $(seq 1 6); do curl -s -o /dev/null -w "%{http_code} " \
 - 2-minute video ke liye: landing → register/verify → login (student) → dashboard → attendance → assignment submit → event register (QR) → placements apply → admin login → analytics + users → dark mode + mobile view
 - Screen recorder ke saath `npm run dev` terminal dikhana mat bhoolo jahan OTP log hota hai (registration demo ke liye)
 
+## PS-1 Coverage (DevFusion 4.0)
+
+Problem Statement 1: **Smart Campus Management Platform** — production-ready, role-based campus
+platform with auth, notifications, dashboards, analytics and responsive design.
+
+**Mandatory Tech Stack:** React/Next.js ✓ · TypeScript ✓ · Tailwind CSS ✓ · Responsive UI ✓ · Node.js ✓ · Next.js API ✓ · MongoDB (Mongoose) ✓ · Email auth ✓ · Google OAuth (wired — testing pending) ⚠ · JWT/session auth ✓ · Vercel deployment ✓ · Docker (bonus) ✓
+
+**Authentication:** Sign-up via email+password ✓ · Sign-up via Google ⚠ (not tested) · Login via email ✓ · Login via Google ⚠ (not tested) · Forgot password (OTP + email verification) ✓ · Email verification before dashboard access ✓ · Secure session management (JWT in cookies) ✓ · Secure logout ✓ · Protected routes (dashboard/settings/profile/events/attendance) ✓
+
+**User Roles (4):** Student ✓ · Faculty ✓ · Coordinator ✓ · Admin ✓ — PS ke role-wise permissions implemented.
+
+**Modules:** Student portal ✓ · Faculty portal ✓ · Event management ✓ · Attendance ✓ · Placement notices ✓ · Club activities ✓ · Assignment submission ✓ · Announcements/notices ✓ · Notifications ✓ · Admin controls ✓
+
+**Landing Page:** Hero ✓ · Features ✓ · Testimonials ✓ · Statistics ✓ · FAQ ✓ · Footer ✓ · Responsive navigation ✓ · Dark mode ✓ · Animations ✓ · Loading screens ✓ · SEO ✓
+
+**Dashboards:** every role gets a separate dashboard (student — attendance %, deadlines, events; faculty — classes, attendance, submissions; coordinator — events/placements/clubs; admin — full analytics + logs) ✓
+
+**Student Profile:** picture, name, email, phone, roll number, department, semester, skills, LinkedIn, GitHub, resume upload, bio ✓
+
+**Attendance:** faculty creates session + marks ✓ · student views %, history, subject-wise analytics, monthly reports ✓
+
+**Assignments:** faculty uploads (deadline, attachments, rubric) ✓ · student submits (file/PDF/ZIP/GitHub link), submission history, late status ✓ · faculty review + marks + feedback ✓
+
+**Events:** create (banner, description, venue, registration deadline, seats, speakers) ✓ · QR pass ✓ · student register/cancel + view ticket ✓
+
+**Placements:** companies, roles, eligibility, CTC, deadline ✓ · apply button + application status + resume upload ✓
+
+**Notifications:** real-time — assignment due, attendance marked, event reminder, placement open, system alerts ✓
+
+**Global Search:** students, faculty, events, assignments, placements ✓
+
+**Analytics charts:** monthly attendance, department performance, assignment completion, placement statistics, event participation ✓
+
+**Admin Panel:** users, departments, courses, events, assignments, attendance, announcements, reports, logs, permissions ✓
+
+**Settings:** profile, password, theme, notification preferences, connected accounts, delete account ✓
+
+**UI/UX:** responsive design · dark/light mode · loading skeletons · empty states · error pages · toast notifications · beautiful forms · smooth animations · mobile friendly · accessibility (keyboard nav, contrast, semantic HTML) ✓
+
+**Security:** bcrypt password hashing ✓ · input validation ✓ · rate limiting ✓ · XSS protection ✓ · secure cookies ✓ · environment variables ✓ · file upload validation ✓ · authorization middleware ✓ · server-side validation ✓ · audit logging for sensitive admin actions ✓
+
+**Database entities (13/13):** Users ✓ · Roles ✓ · Departments ✓ · Attendance ✓ · Assignments ✓ · Assignment Submissions ✓ · Events ✓ · Event Registrations ✓ · Notifications ✓ · Placements ✓ · Applications ✓ · Settings ✓ · Activity Logs ✓
+
+**Bonus features implemented:** AI chatbot for campus FAQs ✓ · QR attendance scanner ✓ · Face recognition attendance ✓ · Admin audit logs ✓ · API docs (AI service Swagger/OpenAPI) ✓ · Dockerized deployment ✓ · CI/CD (Vercel auto-deploy) ✓
+
+**Bonus features not implemented:** live chat, calendar sync, PWA/offline, multi-language, AI plagiarism detection, email reminders, push notifications, WebSockets live updates, CSV/Excel export.
+
 ## Pending
 
-- [ ] Google login local fix — credentials `.env` me hain (client ID/secret set), lekin standalone server pe signin abhi `Configuration` error de raha hai. Alag branch me fix kiya ja raha hai (env injection + NextAuth action). Vercel pe env inject hota hai toh wahan clean chalne ke chances ache hain.
+- [ ] **Google Sign-in / Sign-up** — wired (client ID/secret + redirect URI) but **not tested end-to-end** on live deploy. Local fix (env injection + NextAuth action) separate branch me in progress.
 - [ ] AI ke liye free LLM key daalna (Gemini/DeepSeek) taaki chatbot + lecture notes real AI se chalein (mock se nahi).
-- [ ] Live deploy (Vercel) + demo video
+- [ ] Demo video (3–5 min)
 
 ## Deploy on Vercel
+
+**Live:** https://iit-bombay-hackathon-1r7i.vercel.app
 
 `vercel.json` already present hai (Mumbai region `bom1`, Next.js auto-detect, `main` pe auto-deploy).
 
