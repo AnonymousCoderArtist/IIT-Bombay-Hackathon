@@ -99,6 +99,19 @@ function NavItem({ href, label, icon: Icon }: { href: string; label: string; ico
   );
 }
 
+function NavGroup({ label, links }: { label: string; links: { href: string; label: string; icon: ComponentType<{ size?: number | string; className?: string }> }[] }) {
+  return (
+    <div className="space-y-1">
+      <p className="px-3 pb-1 pt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-muted-foreground/70">
+        {label}
+      </p>
+      {links.map((link) => (
+        <NavItem key={link.href} {...link} />
+      ))}
+    </div>
+  );
+}
+
 export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const { data: session } = useSession();
   const role = (session?.user?.role ?? "student") as keyof typeof roleLinks;
@@ -118,16 +131,13 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
           </span>
         </Link>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2">
-          {roleLinks[role].map((link) => (
-            <NavItem key={link.href} {...link} />
-          ))}
+        <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-2">
+          <NavGroup label="Overview" links={roleLinks[role].slice(0, 2)} />
+          <NavGroup label="Manage" links={roleLinks[role].slice(2)} />
         </nav>
 
-        <div className="space-y-1 border-t border-border px-3 py-3">
-          {bottomLinks.map((link) => (
-            <NavItem key={link.href} {...link} />
-          ))}
+        <div className="space-y-4 border-t border-border px-3 py-3">
+          <NavGroup label="Account" links={bottomLinks} />
         </div>
 
         <div className="border-t border-border p-3">

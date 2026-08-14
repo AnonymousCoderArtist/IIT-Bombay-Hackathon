@@ -35,23 +35,25 @@ export function Hero() {
       </div>
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-20 sm:px-6 lg:pb-28 lg:pt-24">
         <div className="mx-auto max-w-4xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="text-5xl leading-[1.02] text-balance sm:text-6xl lg:text-[5.5rem]">
-              {t("hero.title1")}{" "}
-              <em className="font-serif font-semibold italic text-primary">
-                {t("hero.title2")}
-              </em>
-            </h1>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-primary">
+                {t("hero.badge")}
+              </p>
+              <h1 className="mt-6 font-serif text-6xl leading-[1.02] tracking-tight text-balance sm:text-7xl lg:text-[6rem]">
+                {t("hero.title1")}
+                <br />
+                <em className="italic text-primary">{t("hero.title2")}</em>
+              </h1>
 
-            <TextGenerateEffect
-              words={t("hero.subtitle")}
-              className="mx-auto mt-6 max-w-2xl text-lg font-normal text-muted-foreground sm:text-xl"
-              textClassName="text-lg font-normal leading-7 text-muted-foreground sm:text-xl sm:leading-8"
-            />
+              <TextGenerateEffect
+                words={t("hero.subtitle")}
+                className="mx-auto mt-7 max-w-2xl text-lg font-normal text-muted-foreground sm:text-xl"
+                textClassName="text-lg font-normal leading-7 text-muted-foreground sm:text-xl sm:leading-8"
+              />
 
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Button

@@ -129,11 +129,14 @@ export default function DashboardHome() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-muted-foreground">{today}</p>
-          <h1 className="mt-1 bg-linear-to-t from-foreground/55 to-foreground bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
-            Welcome back, {session?.user?.name?.split(" ")[0]}
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-primary">
+            {today}
+          </p>
+          <h1 className="mt-2 font-serif text-4xl tracking-tight text-balance sm:text-5xl">
+            Welcome back,{" "}
+            <em className="italic text-primary">{session?.user?.name?.split(" ")[0]}</em>
           </h1>
-          <p className="mt-1 text-muted-foreground">
+          <p className="mt-2 text-muted-foreground">
             Here is what is happening on your campus today.
           </p>
         </div>

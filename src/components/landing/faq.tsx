@@ -54,10 +54,10 @@ export function Faq() {
       </div>
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="text-center">
-          <span className="text-xs font-medium tracking-[0.3em] uppercase text-primary">
+          <span className="text-[0.7rem] font-medium tracking-[0.28em] uppercase text-primary">
             FAQ
           </span>
-          <h2 className="mt-4 text-4xl tracking-tight sm:text-5xl">
+          <h2 className="mt-4 font-serif text-5xl tracking-tight sm:text-6xl">
             {t("faq.title")}
           </h2>
           <p className="mt-4 text-muted-foreground">{t("faq.subtitle")}</p>

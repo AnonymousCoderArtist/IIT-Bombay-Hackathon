@@ -1,7 +1,6 @@
 import type { LucideIcon } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
 type StatCardProps = {
   title: string;
@@ -12,36 +11,27 @@ type StatCardProps = {
   accent?: "primary" | "cyan" | "violet" | "emerald" | "amber";
 };
 
-const ACCENT_CLASSES: Record<NonNullable<StatCardProps["accent"]>, string> = {
-  primary: "bg-primary/10 text-primary",
-  cyan: "bg-primary/10 text-primary",
-  violet: "bg-primary/15 text-primary",
-  emerald: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
-  amber: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-};
-
-export function StatCard({ title, value, icon: Icon, hint, loading, accent = "primary" }: StatCardProps) {
+export function StatCard({ title, value, icon: Icon, hint, loading }: StatCardProps) {
   return (
-    <Card className="group relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/35 hover:shadow-elevated">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-        <span
-          className={cn(
-            "flex size-9 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105",
-            ACCENT_CLASSES[accent]
-          )}
-        >
-          <Icon className="size-4" />
-        </span>
-      </CardHeader>
-      <CardContent>
+    <Card className="group relative overflow-hidden transition-colors duration-300 hover:border-primary/30">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <CardContent className="p-5">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            {title}
+          </p>
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/5 text-primary transition-transform duration-300 group-hover:scale-105">
+            <Icon className="size-3.5" />
+          </span>
+        </div>
         {loading ? (
-          <Skeleton className="h-9 w-24" />
+          <Skeleton className="mt-3 h-11 w-28" />
         ) : (
-          <p className="text-3xl font-bold tracking-tight tabular-nums">{value}</p>
+          <p className="mt-3 font-heading text-4xl font-extrabold tracking-tight tabular-nums">
+            {value}
+          </p>
         )}
-        {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
+        {hint && <p className="mt-1.5 text-xs text-muted-foreground">{hint}</p>}
       </CardContent>
     </Card>
   );
