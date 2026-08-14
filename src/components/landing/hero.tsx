@@ -20,16 +20,16 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-72"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[26rem]"
       >
         <Image
           src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
           alt=""
           width={5824}
           height={3264}
-          className="h-full w-full object-cover object-top opacity-70 dark:opacity-60"
+          className="h-full w-full object-cover object-center opacity-60 dark:opacity-50"
         />
-        <div className="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-b from-background via-background/40 to-transparent" />
       </div>
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:pb-28 lg:pt-20">
         <div className="mx-auto max-w-4xl text-center">
