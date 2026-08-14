@@ -220,14 +220,26 @@ export function Features() {
     <section id="features" className="relative overflow-hidden py-24 lg:py-28">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bottom-0 -z-10"
+        className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
       >
         <Image
-          src="/golden-spiral-sm.jpeg"
+          src="/golden-spiral.png"
           alt=""
-          width={365}
-          height={261}
-          className="h-full w-full object-cover object-bottom opacity-25 dark:opacity-30"
+          width={3000}
+          height={4800}
+          className="h-full w-full object-cover opacity-15 mix-blend-screen dark:opacity-20"
+        />
+      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-[-6rem] -z-10"
+      >
+        <Image
+          src="/black-background-and-golden-waves-and-bubbles-photo.jpg"
+          alt=""
+          width={625}
+          height={350}
+          className="h-72 w-full object-cover object-center opacity-25 dark:opacity-30"
         />
       </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">

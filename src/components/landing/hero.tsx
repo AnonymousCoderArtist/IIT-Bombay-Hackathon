@@ -31,13 +31,6 @@ export function Hero() {
           loading="eager"
           className="h-full w-full object-cover object-[center_65%]"
         />
-        <Image
-          src="/golden-spiral.png"
-          alt=""
-          width={3000}
-          height={4800}
-          className="absolute right-[-5%] top-[-15%] h-[80%] w-auto object-contain opacity-60 mix-blend-screen dark:opacity-50"
-        />
         <div className="absolute inset-0 bg-background/20" />
       </div>
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-20 sm:px-6 lg:pb-28 lg:pt-24">
