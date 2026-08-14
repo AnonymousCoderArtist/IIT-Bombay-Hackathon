@@ -36,24 +36,35 @@ export function Features() {
           </p>
         </div>
 
-        <div className="mt-16 border-t border-border/60">
+        <div className="mt-16 grid gap-5 md:grid-cols-6">
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              className="group grid gap-6 border-b border-border/60 py-8 transition-colors duration-300 hover:bg-surface/40 md:grid-cols-12 md:items-center md:py-10"
+              className={`group relative overflow-hidden rounded-2xl border border-border bg-surface/50 p-7 transition-colors duration-300 hover:border-primary/40 hover:bg-surface md:p-8 ${
+                index === 0
+                  ? "md:col-span-4 md:row-span-2 md:p-10"
+                  : index === 1
+                    ? "md:col-span-2"
+                    : index === 2
+                      ? "md:col-span-2"
+                      : index === 3
+                        ? "md:col-span-2"
+                        : index === 4
+                          ? "md:col-span-3"
+                          : "md:col-span-3"
+              }`}
             >
-              <span className="font-heading text-sm font-extrabold tracking-[0.2em] text-primary/50 transition-colors group-hover:text-primary md:col-span-1">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div className="flex items-start gap-5 md:col-span-4">
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/25 bg-primary/8 text-primary transition-transform duration-300 group-hover:scale-105">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-primary/8 blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              />
+              <div className="relative">
+                <span className="flex size-12 items-center justify-center rounded-xl border border-primary/25 bg-primary/8 text-primary transition-transform duration-300 group-hover:scale-105">
                   <feature.icon size={22} />
                 </span>
-                <h3 className="pt-1 text-xl tracking-tight md:text-2xl">
-                  {feature.title}
-                </h3>
+                <h3 className="mt-6 text-2xl tracking-tight">{feature.title}</h3>
+                <p className="mt-3 text-muted-foreground">{feature.description}</p>
               </div>
-              <p className="text-muted-foreground md:col-span-6 md:pl-6">{feature.description}</p>
             </div>
           ))}
         </div>

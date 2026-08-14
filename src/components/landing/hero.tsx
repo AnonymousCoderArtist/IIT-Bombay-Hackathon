@@ -29,20 +29,16 @@ export function Hero() {
           height={3264}
           className="h-full w-full object-cover object-[center_65%]"
         />
-        <div className="absolute inset-0 bg-background/55" />
+        <div className="absolute inset-0 bg-background/30" />
       </div>
-      <div className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:pb-28 lg:pt-20">
+      <div className="mx-auto max-w-7xl px-4 pb-24 pt-20 sm:px-6 lg:pb-28 lg:pt-24">
         <div className="mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/8 px-4 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-primary">
-              {t("hero.badge")}
-            </span>
-
-            <h1 className="mt-8 text-5xl leading-[1.05] text-balance sm:text-6xl lg:text-7xl">
+            <h1 className="text-5xl leading-[1.02] text-balance sm:text-6xl lg:text-[5.5rem]">
               {t("hero.title1")}{" "}
               <em className="font-serif font-semibold italic text-primary">
                 {t("hero.title2")}
@@ -51,8 +47,8 @@ export function Hero() {
 
             <TextGenerateEffect
               words={t("hero.subtitle")}
-              className="mx-auto mt-6 max-w-2xl text-base font-normal text-muted-foreground sm:text-lg"
-              textClassName="text-base font-normal leading-7 text-muted-foreground sm:text-lg sm:leading-8"
+              className="mx-auto mt-6 max-w-2xl text-lg font-normal text-muted-foreground sm:text-xl"
+              textClassName="text-lg font-normal leading-7 text-muted-foreground sm:text-xl sm:leading-8"
             />
 
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
