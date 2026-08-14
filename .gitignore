@@ -54,6 +54,4 @@ mongodb-data/
 __pycache__/
 *.pyc
 services/ai/.env
-public/Elon*.jpg
-public/Elon*.jpeg
 public/faces/

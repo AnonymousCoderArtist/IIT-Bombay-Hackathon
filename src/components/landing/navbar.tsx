@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { GraduationCap, Languages, Menu, Moon, Sun, X } from "lucide-react";
+import { Languages, Menu, Moon, Sun, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
 import { useI18n } from "@/lib/i18n";
 
 export function Navbar() {
@@ -28,9 +29,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-transparent backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2.5 font-semibold">
-          <span className="flex size-9 items-center justify-center bg-primary text-primary-foreground shadow-sm shadow-primary/25">
-            <GraduationCap className="size-5" />
-          </span>
+          <Logo className="h-9 w-9" />
           <span className="font-heading text-base font-bold tracking-tight">
             Smart<span className="text-primary">Campus</span>
           </span>

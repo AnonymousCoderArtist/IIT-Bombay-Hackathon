@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { GraduationCap, Code2, Globe, Send } from "lucide-react";
+import { Code2, Globe, Send } from "lucide-react";
+import { Logo } from "@/components/logo";
 import { useI18n } from "@/lib/i18n";
 
 export function Footer() {
@@ -46,9 +47,7 @@ export function Footer() {
           <div className="grid gap-10 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 font-semibold">
-              <span className="flex size-9 items-center justify-center bg-primary text-primary-foreground shadow-sm shadow-primary/25">
-                <GraduationCap className="size-5" />
-              </span>
+              <Logo className="h-9 w-9" />
               <span className="font-heading text-base font-bold tracking-tight">
                 Smart<span className="text-primary">Campus</span>
               </span>

@@ -1,5 +1,9 @@
 # Smart Campus Management Platform
 
+<p align="center">
+  <img src="public/logo-dark.png" alt="Smart Campus Logo" width="160" />
+</p>
+
 Ek hi platform pe campus ki saari cheezein — attendance, assignments, events, placements, notifications. Students, faculty, coordinators aur admin ke liye alag dashboards.
 
 Built for **DevFusion 4.0: The Developers Hackathon**.
@@ -271,6 +275,10 @@ npx tsx --env-file-if-exists=.env scripts/face-setup.ts
 
 > Token 30 min valid. Expire ho jaye toh step 2 dobara chalao. Liveness normally ON hoti hai
 > (printed/screen photo reject); test ke liye `FACE_LIVENESS_DISABLED=1` use karo.
+
+**Sample test image (repo me include hai):** [`public/Elon Musk.jpg`](public/Elon%20Musk.jpg) —
+Enrollment aur check-in dono ke liye use kar sakte ho. `FACE_LIVENESS_DISABLED=1` ke saath static
+photo se check-in bhi test karo. (`ElonTest.jpg` bhi repo me hai.)
 
 ### AI Assistant (normal chat + IIT Bombay context)
 
