@@ -10,10 +10,10 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 - Auto-deploy on `main` push (Vercel, Mumbai region)
 
 > **Auth status (important):** Email + password login & sign-up are **tested and working**
-> (OTP verification via dev-server log or SMTP). **Google Sign-in and Google Sign-up are NOT
-> tested** on the live deploy — the Google OAuth flow is wired (client ID/secret set + redirect
-> URI), but end-to-end Google login/sign-up verification is pending. Until then, use email login
-> with the test credentials below.
+> (OTP verification via dev-server log or SMTP). **Google Sign-in/Sign-up** — flow verified up to
+> the Google redirect on live (redirect URI set, `client_id` resolves) and callback hardened
+> against duplicate-email race (atomic upsert). Full browser end-to-end confirmation still pending
+> — until then use email login with the test credentials below.
 
 ## Tech Stack
 
@@ -279,7 +279,7 @@ platform with auth, notifications, dashboards, analytics and responsive design.
 
 ## Pending
 
-- [ ] **Google Sign-in / Sign-up** — wired (client ID/secret + redirect URI) but **not tested end-to-end** on live deploy. Local fix (env injection + NextAuth action) separate branch me in progress.
+- [ ] **Google Sign-in / Sign-up** — flow verified up to Google redirect on live; callback hardened (`auth.ts` atomic upsert, dup-email race fix). Browser end-to-end confirm pending.
 - [ ] AI ke liye free LLM key daalna (Gemini/DeepSeek) taaki chatbot + lecture notes real AI se chalein (mock se nahi).
 - [ ] Demo video (3–5 min)
 
