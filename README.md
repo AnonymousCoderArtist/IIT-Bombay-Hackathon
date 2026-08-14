@@ -13,6 +13,20 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 > dev-server log or SMTP). **Google Sign-in & Sign-up also working** (login page → Continue with
 > Google → consent → dashboard; naya Google user auto-creates as student).
 
+## Screenshots
+
+![Landing](public/screenshots/landing.png)
+
+![Student Dashboard](public/screenshots/dashboard.png)
+
+| Login | Events |
+| ----- | ------ |
+| ![Login](public/screenshots/login.png) | ![Events](public/screenshots/events.png) |
+
+| Attendance | Placements | Assignments |
+| ---------- | ---------- | ----------- |
+| ![Attendance](public/screenshots/attendance.png) | ![Placements](public/screenshots/placements.png) | ![Assignments](public/screenshots/assignments.png) |
+
 ## Tech Stack
 
 - **Frontend:** Next.js 16, React 19, Tailwind CSS, shadcn/ui, Framer Motion
@@ -30,20 +44,6 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 - Notifications — assignments, attendance, events, placements, alerts
 - Global search + analytics charts
 - Admin panel — user management, roles, activity logs
-
-## Screenshots
-
-![Landing](public/screenshots/landing.png)
-
-![Student Dashboard](public/screenshots/dashboard.png)
-
-| Login | Events |
-| ----- | ------ |
-| ![Login](public/screenshots/login.png) | ![Events](public/screenshots/events.png) |
-
-| Attendance | Placements | Assignments |
-| ---------- | ---------- | ----------- |
-| ![Attendance](public/screenshots/attendance.png) | ![Placements](public/screenshots/placements.png) | ![Assignments](public/screenshots/assignments.png) |
 
 ## Quick Start
 
