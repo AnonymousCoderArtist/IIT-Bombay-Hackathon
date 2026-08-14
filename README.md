@@ -4,22 +4,6 @@ Ek hi platform pe campus ki saari cheezein — attendance, assignments, events, 
 
 Built for **DevFusion 4.0: The Developers Hackathon**.
 
-## Unique Features
-
-- **Face Recognition Attendance** — camera ya photo upload se check-in with liveness detection (printed/screen photos reject), face enrollment + token based QR check-in
-- **AI Campus Assistant** — RAG chatbot jo IIT Bombay campus FAQs ka grounded answer deta hai (sources ke saath), greetings + normal chit-chat bhi, per-user AI settings
-- **QR Attendance Scanner** — check-in token + QR system
-- **AI Lecture Notes** — audio/voice se transcription + summarization
-- **AI Placement Match** — resume/job matching + sentiment analysis
-- **AI Plagiarism Detection** — assignment submissions me similarity check
-- **Web Push Notifications** — browser push (VAPID) + real-time alerts
-- **QR Event Passes** — event registration pe QR pass download
-- **Smart Analytics Dashboards** — attendance %, department performance, placement stats, charts
-- **Global Search** — students, faculty, events, assignments, placements ek hi search me
-- **OTP Email Verification + Forgot Password** — secure signup/recovery flow
-- **Dark/Light Mode + Smooth Animations** — Framer Motion + shadcn/ui
-- **Admin Audit Logs** — sensitive admin actions logged
-
 ## Live App
 
 - **Live URL:** https://iit-bombay-hackathon-1r7i.vercel.app
@@ -42,6 +26,22 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 | Attendance | Placements | Assignments |
 | ---------- | ---------- | ----------- |
 | ![Attendance](public/screenshots/attendance.png) | ![Placements](public/screenshots/placements.png) | ![Assignments](public/screenshots/assignments.png) |
+
+## Unique Features
+
+- **Face Recognition Attendance** — camera ya photo upload se check-in with liveness detection (printed/screen photos reject), face enrollment + token based QR check-in
+- **AI Campus Assistant** — RAG chatbot jo IIT Bombay campus FAQs ka grounded answer deta hai (sources ke saath), greetings + normal chit-chat bhi, per-user AI settings
+- **QR Attendance Scanner** — check-in token + QR system
+- **AI Lecture Notes** — audio/voice se transcription + summarization
+- **AI Placement Match** — resume/job matching + sentiment analysis
+- **AI Plagiarism Detection** — assignment submissions me similarity check
+- **Web Push Notifications** — browser push (VAPID) + real-time alerts
+- **QR Event Passes** — event registration pe QR pass download
+- **Smart Analytics Dashboards** — attendance %, department performance, placement stats, charts
+- **Global Search** — students, faculty, events, assignments, placements ek hi search me
+- **OTP Email Verification + Forgot Password** — secure signup/recovery flow
+- **Dark/Light Mode + Smooth Animations** — Framer Motion + shadcn/ui
+- **Admin Audit Logs** — sensitive admin actions logged
 
 ## Tech Stack
 
