@@ -50,7 +50,7 @@ export function AuthCard({
         <span className="text-xs font-medium uppercase tracking-[0.3em] text-primary">
           Smart Campus
         </span>
-        <h2 className="mt-2 text-2xl font-heading tracking-tight text-foreground">{title}</h2>
+        <h2 className="mt-2 text-3xl tracking-tight text-foreground">{title}</h2>
         <p className="mt-2 max-w-sm text-sm text-muted-foreground">{subtitle}</p>
         {children}
       </div>

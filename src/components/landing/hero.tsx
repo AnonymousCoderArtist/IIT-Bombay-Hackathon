@@ -17,7 +17,7 @@ export function Hero() {
   const { t } = useI18n();
   return (
     <section className="relative overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 pb-24 pt-20 sm:px-6 lg:pb-32 lg:pt-28">
+      <div className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:pb-28 lg:pt-20">
         <div className="mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -29,20 +29,20 @@ export function Hero() {
               {t("hero.badge")}
             </span>
 
-            <h1 className="mt-8 text-[2.75rem] leading-[1.02] font-heading tracking-tight sm:text-7xl lg:text-[5.5rem]">
+            <h1 className="mt-8 text-5xl leading-[1.05] text-balance sm:text-6xl lg:text-7xl">
               {t("hero.title1")}{" "}
-              <span className="font-serif-italic font-light italic text-primary">
+              <em className="font-serif-italic font-light text-primary">
                 {t("hero.title2")}
-              </span>
+              </em>
             </h1>
 
             <TextGenerateEffect
               words={t("hero.subtitle")}
-              className="mx-auto mt-7 max-w-2xl text-lg font-normal text-muted-foreground"
-              textClassName="text-lg font-normal leading-7 text-muted-foreground"
+              className="mx-auto mt-6 max-w-2xl text-base font-normal text-muted-foreground sm:text-lg"
+              textClassName="text-base font-normal leading-7 text-muted-foreground sm:text-lg sm:leading-8"
             />
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Button
                 size="lg"
                 className="group h-11 rounded-full px-7"
@@ -71,7 +71,7 @@ export function Hero() {
         >
           <div
             aria-hidden
-            className="absolute -inset-8 -z-10 rounded-[2rem] bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,color-mix(in_oklch,var(--primary)_14%,transparent),transparent)] blur-2xl"
+            className="absolute -inset-10 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,color-mix(in_oklch,var(--primary)_16%,transparent),transparent)] blur-3xl"
           />
           <div className="rounded-2xl border border-border bg-surface/70 shadow-elevated backdrop-blur-md">
             <div className="flex items-center justify-between rounded-t-2xl border-b border-border px-6 py-3">
@@ -90,7 +90,7 @@ export function Hero() {
                   <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
                     Good morning
                   </p>
-                  <p className="mt-1.5 font-heading text-xl text-foreground">
+                  <p className="mt-1.5 font-heading text-lg text-foreground">
                     Aarav ·{" "}
                     <span className="font-serif italic font-light text-primary">Sem 5 CSE</span>
                   </p>

@@ -33,7 +33,7 @@ export function Testimonials() {
             <span className="text-xs font-medium tracking-[0.3em] uppercase text-primary">
               Voices
             </span>
-            <h2 className="mt-4 text-4xl font-heading tracking-tight text-balance sm:text-5xl">
+            <h2 className="mt-4 text-4xl tracking-tight text-balance sm:text-5xl">
               Loved across campus
             </h2>
           </div>

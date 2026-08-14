@@ -27,7 +27,7 @@ export function Features() {
             <span className="text-xs font-medium tracking-[0.3em] uppercase text-primary">
               {t("features.eyebrow")}
             </span>
-            <h2 className="mt-4 text-4xl font-heading tracking-tight text-balance sm:text-5xl">
+            <h2 className="mt-4 text-4xl tracking-tight text-balance sm:text-5xl">
               {t("features.title")}
             </h2>
           </div>
@@ -49,7 +49,7 @@ export function Features() {
                 <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/25 bg-primary/8 text-primary transition-transform duration-300 group-hover:scale-105">
                   <feature.icon size={22} />
                 </span>
-                <h3 className="pt-1 font-heading text-xl tracking-tight md:text-2xl">
+                <h3 className="pt-1 text-xl tracking-tight md:text-2xl">
                   {feature.title}
                 </h3>
               </div>
