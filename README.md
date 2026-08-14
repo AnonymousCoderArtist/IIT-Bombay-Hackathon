@@ -1,7 +1,10 @@
 # Smart Campus Management Platform
 
 <p align="center">
-  <img src="public/logo-dark.png" alt="Smart Campus Logo" width="160" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/logo-white.png" />
+    <img src="public/logo-dark.png" alt="Smart Campus Logo" width="160" />
+  </picture>
 </p>
 
 Ek hi platform pe campus ki saari cheezein — attendance, assignments, events, placements, notifications. Students, faculty, coordinators aur admin ke liye alag dashboards.

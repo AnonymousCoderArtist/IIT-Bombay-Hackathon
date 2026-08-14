@@ -32,7 +32,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
       />
 
       <Link href="/" className="relative mb-8 flex items-center gap-2.5 font-semibold">
-        <Logo className="h-9 w-9" />
+        <Logo className="h-8 w-8 sm:h-9 sm:w-9" />
         <span className="font-heading text-base font-bold tracking-tight">
           Smart<span className="text-primary">Campus</span>
         </span>

@@ -112,7 +112,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
     >
       <div className={cn(mobile ? "flex h-full flex-col" : "sticky top-0 flex h-screen flex-col")}>
         <Link href="/dashboard" className="flex items-center gap-2.5 px-5 py-5">
-          <Logo className="h-9 w-9" />
+          <Logo className="h-8 w-8 sm:h-9 sm:w-9" />
           <span className="font-heading text-base font-bold tracking-tight">
             Smart<span className="text-primary">Campus</span>
           </span>
