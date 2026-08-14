@@ -55,7 +55,28 @@ function LoginForm() {
 
   async function handleGoogle() {
     setGoogleLoading(true);
-    await signIn("google", { callbackUrl });
+
+    try {
+      const result = await signIn("google", { callbackUrl, redirect: false });
+
+      if (result?.error) {
+        const retry = await signIn("google", { callbackUrl, redirect: false });
+        if (retry?.error) {
+          toast.error("Google sign-in fail hua — dobara try karo");
+          return;
+        }
+        if (retry?.url) {
+          window.location.href = retry.url;
+        }
+        return;
+      }
+
+      if (result?.url) {
+        window.location.href = result.url;
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
   }
 
   return (
