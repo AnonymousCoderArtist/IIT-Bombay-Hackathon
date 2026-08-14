@@ -9,11 +9,9 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 - **Live URL:** https://iit-bombay-hackathon-1r7i.vercel.app
 - Auto-deploy on `main` push (Vercel, Mumbai region)
 
-> **Auth status (important):** Email + password login & sign-up are **tested and working**
-> (OTP verification via dev-server log or SMTP). **Google Sign-in/Sign-up** — flow verified up to
-> the Google redirect on live (redirect URI set, `client_id` resolves) and callback hardened
-> against duplicate-email race (atomic upsert). Full browser end-to-end confirmation still pending
-> — until then use email login with the test credentials below.
+> **Auth status:** Email + password login & sign-up **tested & working** (OTP verification via
+> dev-server log or SMTP). **Google Sign-in & Sign-up also working** (login page → Continue with
+> Google → consent → dashboard; naya Google user auto-creates as student).
 
 ## Tech Stack
 
@@ -249,9 +247,9 @@ for i in $(seq 1 6); do curl -s -o /dev/null -w "%{http_code} " \
 Problem Statement 1: **Smart Campus Management Platform** — production-ready, role-based campus
 platform with auth, notifications, dashboards, analytics and responsive design.
 
-**Mandatory Tech Stack:** React/Next.js ✓ · TypeScript ✓ · Tailwind CSS ✓ · Responsive UI ✓ · Node.js ✓ · Next.js API ✓ · MongoDB (Mongoose) ✓ · Email auth ✓ · Google OAuth (wired — testing pending) ⚠ · JWT/session auth ✓ · Vercel deployment ✓ · Docker (bonus) ✓
+**Mandatory Tech Stack:** React/Next.js ✓ · TypeScript ✓ · Tailwind CSS ✓ · Responsive UI ✓ · Node.js ✓ · Next.js API ✓ · MongoDB (Mongoose) ✓ · Email auth ✓ · Google OAuth ✓ · JWT/session auth ✓ · Vercel deployment ✓ · Docker (bonus) ✓
 
-**Authentication:** Sign-up via email+password ✓ · Sign-up via Google ⚠ (not tested) · Login via email ✓ · Login via Google ⚠ (not tested) · Forgot password (OTP + email verification) ✓ · Email verification before dashboard access ✓ · Secure session management (JWT in cookies) ✓ · Secure logout ✓ · Protected routes (dashboard/settings/profile/events/attendance) ✓
+**Authentication:** Sign-up via email+password ✓ · Sign-up via Google ✓ · Login via email ✓ · Login via Google ✓ · Forgot password (OTP + email verification) ✓ · Email verification before dashboard access ✓ · Secure session management (JWT in cookies) ✓ · Secure logout ✓ · Protected routes (dashboard/settings/profile/events/attendance) ✓
 
 **User Roles (4):** Student ✓ · Faculty ✓ · Coordinator ✓ · Admin ✓ — PS ke role-wise permissions implemented.
 
@@ -293,7 +291,6 @@ platform with auth, notifications, dashboards, analytics and responsive design.
 
 ## Pending
 
-- [ ] **Google Sign-in / Sign-up** — flow verified up to Google redirect on live; callback hardened (`auth.ts` atomic upsert, dup-email race fix). Browser end-to-end confirm pending.
 - [ ] AI ke liye free LLM key daalna (Gemini/DeepSeek) taaki chatbot + lecture notes real AI se chalein (mock se nahi).
 - [ ] Demo video (3–5 min)
 

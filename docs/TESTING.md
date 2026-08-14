@@ -3,10 +3,8 @@
 > Har feature ka step-by-step test. **Steps** follow karo → **Expected** result milna chahiye.
 > Test credentials saare niche hain. Bug milne pe: page + kya kiya + kya aaya — note karke batao.
 
-> **Status note:** Email + password login/sign-up **tested & working**. **Google Sign-in / Sign-up**
-> — flow verified up to the Google redirect (client_id resolves, redirect URI set) + callback
-> hardened (atomic upsert). Browser end-to-end confirm pending — Google wale steps abhi try karke
-> dekh lo, fail hone pe email login use karo.
+> **Status note:** Email + password login/sign-up **tested & working**. **Google Sign-in / Sign-up
+> working** (Continue with Google → consent → dashboard; naya Google user auto-creates as student).
 
 ## Test credentials
 
