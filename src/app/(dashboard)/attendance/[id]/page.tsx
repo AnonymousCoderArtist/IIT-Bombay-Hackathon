@@ -204,6 +204,7 @@ export default function MarkSessionPage() {
                           title="Face check-in photo verify karo"
                           className="shrink-0"
                         >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={photos[student._id]}
                             alt={`${student.name} check-in photo`}

@@ -166,6 +166,7 @@ export default function FaceCaptureDialog({ title, description, trigger, loading
             />
             {mode === "upload" ? (
               preview ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={preview} alt="Selected face" className="aspect-square w-full object-cover" />
               ) : (
                 <div className="flex aspect-square w-full flex-col items-center justify-center gap-2 text-white/70">
