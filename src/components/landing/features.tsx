@@ -15,6 +15,14 @@ const roles = [
   { name: "Admin", active: false },
 ];
 
+const attendanceWeek = [
+  { day: "Mon", value: 88 },
+  { day: "Tue", value: 95 },
+  { day: "Wed", value: 91 },
+  { day: "Thu", value: 100 },
+  { day: "Fri", value: 86 },
+];
+
 const tasks = [
   { label: "DBMS assignment", done: true },
   { label: "OS practical file", done: true },
@@ -39,13 +47,13 @@ export function Features() {
       icon: LayoutDashboardIcon,
       title: t("f1.title"),
       description: t("f1.desc"),
-      span: "md:col-span-4 md:row-span-2",
+      span: "md:col-span-2",
       extra: (
-        <div className="mt-8 space-y-2.5">
+        <div className="mt-6 space-y-2.5">
           {roles.map((role) => (
             <div
               key={role.name}
-              className={`flex items-center justify-between rounded-xl border px-4 py-3 text-sm transition-colors ${
+              className={`flex items-center justify-between rounded-xl border px-3.5 py-2.5 text-sm transition-colors ${
                 role.active
                   ? "border-primary/40 bg-primary/8 text-foreground"
                   : "border-border bg-background/40 text-muted-foreground"
@@ -62,17 +70,46 @@ export function Features() {
       icon: AlarmClockPlusIcon,
       title: t("f2.title"),
       description: t("f2.desc"),
-      span: "md:col-span-2",
+      span: "md:col-span-4 md:row-span-2",
       extra: (
-        <div className="mt-6">
-          <div className="flex items-end justify-between text-sm">
-            <span className="font-heading text-3xl font-extrabold tabular-nums text-primary">92%</span>
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Clock className="size-3.5" /> this month
-            </span>
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.4fr] lg:items-end">
+          <div>
+            <div className="flex items-end gap-3">
+              <span className="font-heading text-5xl font-extrabold tabular-nums text-primary">92%</span>
+              <span className="flex items-center gap-1.5 pb-1.5 text-xs text-muted-foreground">
+                <Clock className="size-3.5" /> this month
+              </span>
+            </div>
+            <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-border">
+              <div className="h-full w-[92%] rounded-full bg-primary" />
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Only 2 lectures missed out of 25
+            </p>
           </div>
-          <div className="mt-3 h-2 overflow-hidden rounded-full bg-border">
-            <div className="h-full w-[92%] rounded-full bg-primary" />
+          <div>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                This week
+              </p>
+              <span className="flex items-center gap-1 text-xs text-primary">
+                <TrendingUp className="size-3.5" /> +7% vs last week
+              </span>
+            </div>
+            <div className="mt-4 flex h-28 items-end gap-3">
+              {attendanceWeek.map((item) => (
+                <div key={item.day} className="flex flex-1 flex-col items-center gap-2">
+                  <span className="text-xs tabular-nums text-muted-foreground">{item.value}%</span>
+                  <span
+                    style={{ height: `${item.value}%` }}
+                    className={`w-full rounded-md ${
+                      item.value >= 90 ? "bg-primary" : "bg-primary/35"
+                    }`}
+                  />
+                  <span className="text-[0.7rem] text-muted-foreground">{item.day}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       ),
@@ -149,7 +186,7 @@ export function Features() {
       extra: (
         <div className="mt-6 grid gap-2 sm:grid-cols-3">
           {placements.map((company) => (
-            <div key={company.label} className="rounded-xl border border-border bg-background/40 px-4 py-3 text-center">
+            <div key={company.label} className="rounded-xl border border-border bg-background/40 px-3 py-3 text-center">
               <p className="text-sm font-medium text-foreground">{company.label}</p>
               <p className="mt-0.5 text-xs text-primary">{company.offer}</p>
             </div>
@@ -176,13 +213,17 @@ export function Features() {
           </p>
         </div>
 
-        <div className="mt-16 overflow-hidden rounded-3xl border border-border shadow-elevated">
-          <div className="grid gap-px bg-border md:grid-cols-6">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className={`group relative bg-surface/70 p-6 transition-colors duration-300 hover:bg-surface md:p-8 ${feature.span}`}
-              >
+        <div className="mt-16 grid gap-5 md:grid-cols-6">
+          {features.map((feature) => (
+            <div
+              key={feature.title}
+              className={`group relative overflow-hidden rounded-3xl border border-border bg-surface/50 p-7 transition-colors duration-300 hover:border-primary/30 hover:bg-surface/70 md:p-8 ${feature.span}`}
+            >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 size-44 rounded-full bg-primary/8 blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              />
+              <div className="relative">
                 <div className="flex size-11 items-center justify-center rounded-xl border border-primary/25 bg-primary/8 text-primary transition-transform duration-300 group-hover:scale-105">
                   <feature.icon size={20} />
                 </div>
@@ -190,8 +231,8 @@ export function Features() {
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
                 {feature.extra}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
