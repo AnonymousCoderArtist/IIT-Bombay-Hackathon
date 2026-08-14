@@ -13,22 +13,22 @@ export function Stats() {
   ];
 
   return (
-    <section className="relative overflow-hidden py-14">
+    <section className="relative overflow-hidden py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border lg:grid-cols-4">
-          {stats.map((stat) => (
+        <div className="grid grid-cols-2 gap-8 lg:grid-cols-4 lg:gap-4">
+          {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
-              className="bg-surface px-4 py-10 text-center"
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+              className="text-center lg:text-left"
             >
-              <p className="font-heading text-4xl font-extrabold tracking-tight tabular-nums text-primary">
+              <p className="font-heading text-5xl font-extrabold tracking-tight tabular-nums text-primary lg:text-6xl">
                 {stat.value}
               </p>
-              <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{stat.label}</p>
             </motion.div>
           ))}
         </div>

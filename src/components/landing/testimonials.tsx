@@ -1,7 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 const testimonials = [
   {
     name: "Lokesh Lal",
@@ -28,42 +26,33 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="border-y border-border/60 py-24">
+    <section id="testimonials" className="border-y border-border/60 py-24 lg:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-          <span className="text-xs font-medium tracking-[0.3em] uppercase text-primary">
-            Voices
-          </span>
-          <h2 className="mt-4 text-4xl font-heading tracking-tight text-balance sm:text-5xl">
-            Loved across campus
-          </h2>
-          <p className="mt-4 max-w-xl text-muted-foreground">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <span className="text-xs font-medium tracking-[0.3em] uppercase text-primary">
+              Voices
+            </span>
+            <h2 className="mt-4 text-4xl font-heading tracking-tight text-balance sm:text-5xl">
+              Loved across campus
+            </h2>
+          </div>
+          <p className="max-w-sm text-muted-foreground md:text-right">
             Students, faculty and coordinators rely on Smart Campus every day.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
-            <motion.figure
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="flex flex-col justify-between bg-surface p-7"
-            >
+        <div className="mt-16 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3">
+          {testimonials.map((testimonial) => (
+            <figure key={testimonial.name} className="flex flex-col justify-between bg-card p-8">
               <div>
-                <span className="flex size-9 items-center justify-center rounded-full border border-primary/40 bg-primary/8 text-primary">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                    <path d="M11.17 6a3.5 3.5 0 0 1-3.5 3.5H7.4a6.5 6.5 0 0 0 6.46 7h.12a6.5 6.5 0 0 0 6.46-7h-.27a3.5 3.5 0 0 1-3.5-3.5V4.5h-5.5V6Z" transform="scale(-1,1) translate(-24,0)" />
-                  </svg>
-                </span>
-                <blockquote className="mt-5 text-sm leading-relaxed text-muted-foreground">
-                  &ldquo;{testimonial.quote}&rdquo;
+                <span className="font-serif text-4xl font-light italic text-primary">&ldquo;</span>
+                <blockquote className="mt-3 text-[0.95rem] leading-relaxed text-foreground/85">
+                  {testimonial.quote}
                 </blockquote>
               </div>
-              <figcaption className="mt-7 flex items-center gap-3 border-t border-border pt-5">
-                <span className="flex size-9 items-center justify-center rounded-full bg-primary/12 font-heading text-xs font-extrabold text-primary">
+              <figcaption className="mt-8 flex items-center gap-3 border-t border-border pt-5">
+                <span className="flex size-10 items-center justify-center rounded-full border border-primary/30 bg-primary/8 font-heading text-xs font-extrabold text-primary">
                   {testimonial.initials}
                 </span>
                 <div>
@@ -71,7 +60,7 @@ export function Testimonials() {
                   <p className="text-xs text-muted-foreground">{testimonial.role}</p>
                 </div>
               </figcaption>
-            </motion.figure>
+            </figure>
           ))}
         </div>
       </div>
