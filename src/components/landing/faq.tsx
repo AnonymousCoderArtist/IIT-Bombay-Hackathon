@@ -49,7 +49,7 @@ export function Faq() {
           alt=""
           width={640}
           height={359}
-          className="h-full w-full object-cover opacity-25 dark:opacity-30"
+          className="h-full w-full object-cover opacity-40 dark:opacity-45"
         />
       </div>
       <div className="mx-auto max-w-3xl px-4 sm:px-6">

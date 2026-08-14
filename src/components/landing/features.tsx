@@ -227,19 +227,7 @@ export function Features() {
           alt=""
           width={4800}
           height={3000}
-          className="h-full w-full -rotate-90 scale-125 object-cover opacity-15 mix-blend-screen dark:opacity-20"
-        />
-      </div>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-[-6rem] -z-10"
-      >
-        <Image
-          src="/black-background-and-golden-waves-and-bubbles-photo.jpg"
-          alt=""
-          width={625}
-          height={350}
-          className="h-72 w-full object-cover object-center opacity-25 dark:opacity-30"
+          className="h-full w-full object-cover opacity-30 mix-blend-screen dark:opacity-35"
         />
       </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">

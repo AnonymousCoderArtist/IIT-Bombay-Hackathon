@@ -38,7 +38,7 @@ export function Testimonials() {
           alt=""
           width={625}
           height={350}
-          className="h-full w-full object-cover object-right opacity-20 dark:opacity-25"
+          className="h-full w-full object-cover object-right opacity-35 dark:opacity-40"
         />
       </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">

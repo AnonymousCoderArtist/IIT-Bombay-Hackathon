@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           className="pointer-events-none fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: "url(/black-background-and-golden-waves-and-bubbles-photo.jpg)",
-            opacity: 0.15,
+            opacity: 0.25,
           }}
         />
         <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_-10%,color-mix(in_oklch,var(--primary)_12%,transparent),transparent)]" />

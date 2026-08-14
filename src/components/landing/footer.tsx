@@ -30,7 +30,7 @@ export function Footer() {
         aria-hidden
         width={5824}
         height={3264}
-        className="pointer-events-none absolute inset-x-0 bottom-[-8rem] -z-10 h-96 w-full object-cover object-center opacity-25 dark:opacity-30"
+        className="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover object-center opacity-40 dark:opacity-45"
       />
       <div
         aria-hidden
