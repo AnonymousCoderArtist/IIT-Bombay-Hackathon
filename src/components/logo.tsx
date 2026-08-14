@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export function Logo({ className }: { className?: string }) {
@@ -10,12 +9,11 @@ export function Logo({ className }: { className?: string }) {
           className
         )}
       >
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/logo-only-dark.png"
           alt="Smart Campus"
-          width={422}
-          height={422}
-          priority
+          loading="eager"
           className="h-full w-full object-contain"
         />
       </span>
@@ -25,12 +23,11 @@ export function Logo({ className }: { className?: string }) {
           className
         )}
       >
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/logo-only-white.png"
           alt="Smart Campus"
-          width={402}
-          height={402}
-          priority
+          loading="eager"
           className="h-full w-full object-contain"
         />
       </span>
