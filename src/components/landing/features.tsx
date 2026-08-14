@@ -70,20 +70,20 @@ export function Features() {
       icon: AlarmClockPlusIcon,
       title: t("f2.title"),
       description: t("f2.desc"),
-      span: "md:col-span-4 md:row-span-2",
+      span: "md:col-span-4",
       extra: (
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.4fr] lg:items-end">
+        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.3fr] lg:items-center">
           <div>
             <div className="flex items-end gap-3">
-              <span className="font-heading text-5xl font-extrabold tabular-nums text-primary">92%</span>
+              <span className="font-heading text-4xl font-extrabold tabular-nums text-primary">92%</span>
               <span className="flex items-center gap-1.5 pb-1.5 text-xs text-muted-foreground">
                 <Clock className="size-3.5" /> this month
               </span>
             </div>
-            <div className="mt-4 h-2.5 overflow-hidden rounded-full bg-border">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-border">
               <div className="h-full w-[92%] rounded-full bg-primary" />
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">
+            <p className="mt-2 text-xs text-muted-foreground">
               Only 2 lectures missed out of 25
             </p>
           </div>
@@ -96,10 +96,10 @@ export function Features() {
                 <TrendingUp className="size-3.5" /> +7% vs last week
               </span>
             </div>
-            <div className="mt-4 flex h-28 items-end gap-3">
+            <div className="mt-3 flex h-24 items-end gap-3">
               {attendanceWeek.map((item) => (
-                <div key={item.day} className="flex flex-1 flex-col items-center gap-2">
-                  <span className="text-xs tabular-nums text-muted-foreground">{item.value}%</span>
+                <div key={item.day} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5">
+                  <span className="text-[0.65rem] tabular-nums text-muted-foreground">{item.value}%</span>
                   <span
                     style={{ height: `${item.value}%` }}
                     className={`w-full rounded-md ${
@@ -160,9 +160,9 @@ export function Features() {
       icon: ChartBarIcon,
       title: t("f5.title"),
       description: t("f5.desc"),
-      span: "md:col-span-4",
+      span: "md:col-span-2",
       extra: (
-        <div className="mt-6 flex h-20 items-end gap-1.5">
+        <div className="mt-6 flex h-16 items-end gap-1.5">
           {[40, 65, 50, 80, 60, 100].map((height, i) => (
             <span
               key={i}
@@ -172,9 +172,6 @@ export function Features() {
               }`}
             />
           ))}
-          <span className="ml-3 shrink-0 items-center gap-1 text-xs text-primary sm:flex">
-            <TrendingUp className="size-4" /> +18% offers
-          </span>
         </div>
       ),
     },
