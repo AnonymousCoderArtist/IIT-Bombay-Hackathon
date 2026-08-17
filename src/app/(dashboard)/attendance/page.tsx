@@ -153,12 +153,12 @@ function StudentAttendanceView() {
             { label: "Late", value: data.summary.late, accent: "border-amber-500/40 bg-amber-500/10" },
             { label: "Absent", value: data.summary.absent, accent: "border-red-500/40 bg-red-500/10" },
           ].map((stat) => (
-            <Card key={stat.label} className={`transition-all duration-300 hover:-translate-y-0.5 hover:shadow-elevated ${stat.accent}`}>
+            <Card key={stat.label} className={`transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-glow ${stat.accent}`}>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground">{stat.label}</CardTitle>
+                <CardTitle className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-muted-foreground">{stat.label}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold tabular-nums">{stat.value}</p>
+                <p className="font-heading text-3xl font-extrabold tracking-tight tabular-nums">{stat.value}</p>
                 {stat.sub && <p className="mt-1 text-xs text-muted-foreground">{stat.sub}</p>}
               </CardContent>
             </Card>
@@ -180,6 +180,9 @@ function StudentAttendanceView() {
 
       <Card>
         <CardHeader>
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.2em] text-primary">
+            Analytics
+          </p>
           <CardTitle className="text-base">Attendance trend (last 6 months)</CardTitle>
         </CardHeader>
         <CardContent>
