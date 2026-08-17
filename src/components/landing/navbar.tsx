@@ -30,7 +30,7 @@ export function Navbar() {
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2.5">
           <Logo className="h-8 w-8 sm:h-9 sm:w-9" />
-          <span className="font-heading text-base tracking-tight">
+          <span className="font-heading text-base tracking-tight text-foreground dark:text-zinc-50">
             Smart<span className="text-primary">Campus</span>
           </span>
         </Link>

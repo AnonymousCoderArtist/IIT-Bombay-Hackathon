@@ -179,30 +179,8 @@ export default function DashboardHome() {
       <div className="grid gap-3 lg:grid-cols-3">
         <div className="space-y-3 lg:col-span-2">
           <div className="grid gap-3 lg:grid-cols-2">
-            {(role === "student" || role === "coordinator") && <CalendarWidget />}
-
-            {role === "student" ? (
-              <CampusGroupsCard />
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent activity</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {loading ? (
-                    <div className="space-y-2">
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-3/4" />
-                      <Skeleton className="h-4 w-1/2" />
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      Your recent activity and updates will appear here as things happen.
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+            <CalendarWidget />
+            <CampusGroupsCard />
           </div>
 
           {role === "admin" && <AnalyticsCharts data={data ?? {}} />}

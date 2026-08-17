@@ -57,7 +57,7 @@ Golden-on-black premium aesthetic (dulcedo.com-inspired editorial style):
 - **Brand colors** — gold `#C5AE79` accent, deep black backgrounds, warm off-white surfaces
 - **Typography** — serif display headings (editorial feel) + clean sans body, tabular numerals for stats
 - **Glassmorphism** — glass stat cards with gold gradient borders, hairline highlights, subtle glow
-- **Dashboard** — sidebar navigation with animated icons (icons react on hover), viewport-fit compact layout, gold quick-access panel, smart tip card, editorial calendar widget
+- **Dashboard** — har role ka consistent premium layout: gold stat cards, editorial calendar widget, campus WhatsApp groups, smart tip card; sidebar icons animate on hover; viewport-fit compact layout (no scrolling needed). Admin ko full analytics charts (attendance trend, department performance, placement stats, top events) bhi milte hain — sab gold theme me.
 - **Landing** — stacked serif hero, label + number stat pairs, gold wave imagery, gold-themed scrollbar
 - **Motion** — staggered card entrances, hover lift + glow, icon micro-animations
 
