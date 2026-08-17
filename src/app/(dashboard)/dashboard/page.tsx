@@ -128,17 +128,17 @@ export default function DashboardHome() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-primary" suppressHydrationWarning>
             {today}
           </p>
-          <h1 className="mt-1 font-serif text-2xl tracking-tight text-balance sm:text-3xl">
+          <h1 className="mt-0.5 font-serif text-2xl tracking-tight text-balance sm:text-3xl">
             Welcome back,{" "}
             <em className="italic text-primary">{session?.user?.name?.split(" ")[0]}</em>
           </h1>
-          <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+          <p className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
             <span className="inline-block size-1.5 rounded-full bg-primary" />
             Here is what is happening on your campus today.
           </p>
@@ -176,9 +176,9 @@ export default function DashboardHome() {
         ))}
       </motion.div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-2">
-          <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-3 lg:grid-cols-3">
+        <div className="space-y-3 lg:col-span-2">
+          <div className="grid gap-3 lg:grid-cols-2">
             {(role === "student" || role === "coordinator") && <CalendarWidget />}
 
             {role === "student" ? (

@@ -28,7 +28,7 @@ export function Logo({ className }: { className?: string }) {
           src="/logo-only-white.png"
           alt="Smart Campus"
           loading="eager"
-          className="h-full w-full object-contain"
+          className="h-full w-full object-contain brightness-125 contrast-110"
         />
       </span>
     </>
