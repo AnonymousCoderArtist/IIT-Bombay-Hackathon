@@ -56,8 +56,17 @@ export default function CalendarWidget() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold tracking-tight">Upcoming events</h2>
-        <CalendarDays className="size-4 text-muted-foreground" />
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
+            <CalendarDays className="size-4" />
+          </span>
+          <div>
+            <p className="text-[0.7rem] font-medium uppercase tracking-[0.2em] text-primary">
+              Campus calendar
+            </p>
+            <h2 className="font-heading text-lg tracking-tight">Upcoming events</h2>
+          </div>
+        </div>
       </div>
 
       {loading ? (
