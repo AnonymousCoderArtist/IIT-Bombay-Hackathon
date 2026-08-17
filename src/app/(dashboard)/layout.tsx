@@ -12,7 +12,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <DashboardProviders>
-      <div className="relative flex min-h-screen">
+      <div className="relative flex h-dvh overflow-hidden">
         <Image
           src="/black-background-and-golden-waves-and-bubbles-photo.jpg"
           alt=""
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <div className="relative z-10 flex min-w-0 flex-1 flex-col">
           <Topbar onMenuClick={() => setMobileOpen(true)} />
-          <main className="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+          <main className="mx-auto w-full max-w-7xl flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">{children}</main>
         </div>
       </div>
     </DashboardProviders>

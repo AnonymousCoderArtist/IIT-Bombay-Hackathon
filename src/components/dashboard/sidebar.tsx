@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import type { ComponentType } from "react";
+import { useRef, type ComponentType } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
+import type { AnimatedIconHandle } from "@/components/ui/types";
 import LayoutDashboardIcon from "@/components/ui/layout-dashboard-icon";
 import ClockIcon from "@/components/ui/clock-icon";
 import FileDescriptionIcon from "@/components/ui/file-description-icon";
@@ -74,12 +75,34 @@ const bottomLinks = [
   { href: "/settings", label: "Settings", icon: GearIcon },
 ];
 
-function NavItem({ href, label, icon: Icon }: { href: string; label: string; icon: ComponentType<{ size?: number | string; className?: string }> }) {
+type NavIconType = ComponentType<{
+  size?: number | string;
+  className?: string;
+  ref?: React.Ref<AnimatedIconHandle>;
+}>;
+
+function HoverIcon({ icon: Icon, iconRef, active }: { icon: NavIconType; iconRef: React.Ref<AnimatedIconHandle>; active: boolean }) {
+  return (
+    <Icon
+      ref={iconRef}
+      size={16}
+      className={cn(
+        "transition-colors duration-200",
+        active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+      )}
+    />
+  );
+}
+
+function NavItem({ href, label, icon: Icon }: { href: string; label: string; icon: NavIconType }) {
   const pathname = usePathname();
   const active = pathname === href || pathname.startsWith(`${href}/`);
+  const iconRef = useRef<AnimatedIconHandle>(null);
   return (
     <Link
       href={href}
+      onMouseEnter={() => iconRef.current?.startAnimation?.()}
+      onMouseLeave={() => iconRef.current?.stopAnimation?.()}
       className={cn(
         "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:scale-[1.02]",
         active
@@ -87,13 +110,7 @@ function NavItem({ href, label, icon: Icon }: { href: string; label: string; ico
           : "text-muted-foreground hover:translate-x-1 hover:bg-muted/60 hover:text-foreground"
       )}
     >
-      <Icon
-        size={16}
-        className={cn(
-          "transition-all duration-200",
-          active ? "text-primary" : "text-muted-foreground group-hover:scale-110 group-hover:text-foreground"
-        )}
-      />
+      <HoverIcon icon={Icon} iconRef={iconRef} active={active} />
       {label}
     </Link>
   );
@@ -123,7 +140,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
         mobile ? "flex h-full flex-col" : "hidden md:flex md:flex-col"
       )}
     >
-      <div className={cn(mobile ? "flex h-full flex-col" : "sticky top-0 flex h-screen flex-col")}>
+      <div className={cn(mobile ? "flex h-full flex-col" : "flex h-full flex-col")}>
         <Link href="/dashboard" className="flex items-center gap-2.5 px-5 py-5">
           <Logo className="h-8 w-8 sm:h-9 sm:w-9" />
           <span className="font-heading text-base tracking-tight">

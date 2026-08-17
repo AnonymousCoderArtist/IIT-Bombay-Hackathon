@@ -128,17 +128,17 @@ export default function DashboardHome() {
   });
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="space-y-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-primary" suppressHydrationWarning>
+          <p className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-primary" suppressHydrationWarning>
             {today}
           </p>
-          <h1 className="mt-2 font-serif text-4xl tracking-tight text-balance sm:text-5xl">
+          <h1 className="mt-1 font-serif text-2xl tracking-tight text-balance sm:text-3xl">
             Welcome back,{" "}
             <em className="italic text-primary">{session?.user?.name?.split(" ")[0]}</em>
           </h1>
-          <p className="mt-2 flex items-center gap-2 text-muted-foreground">
+          <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
             <span className="inline-block size-1.5 rounded-full bg-primary" />
             Here is what is happening on your campus today.
           </p>
@@ -148,7 +148,7 @@ export default function DashboardHome() {
             <Link
               key={action.href}
               href={action.href}
-              className="group inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 text-sm font-medium shadow-card transition-all hover:border-primary/40 hover:text-primary"
+              className="group inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium shadow-card transition-all hover:border-primary/40 hover:text-primary"
             >
               {action.label}
               <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -161,7 +161,7 @@ export default function DashboardHome() {
         initial="hidden"
         animate="show"
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
       >
         {cardsByRole[role]?.map((card) => (
           <motion.div
@@ -176,9 +176,9 @@ export default function DashboardHome() {
         ))}
       </motion.div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
-          <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="space-y-4 lg:col-span-2">
+          <div className="grid gap-4 lg:grid-cols-2">
             {(role === "student" || role === "coordinator") && <CalendarWidget />}
 
             {role === "student" ? (
@@ -293,13 +293,13 @@ function CampusGroupsCard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        {groups.map((group) => (
+        {groups.slice(0, 4).map((group) => (
           <a
             key={`${group.kind}-${group.name}-${group.link}`}
             href={group.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center justify-between gap-2 rounded-xl border border-border/60 bg-background/40 px-3 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/5 hover:shadow-elevated"
+            className="group flex items-center justify-between gap-2 rounded-xl border border-border/60 bg-background/40 px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/5 hover:shadow-elevated"
           >
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">{group.name}</p>

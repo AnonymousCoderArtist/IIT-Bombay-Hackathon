@@ -50,6 +50,19 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 - **Dark/Light Mode + Smooth Animations** — Framer Motion + shadcn/ui
 - **Admin Audit Logs** — sensitive admin actions logged
 
+## Design System
+
+Golden-on-black premium aesthetic (dulcedo.com-inspired editorial style):
+
+- **Brand colors** — gold `#C5AE79` accent, deep black backgrounds, warm off-white surfaces
+- **Typography** — serif display headings (editorial feel) + clean sans body, tabular numerals for stats
+- **Glassmorphism** — glass stat cards with gold gradient borders, hairline highlights, subtle glow
+- **Dashboard** — sidebar navigation with animated icons (icons react on hover), viewport-fit compact layout, gold quick-access panel, smart tip card, editorial calendar widget
+- **Landing** — stacked serif hero, label + number stat pairs, gold wave imagery, gold-themed scrollbar
+- **Motion** — staggered card entrances, hover lift + glow, icon micro-animations
+
+Full dashboard design reference: [`DASHBOARD_DESIGN.md`](DASHBOARD_DESIGN.md)
+
 ## Tech Stack
 
 - **Frontend:** Next.js 16, React 19, Tailwind CSS, shadcn/ui, Framer Motion
