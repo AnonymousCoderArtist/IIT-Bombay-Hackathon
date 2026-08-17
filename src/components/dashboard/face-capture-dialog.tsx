@@ -117,7 +117,7 @@ export default function FaceCaptureDialog({ title, description, trigger, loading
         }
       }}
     >
-      <DialogTrigger render={<span />}>{trigger}</DialogTrigger>
+      <DialogTrigger nativeButton={false} render={<span />}>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
