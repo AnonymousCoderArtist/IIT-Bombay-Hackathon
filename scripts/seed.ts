@@ -15,6 +15,7 @@ import {
   Notice,
   StudyMaterial,
   Course,
+  ActivityLog,
 } from "../src/lib/models";
 
 const departments = [
@@ -198,6 +199,7 @@ async function main() {
     .map((u) => createdIds[u.role + u.email]);
   const facultyId = createdIds["facultyfaculty@smartcampus.edu"];
   const coordinatorId = createdIds["coordinatorcoordinator@smartcampus.edu"];
+  const adminId = createdIds["adminadmin@smartcampus.edu"];
 
   console.log("\n--- Seeding courses ---");
   const courseDocs = await Course.bulkWrite(
@@ -474,6 +476,32 @@ async function main() {
     },
   ]);
   console.log("2 notices created");
+
+  console.log("\n--- Seeding activity logs ---");
+  const existingLogs = await ActivityLog.countDocuments();
+  if (existingLogs === 0) {
+    const logSamples = [
+      { userId: adminId, action: "login", targetResource: "Admin Portal", details: { method: "email" } },
+      { userId: adminId, action: "update_user", targetResource: "Admin Portal", details: { status: "active" } },
+      { userId: facultyId, action: "create_assignment", targetResource: "DBMS Assignment 3", details: { deadline: "5 days" } },
+      { userId: facultyId, action: "create_attendance_session", targetResource: "DBMS · Theory", details: { subject: "DBMS" } },
+      { userId: coordinatorId, action: "create_event", targetResource: "Tech Talk 2026", details: { venue: "Main Auditorium" } },
+      { userId: coordinatorId, action: "create_placement", targetResource: "TCS · SDE", details: { ctc: "8 LPA" } },
+      { userId: coordinatorId, action: "create_notice", targetResource: "Mid-term exam schedule", details: { category: "exam" } },
+      { userId: adminId, action: "login", targetResource: "Admin Portal", details: { method: "email" } },
+    ];
+    const now = Date.now();
+    for (let i = 0; i < logSamples.length; i++) {
+      await ActivityLog.create({
+        ...logSamples[i],
+        ipAddress: "127.0.0.1",
+        createdAt: new Date(now - i * 3600 * 1000),
+      });
+    }
+    console.log(`${logSamples.length} activity logs created`);
+  } else {
+    console.log("activity logs already exist, skipping");
+  }
 
   await mongoose.disconnect();
   console.log("\nDone! Login with the test credentials above.\n");
