@@ -5,7 +5,7 @@ import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, GraduationCap, ShieldCheck, CalendarClock, BookOpen } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { AuroraInput } from "@/components/ui/aurora-input";
 import { AuthShell } from "@/components/auth/auth-shell";
@@ -17,6 +17,13 @@ import {
 } from "@/components/auth/auth-card";
 
 export const dynamic = "force-dynamic";
+
+const DEMO_ACCOUNTS = [
+  { role: "Student", email: "student@smartcampus.edu", password: "Student@123", icon: GraduationCap },
+  { role: "Faculty", email: "faculty@smartcampus.edu", password: "Faculty@123", icon: BookOpen },
+  { role: "Coordinator", email: "coordinator@smartcampus.edu", password: "Coord@123", icon: CalendarClock },
+  { role: "Admin", email: "admin@smartcampus.edu", password: "Admin@123", icon: ShieldCheck },
+];
 
 function LoginForm() {
   const router = useRouter();
@@ -128,6 +135,38 @@ function LoginForm() {
             </span>
             <BottomGradient />
           </button>
+
+          <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <p className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400">
+                Demo accounts
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {DEMO_ACCOUNTS.map((account) => {
+                const Icon = account.icon;
+                return (
+                  <button
+                    key={account.role}
+                    type="button"
+                    onClick={() => {
+                      setEmail(account.email);
+                      setPassword(account.password);
+                    }}
+                    className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-left text-xs font-medium text-neutral-700 transition-all hover:border-primary/50 hover:bg-primary/5 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-neutral-200"
+                  >
+                    <Icon className="size-3.5 shrink-0 text-primary" />
+                    {account.role}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              Click a role to fill credentials, then Sign in.
+            </p>
+          </div>
 
           <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
 

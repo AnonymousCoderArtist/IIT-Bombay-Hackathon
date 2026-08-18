@@ -186,6 +186,8 @@ Free LLM keys:
 
 ## Test Credentials
 
+Login page pe **Demo accounts** section hai — kisi bhi role pe click karo to credentials auto-fill ho jaate hain (phir bas "Sign in").
+
 | Role | Email | Password |
 | ---- | ----- | -------- |
 | Admin | `admin@smartcampus.edu` | `Admin@123` |
