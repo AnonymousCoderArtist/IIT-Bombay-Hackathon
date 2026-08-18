@@ -6,9 +6,10 @@ import GithubIcon from "@/components/ui/github-icon";
 import { ScanFace, FileCode2, TerminalSquare } from "lucide-react";
 
 const commands = [
-  { label: "1. Python AI service start karo (face + RAG backend)", cmd: "cd services/ai && uv sync && FACE_LIVENESS_DISABLED=1 uv run uvicorn app.main:app --port 8000" },
-  { label: "2. Ek face enroll karo (student account pe)", cmd: "npx tsx --env-file-if-exists=.env scripts/face-setup.ts" },
-  { label: "3. Student login → /attendance/scan → Face check-in", cmd: "token paste karo → photo upload ya camera capture" },
+  { label: "1. Repo clone karo", cmd: "git clone https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon.git && cd IIT-Bombay-Hackathon" },
+  { label: "2. Python AI service start karo (face + RAG backend)", cmd: "cd services/ai && uv sync && FACE_LIVENESS_DISABLED=1 uv run uvicorn app.main:app --port 8000" },
+  { label: "3. Ek face enroll karo (student account pe)", cmd: "npx tsx --env-file-if-exists=.env scripts/face-setup.ts" },
+  { label: "4. Student login → /attendance/scan → Face check-in", cmd: "token paste karo → photo upload ya camera capture" },
 ];
 
 export function OpenSource() {
@@ -33,10 +34,10 @@ export function OpenSource() {
               Open Source
             </span>
             <h2 className="mt-4 font-serif text-5xl tracking-tight text-balance sm:text-6xl">
-              Face recognition, alag Python service se
+              AI Face Attendance, alag Python service se
             </h2>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
-              Face attendance <span className="text-foreground">UniFace</span> (SCRFD detection +
+              AI face attendance <span className="text-foreground">UniFace</span> (SCRFD detection +
               ArcFace embeddings) aur <span className="text-foreground">MiniFASNet liveness</span> se
               chalti hai — printed photo ya phone screen wali fake image reject hoti hai. Ye service
               locally chalti hai aur repo ke saath ship hoti hai.
