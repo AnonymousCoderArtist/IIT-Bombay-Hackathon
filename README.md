@@ -22,17 +22,47 @@ Built for **DevFusion 4.0: The Developers Hackathon**.
 
 ## Screenshots
 
+**Website home page:**
+
 ![Landing](public/screenshots/landing.png)
 
-![Student Dashboard](public/screenshots/dashboard.png)
+![Landing — features, testimonials & FAQ](public/screenshots/landing-bottom.png)
 
-| Login | Events |
-| ----- | ------ |
-| ![Login](public/screenshots/login.png) | ![Events](public/screenshots/events.png) |
+**Authentication:**
 
-| Attendance | Placements | Assignments |
-| ---------- | ---------- | ----------- |
-| ![Attendance](public/screenshots/attendance.png) | ![Placements](public/screenshots/placements.png) | ![Assignments](public/screenshots/assignments.png) |
+| Login (demo accounts) | |
+| --------------------- | - |
+| ![Login](public/screenshots/login.png) | |
+
+**Student portal:**
+
+| Dashboard | Attendance | Assignments |
+| --------- | ---------- | ----------- |
+| ![Dashboard](public/screenshots/dashboard.png) | ![Attendance](public/screenshots/attendance.png) | ![Assignments](public/screenshots/assignments.png) |
+
+| Events | Placements | Clubs |
+| ------ | ---------- | ----- |
+| ![Events](public/screenshots/events.png) | ![Placements](public/screenshots/placements.png) | ![Clubs](public/screenshots/clubs.png) |
+
+**Faculty portal:**
+
+| Dashboard | Attendance | Assignments |
+| --------- | ---------- | ----------- |
+| ![Faculty Dashboard](public/screenshots/faculty-dashboard.png) | ![Faculty Attendance](public/screenshots/faculty-attendance.png) | ![Faculty Assignments](public/screenshots/faculty-assignments.png) |
+
+**Coordinator portal:**
+
+| Dashboard | Events | Placements |
+| --------- | ------ | ---------- |
+| ![Coordinator Dashboard](public/screenshots/coordinator-dashboard.png) | ![Coordinator Events](public/screenshots/coordinator-events.png) | ![Coordinator Placements](public/screenshots/coordinator-placements.png) |
+
+**Admin portal:**
+
+| Dashboard | Users | Activity Logs |
+| --------- | ----- | ------------- |
+| ![Admin Dashboard](public/screenshots/admin-dashboard.png) | ![Admin Users](public/screenshots/admin-users.png) | ![Admin Logs](public/screenshots/admin-logs.png) |
+
+> Har role ke aur screenshots (notices, materials, lecture notes, notifications, profile, settings, AI assistant, academics): [`public/screenshots/`](public/screenshots/) folder me.
 
 ## Unique Features
 
@@ -186,6 +216,8 @@ Free LLM keys:
 
 ## Test Credentials
 
+Ye saare test users **MongoDB Atlas (live database)** me seeded hain — local + deployed app dono me in se login ho sakte ho.
+
 Login page pe **Demo accounts** section hai — kisi bhi role pe click karo to credentials auto-fill ho jaate hain (phir bas "Sign in").
 
 | Role | Email | Password |
@@ -194,6 +226,8 @@ Login page pe **Demo accounts** section hai — kisi bhi role pe click karo to c
 | Coordinator | `coordinator@smartcampus.edu` | `Coord@123` |
 | Faculty | `faculty@smartcampus.edu` | `Faculty@123` |
 | Student | `student@smartcampus.edu` | `Student@123` |
+
+Additional sample students: `rahul@smartcampus.edu` / `Student@123`, `sneha@smartcampus.edu` / `Student@123`.
 
 ## Testing Guide
 
