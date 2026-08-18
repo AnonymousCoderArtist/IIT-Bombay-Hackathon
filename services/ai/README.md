@@ -20,9 +20,12 @@ phir `uv sync`. venv kharab ho jaye toh `rm -rf .venv && uv sync`.
 ## Face recognition (UniFace) + anti-spoofing
 
 Attendance face check-in ke liye [UniFace](https://github.com/yakhyo/uniface) use hota hai
-(SCRFD detection + ArcFace embeddings + MiniFASNet liveness). Models first use par
-auto-download hote hain (`~/.uniface/models`). Enrolled embeddings
-`services/ai/data/face_store.json` me save hote hain.
+(SCRFD detection + ArcFace embeddings + MiniFASNet liveness). **Models repo me bundled hain**
+(`services/ai/models/`, ~29MB) — koi download/redownload nahi, service SHA-256 verify karke
+directly use karti hai. Enrolled embeddings `services/ai/data/face_store.json` me save hote hain.
+
+Agar models alag jagah rakhne ho toh `UNIFACE_CACHE_DIR` env se path daalo (default: bundled
+`services/ai/models/`).
 
 Anti-spoofing (MiniFASNet) har enroll/recognize pe liveness check karta hai —
 printed photo ya phone screen wali fake image reject hoti hai. Threshold
@@ -63,6 +66,6 @@ DEEPSEEK_API_KEY=
 LIVENESS_THRESHOLD=0.6
 ```
 
-> `.venv`, `.env`, `data/`, `__pycache__` sab gitignored hain. Service file ko
-> restart karna padta hai knowledge base ya code badalne ke baad (`--reload` dev
-> me use karo).
+> `.venv`, `.env`, `data/`, `__pycache__` sab gitignored hain. `models/` bundle committed hai
+> (services/ai/models/) taaki naye setup pe redownload na karna pade. Service file ko
+> restart karna padta hai knowledge base ya code badalne ke baad (`--reload` dev me use karo).

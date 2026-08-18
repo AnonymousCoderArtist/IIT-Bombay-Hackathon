@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Quote } from "lucide-react";
+import Image from "next/image";
 
 const testimonials = [
   {
@@ -29,40 +28,45 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="border-y py-24">
+    <section id="testimonials" className="relative overflow-hidden py-24 lg:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 flex items-end justify-end"
+      >
+        <Image
+          src="/black-background-and-golden-waves-and-bubbles-photo.jpg"
+          alt=""
+          width={625}
+          height={350}
+          className="h-full w-full object-cover object-right opacity-35 dark:opacity-40"
+        />
+      </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-          <span className="text-xs font-medium tracking-[0.3em] uppercase text-primary">
-            Voices
-          </span>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-            Loved across campus
-          </h2>
-          <p className="mt-4 max-w-xl text-muted-foreground">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <span className="text-[0.7rem] font-medium tracking-[0.28em] uppercase text-primary">
+              Voices
+            </span>
+            <h2 className="mt-4 font-serif text-5xl tracking-tight text-balance sm:text-6xl">
+              Loved across campus
+            </h2>
+          </div>
+          <p className="max-w-sm text-muted-foreground md:text-right">
             Students, faculty and coordinators rely on Smart Campus every day.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
-            <motion.figure
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="flex flex-col justify-between bg-surface p-7"
-            >
+        <div className="mt-16 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3">
+          {testimonials.map((testimonial) => (
+            <figure key={testimonial.name} className="flex flex-col justify-between bg-card p-8">
               <div>
-                <span className="flex size-9 items-center justify-center border border-primary/40 text-primary">
-                  <Quote className="size-4" />
-                </span>
-                <blockquote className="mt-5 text-sm leading-relaxed text-muted-foreground">
-                  &ldquo;{testimonial.quote}&rdquo;
+                <span className="font-serif text-4xl font-light italic text-primary">&ldquo;</span>
+                <blockquote className="mt-3 text-[0.95rem] leading-relaxed text-foreground/85">
+                  {testimonial.quote}
                 </blockquote>
               </div>
-              <figcaption className="mt-7 flex items-center gap-3 border-t border-border pt-5">
-                <span className="flex size-9 items-center justify-center bg-primary text-xs font-semibold text-primary-foreground">
+              <figcaption className="mt-8 flex items-center gap-3 border-t border-border pt-5">
+                <span className="flex size-10 items-center justify-center rounded-full border border-primary/30 bg-primary/8 font-heading text-xs font-extrabold text-primary">
                   {testimonial.initials}
                 </span>
                 <div>
@@ -70,7 +74,7 @@ export function Testimonials() {
                   <p className="text-xs text-muted-foreground">{testimonial.role}</p>
                 </div>
               </figcaption>
-            </motion.figure>
+            </figure>
           ))}
         </div>
       </div>

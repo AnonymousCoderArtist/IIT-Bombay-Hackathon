@@ -1,18 +1,17 @@
 import { GlowBackdrop } from "@/components/decor/glow-backdrop";
-import { Rays } from "@/components/decor/rays";
 import { Navbar } from "@/components/landing/navbar";
 import { Hero } from "@/components/landing/hero";
 import { Features } from "@/components/landing/features";
 import { Stats } from "@/components/landing/stats";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Faq } from "@/components/landing/faq";
+import { OpenSource } from "@/components/landing/open-source";
 import { Footer } from "@/components/landing/footer";
 
 export default function LandingPage() {
   return (
     <>
       <GlowBackdrop className="fixed inset-0" />
-      <Rays className="fixed inset-0 -z-10" />
       <Navbar />
       <main className="flex-1">
         <Hero />
@@ -20,6 +19,7 @@ export default function LandingPage() {
         <Stats />
         <Testimonials />
         <Faq />
+        <OpenSource />
       </main>
       <Footer />
     </>

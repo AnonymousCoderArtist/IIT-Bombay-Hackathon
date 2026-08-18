@@ -26,7 +26,7 @@ export default function CalendarWidget() {
             if (!event.startDate) return false;
             return new Date(event.startDate).getTime() >= Date.now() - 24 * 60 * 60 * 1000;
           })
-          .slice(0, 6)
+          .slice(0, 4)
           .map((event: { title: string; startDate: string; venue?: string }) => ({
             title: event.title,
             date: event.startDate,
@@ -56,8 +56,17 @@ export default function CalendarWidget() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold tracking-tight">Upcoming events</h2>
-        <CalendarDays className="size-4 text-muted-foreground" />
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
+            <CalendarDays className="size-4" />
+          </span>
+          <div>
+            <p className="text-[0.7rem] font-medium uppercase tracking-[0.2em] text-primary">
+              Campus calendar
+            </p>
+            <h2 className="font-heading text-lg tracking-tight">Upcoming events</h2>
+          </div>
+        </div>
       </div>
 
       {loading ? (
@@ -78,12 +87,12 @@ export default function CalendarWidget() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-2.5 md:grid-cols-2">
           {events.map((event) => (
             <Card key={`${event.date}-${event.title}`} className="group transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-elevated">
-              <CardContent className="p-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex size-10 shrink-0 items-center justify-center bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary/15">
+              <CardContent className="p-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex size-9 shrink-0 items-center justify-center bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary/15">
                     <CalendarDays className="size-4" />
                   </div>
                   <div className="min-w-0 flex-1">

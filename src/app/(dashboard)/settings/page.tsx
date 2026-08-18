@@ -34,6 +34,12 @@ const GEMINI_MODELS = [
 export default function SettingsPage() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -411,28 +417,28 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
               <Button
-                variant={theme === "light" ? "default" : "outline"}
+                variant={mounted && theme === "light" ? "default" : "outline"}
                 onClick={() => changeTheme("light")}
               >
                 <Sun className="size-4" />
                 Light
               </Button>
               <Button
-                variant={theme === "dark" ? "default" : "outline"}
+                variant={mounted && theme === "dark" ? "default" : "outline"}
                 onClick={() => changeTheme("dark")}
               >
                 <Moon className="size-4" />
                 Dark
               </Button>
               <Button
-                variant={(!theme || theme === "system") ? "default" : "outline"}
+                variant={mounted && (!theme || theme === "system") ? "default" : "outline"}
                 onClick={() => changeTheme("system")}
               >
                 <Monitor className="size-4" />
                 System
               </Button>
               <span className="ml-2 self-center text-sm text-muted-foreground">
-                Currently: {resolvedTheme}
+                Currently: {mounted ? resolvedTheme : "…"}
               </span>
             </CardContent>
           </Card>

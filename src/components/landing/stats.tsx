@@ -13,22 +13,26 @@ export function Stats() {
   ];
 
   return (
-    <section className="relative overflow-hidden py-14">
+    <section className="relative overflow-hidden py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid grid-cols-2 gap-px overflow-hidden border border-border bg-border lg:grid-cols-4">
-          {stats.map((stat) => (
+        <div className="grid grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
-              className="bg-surface px-4 py-10 text-center"
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+              className={`px-6 py-8 ${i > 0 ? "border-l border-border/60" : ""} ${
+                i >= 2 ? "border-t lg:border-t-0" : ""
+              } ${i === 2 && i >= 2 ? "lg:border-l" : ""}`}
             >
-              <p className="text-4xl font-bold tracking-tight tabular-nums text-primary">
+              <p className="font-serif text-6xl tracking-tight tabular-nums text-primary lg:text-7xl">
                 {stat.value}
               </p>
-              <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
+              <p className="mt-2 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                {stat.label}
+              </p>
             </motion.div>
           ))}
         </div>

@@ -48,6 +48,7 @@ export default function LectureNotesPage() {
   const [transcript, setTranscript] = useState("");
   const [source, setSource] = useState("live-stt");
   const [recording, setRecording] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -68,6 +69,11 @@ export default function LectureNotesPage() {
   }
 
   useEffect(load, []);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -209,7 +215,7 @@ export default function LectureNotesPage() {
     }
   }
 
-  const recSupported = Boolean(REC);
+  const recSupported = Boolean(REC) && mounted;
 
   return (
     <div className="space-y-8">

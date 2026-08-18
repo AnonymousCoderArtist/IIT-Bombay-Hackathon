@@ -46,9 +46,11 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
   const charts = data as unknown as ChartData;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <Card>
+    <div className="grid gap-4 lg:grid-cols-2">
+      <Card className="relative overflow-hidden border-primary/10 bg-gradient-to-br from-card to-surface/40">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
         <CardHeader>
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-primary">Analytics</p>
           <CardTitle>Monthly attendance</CardTitle>
         </CardHeader>
         <CardContent>
@@ -82,8 +84,10 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="relative overflow-hidden border-primary/10 bg-gradient-to-br from-card to-surface/40">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
         <CardHeader>
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-primary">Analytics</p>
           <CardTitle>Department performance</CardTitle>
         </CardHeader>
         <CardContent>
@@ -108,8 +112,10 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="relative overflow-hidden border-primary/10 bg-gradient-to-br from-card to-surface/40">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
         <CardHeader>
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-primary">Analytics</p>
           <CardTitle>Placement applications</CardTitle>
         </CardHeader>
         <CardContent>
@@ -139,8 +145,10 @@ export function AnalyticsCharts({ data }: { data: Record<string, unknown> }) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="relative overflow-hidden border-primary/10 bg-gradient-to-br from-card to-surface/40">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
         <CardHeader>
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-primary">Analytics</p>
           <CardTitle>Top events by registrations</CardTitle>
         </CardHeader>
         <CardContent>

@@ -1,67 +1,68 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { Code2, Globe, Send } from "lucide-react";
+import Image from "next/image";
 import { Logo } from "@/components/logo";
 import { useI18n } from "@/lib/i18n";
+import GithubIcon from "@/components/ui/github-icon";
+import GlobeIcon from "@/components/ui/globe-icon";
+import BrandTelegramIcon from "@/components/ui/brand-telegram-icon";
 
 export function Footer() {
   const { t } = useI18n();
   const columns = [
-    { title: t("footer.product"), links: ["Features", "Pricing", "Changelog", "Roadmap"] },
-    { title: t("footer.campus"), links: ["Events", "Placements", "Clubs", "Announcements"] },
-    { title: t("footer.company"), links: ["About", "Blog", "Careers", "Contact"] },
+    { title: t("footer.product"), links: [{ label: "Features", href: "/#features" }, { label: "FAQ", href: "/#faq" }, { label: "Source Code", href: "https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon" }] },
+    { title: t("footer.campus"), links: [{ label: "Dashboard", href: "/dashboard" }, { label: "Login", href: "/login" }] },
+    { title: t("footer.company"), links: [{ label: "Open Source", href: "/#open-source" }, { label: "Readme", href: "https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon#readme" }] },
   ];
 
   const socials = [
-    { icon: Code2, hover: "hover:text-teal-600 hover:border-teal-500/50 dark:hover:text-teal-400" },
-    { icon: Globe, hover: "hover:text-primary hover:border-primary/50" },
-    { icon: Send, hover: "hover:text-orange-600 hover:border-orange-500/50 dark:hover:text-orange-400" },
+    {
+      icon: GithubIcon,
+      href: "https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon",
+      label: "GitHub",
+    },
+    { icon: GlobeIcon, href: "#", label: "Website" },
+    { icon: BrandTelegramIcon, href: "#", label: "Telegram" },
   ];
 
   return (
-    <footer className="relative overflow-hidden border-t">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_115%,color-mix(in_oklch,var(--primary)_22%,transparent),transparent)]"
-      />
-      <Image
-        src="/glow-circle.svg"
-        alt=""
-        width={1676}
-        height={1676}
-        aria-hidden
-        className="pointer-events-none absolute -bottom-64 left-1/2 z-0 h-[44rem] w-[84rem] max-w-none -translate-x-1/2 opacity-30"
-      />
+    <footer className="relative overflow-hidden">
       <Image
         src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
         alt=""
+        aria-hidden
         width={5824}
         height={3264}
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 -bottom-4 -z-10 h-full w-full object-cover object-top opacity-70"
+        className="pointer-events-none absolute inset-x-0 bottom-[-10rem] -z-10 h-96 w-full object-cover object-center opacity-40 dark:opacity-45"
       />
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <div className="border border-border p-8 sm:p-10">
-          <div className="grid gap-10 lg:grid-cols-5">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-80 bg-[radial-gradient(ellipse_70%_60%_at_50%_120%,color-mix(in_oklch,var(--primary)_10%,transparent),transparent)]"
+      />
+      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <div className="grid gap-12 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 font-semibold">
+            <Link href="/" className="flex items-center gap-2.5">
               <Logo className="h-8 w-8 sm:h-9 sm:w-9" />
-              <span className="font-heading text-base font-bold tracking-tight">
+              <span className="font-heading text-base tracking-tight text-foreground dark:text-zinc-50">
                 Smart<span className="text-primary">Campus</span>
               </span>
             </Link>
-            <p className="mt-4 max-w-sm text-sm text-foreground/75">{t("footer.tagline")}</p>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+              {t("footer.tagline")}
+            </p>
             <div className="mt-6 flex gap-3">
-              {socials.map(({ icon: Icon, hover }, i) => (
+              {socials.map(({ icon: Icon, href, label }) => (
                 <a
-                  key={i}
-                  href="#"
-                  className={`flex size-9 items-center justify-center rounded-lg border bg-background/70 text-foreground/75 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 ${hover}`}
-                  aria-label="Social link"
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:text-primary"
+                  aria-label={label}
                 >
-                  <Icon className="size-4" />
+                  <Icon size={16} />
                 </a>
               ))}
             </div>
@@ -69,15 +70,19 @@ export function Footer() {
 
           {columns.map((column) => (
             <div key={column.title}>
-              <h3 className="font-semibold">{column.title}</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground/60">
+                {column.title}
+              </h3>
               <ul className="mt-4 space-y-2.5">
                 {column.links.map((link) => (
-                  <li key={link}>
+                  <li key={link.label}>
                     <a
-                      href="#"
-                      className="text-sm text-foreground/75 transition-colors duration-200 hover:text-primary"
+                      href={link.href}
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      className="text-sm text-muted-foreground transition-colors duration-200 hover:text-primary"
                     >
-                      {link}
+                      {link.label}
                     </a>
                   </li>
                 ))}
@@ -86,19 +91,18 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/70 pt-8 sm:flex-row">
-          <p className="text-sm text-foreground/75">
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-8 sm:flex-row">
+          <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Smart Campus. {t("footer.rights")}
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-sm text-foreground/75 transition-colors hover:text-primary">
+            <a href="#" className="text-sm text-muted-foreground transition-colors hover:text-primary">
               Privacy
             </a>
-            <a href="#" className="text-sm text-foreground/75 transition-colors hover:text-primary">
+            <a href="#" className="text-sm text-muted-foreground transition-colors hover:text-primary">
               Terms
             </a>
           </div>
-        </div>
         </div>
       </div>
     </footer>

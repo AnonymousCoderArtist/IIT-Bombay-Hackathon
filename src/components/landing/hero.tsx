@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, CalendarCheck, ClipboardList, Megaphone } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { useI18n } from "@/lib/i18n";
@@ -14,120 +14,128 @@ const stats = [
   { label: "Events", value: "2 coming" },
 ];
 
-const rows = [
-  { text: "DBMS assignment due Friday", tone: "accent" },
-  { text: "Hackathon registration open", tone: "default" },
-  { text: "Data Structures class at 10 AM", tone: "default" },
-];
-
 export function Hero() {
   const { t } = useI18n();
   return (
     <section className="relative overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,color-mix(in_oklch,var(--primary)_14%,transparent),transparent)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-24 right-[-10%] -z-10 size-[28rem] rounded-full bg-linear-to-br from-primary/10 to-[var(--violet-accent)]/10 blur-3xl animate-pulse-glow"
-      />
+        className="pointer-events-none absolute inset-0 -z-10"
+      >
+        <Image
+          src="/vecteezy_golden-abstract-wave-with-a-transparent-background-a_49389895.png"
+          alt=""
+          width={5824}
+          height={3264}
+          priority
+          loading="eager"
+          className="h-full w-full object-cover object-[center_65%]"
+        />
+        <div className="absolute inset-0 bg-background/20" />
+      </div>
+      <div className="mx-auto max-w-7xl px-4 pb-24 pt-20 sm:px-6 lg:pb-28 lg:pt-24">
+        <div className="mx-auto max-w-4xl text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-primary">
+                {t("hero.badge")}
+              </p>
+              <h1 className="mt-6 font-serif text-6xl leading-[1.02] tracking-tight text-balance sm:text-7xl lg:text-[6rem]">
+                {t("hero.title1")}
+                <br />
+                <em className="italic text-primary">{t("hero.title2")}</em>
+              </h1>
 
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-2 lg:pb-28 lg:pt-24">
+              <TextGenerateEffect
+                words={t("hero.subtitle")}
+                className="mx-auto mt-7 max-w-2xl text-lg font-normal text-muted-foreground sm:text-xl"
+                textClassName="text-lg font-normal leading-7 text-muted-foreground sm:text-xl sm:leading-8"
+              />
+
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+              <Button
+                size="lg"
+                className="group h-11 rounded-full px-7"
+                render={<Link href="/register" />}
+              >
+                {t("hero.start")}
+                <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-0.5" />
+              </Button>
+              <Button
+                size="lg"
+                variant="ghost"
+                className="h-11 rounded-full px-7 text-muted-foreground"
+                render={<a href="#features" />}
+              >
+                {t("hero.explore")}
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-            <Sparkles className="size-3.5" />
-            {t("hero.badge")}
-          </span>
-
-          <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            {t("hero.title1")}{" "}
-            <span className="animate-[gradient-shift_6s_ease_infinite] bg-linear-to-r from-primary via-[color-mix(in_oklch,var(--primary),white_30%)] to-[var(--violet-accent)] bg-clip-text bg-[length:200%_auto] text-transparent">
-              {t("hero.title2")}
-            </span>
-          </h1>
-
-          <TextGenerateEffect
-            words={t("hero.subtitle")}
-            className="mt-6 max-w-xl text-lg font-normal text-muted-foreground"
-            textClassName="text-lg font-normal leading-7 text-muted-foreground"
-          />
-
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Button size="lg" render={<Link href="/register" />}>
-              {t("hero.start")}
-              <ArrowRight className="ml-2 size-4" />
-            </Button>
-            <Button size="lg" variant="outline" render={<a href="#features" />}>
-              {t("hero.explore")}
-            </Button>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="relative"
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="relative mx-auto mt-20 max-w-3xl"
         >
           <div
             aria-hidden
-            className="absolute -inset-4 -z-10 rounded-lg bg-linear-to-br from-primary/20 via-transparent to-[var(--violet-accent)]/20 blur-2xl"
+            className="absolute -inset-10 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,color-mix(in_oklch,var(--primary)_16%,transparent),transparent)] blur-3xl"
           />
-          <Image
-            src="/glow-circle.svg"
-            alt=""
-            fill
-            sizes="600px"
-            aria-hidden
-            className="pointer-events-none absolute -inset-x-[90%] -inset-y-[85%] -z-10 h-full w-full object-cover opacity-45 mix-blend-multiply dark:opacity-55 dark:mix-blend-screen"
-          />
-          <div className="rounded-lg border border-border bg-card/80 p-2 shadow-elevated backdrop-blur-sm">
-            <div className="rounded-sm border bg-surface-secondary/60 p-6">
+          <div className="rounded-2xl border border-border bg-surface/70 shadow-elevated backdrop-blur-md">
+            <div className="flex items-center justify-between rounded-t-2xl border-b border-border px-6 py-3">
+              <div className="flex items-center gap-1.5">
+                <span className="size-2.5 rounded-full bg-[#30363c]" />
+                <span className="size-2.5 rounded-full bg-[#30363c]/60" />
+                <span className="size-2.5 rounded-full bg-[#30363c]/30" />
+              </div>
+              <p className="text-xs tracking-[0.18em] text-muted-foreground uppercase">
+                smartcampus.io
+              </p>
+            </div>
+            <div className="p-7 sm:p-9">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Good morning, Aarav</p>
-                  <p className="text-lg font-semibold bg-linear-to-t from-foreground/45 to-foreground bg-clip-text text-transparent">Semester 5 · Computer Science</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                    Good morning
+                  </p>
+                  <p className="mt-1.5 font-heading text-lg text-foreground">
+                    Aarav ·{" "}
+                    <span className="font-serif italic text-primary">Sem 5 CSE</span>
+                  </p>
                 </div>
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+                  <span className="relative inline-flex size-2 rounded-full bg-primary" />
+                </span>
               </div>
 
-              <div className="mt-6 grid grid-cols-3 gap-3">
+              <div className="mt-7 grid grid-cols-3 gap-3">
                 {stats.map((card) => (
                   <div
                     key={card.label}
-                    className="rounded-sm border border-border bg-surface p-3"
+                    className="rounded-xl border border-border bg-background/60 px-4 py-4"
                   >
-                    <p className="text-sm font-bold tabular-nums">{card.value}</p>
-                    <p className="text-xs text-muted-foreground">{card.label}</p>
+                    <p className="font-heading text-2xl font-extrabold tabular-nums text-primary">
+                      {card.value}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">{card.label}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 space-y-2.5">
-                {rows.map((item, i) => {
-                  const Icon = i === 0 ? ClipboardList : i === 1 ? Megaphone : CalendarCheck;
-                  return (
-                    <div
-                      key={item.text}
-                      className="flex items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5"
-                    >
-                      <span
-                        className={`flex size-7 items-center justify-center rounded-md ${
-                          item.tone === "accent"
-                            ? "bg-teal-500/10 text-teal-600 dark:text-teal-400"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        <Icon className="size-3.5" />
-                      </span>
-                      <p className="text-sm">{item.text}</p>
-                    </div>
-                  );
-                })}
+              <div className="mt-6 flex items-center justify-between border-t border-border pt-5">
+                <p className="text-sm text-muted-foreground">
+                  DBMS assignment due{" "}
+                  <span className="text-foreground">Friday</span>
+                </p>
+                <span className="rounded-full border border-primary/30 bg-primary/8 px-3 py-1 text-[0.7rem] font-medium text-primary">
+                  Hackathon live
+                </span>
               </div>
             </div>
           </div>

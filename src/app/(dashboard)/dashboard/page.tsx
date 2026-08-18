@@ -21,6 +21,7 @@ import {
 import { StatCard } from "@/components/dashboard/stat-card";
 import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
 import CalendarWidget from "@/components/dashboard/calendar-widget";
+import { CampusQuickPanel } from "@/components/dashboard/campus-quick-panel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -42,6 +43,7 @@ type CardDef = {
   icon: typeof CalendarDays;
   hint?: string;
   accent: "primary" | "cyan" | "violet" | "emerald" | "amber";
+  progress?: number;
 };
 
 export default function DashboardHome() {
@@ -60,7 +62,7 @@ export default function DashboardHome() {
   const role = session?.user?.role ?? "student";
 
   const studentCards: CardDef[] = [
-    { title: "Attendance", value: `${attendancePct(data)}%`, icon: CalendarDays, accent: "primary" },
+    { title: "Attendance", value: `${attendancePct(data)}%`, icon: CalendarDays, accent: "primary", progress: attendancePct(data) },
     { title: "Assignments", value: value(data, "submissions"), hint: `of ${value(data, "totalAssignments")} total`, icon: ClipboardList, accent: "cyan" },
     { title: "Events registered", value: value(data, "eventsRegistered"), icon: Megaphone, accent: "violet" },
     { title: "Unread notifications", value: value(data, "unreadNotifications"), icon: Bell, accent: "amber" },
@@ -126,14 +128,18 @@ export default function DashboardHome() {
   });
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="space-y-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-muted-foreground">{today}</p>
-          <h1 className="mt-1 bg-linear-to-t from-foreground/55 to-foreground bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl">
-            Welcome back, {session?.user?.name?.split(" ")[0]}
+          <p className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-primary" suppressHydrationWarning>
+            {today}
+          </p>
+          <h1 className="mt-0.5 font-serif text-2xl tracking-tight text-balance sm:text-3xl">
+            Welcome back,{" "}
+            <em className="italic text-primary">{session?.user?.name?.split(" ")[0]}</em>
           </h1>
-          <p className="mt-1 text-muted-foreground">
+          <p className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
+            <span className="inline-block size-1.5 rounded-full bg-primary" />
             Here is what is happening on your campus today.
           </p>
         </div>
@@ -142,7 +148,7 @@ export default function DashboardHome() {
             <Link
               key={action.href}
               href={action.href}
-              className="group inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 text-sm font-medium shadow-card transition-all hover:border-primary/40 hover:text-primary"
+              className="group inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-sm font-medium shadow-card transition-all hover:border-primary/40 hover:text-primary"
             >
               {action.label}
               <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -155,7 +161,7 @@ export default function DashboardHome() {
         initial="hidden"
         animate="show"
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
       >
         {cardsByRole[role]?.map((card) => (
           <motion.div
@@ -170,34 +176,18 @@ export default function DashboardHome() {
         ))}
       </motion.div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {(role === "student" || role === "coordinator") && <CalendarWidget />}
+      <div className="grid gap-3 lg:grid-cols-3">
+        <div className="space-y-3 lg:col-span-2">
+          <div className="grid gap-3 lg:grid-cols-2">
+            <CalendarWidget />
+            <CampusGroupsCard />
+          </div>
 
-        {role === "student" ? (
-          <CampusGroupsCard />
-        ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Your recent activity and updates will appear here as things happen.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        )}
+          {role === "admin" && <AnalyticsCharts data={data ?? {}} />}
+        </div>
+
+        <CampusQuickPanel />
       </div>
-
-      {role === "admin" && <AnalyticsCharts data={data ?? {}} />}
     </div>
   );
 }
@@ -270,7 +260,8 @@ function CampusGroupsCard() {
   }
 
   return (
-    <Card>
+    <Card className="relative overflow-hidden border-primary/10">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <span className="flex size-6 items-center justify-center rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
@@ -280,19 +271,19 @@ function CampusGroupsCard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        {groups.map((group) => (
+        {groups.slice(0, 4).map((group) => (
           <a
             key={`${group.kind}-${group.name}-${group.link}`}
             href={group.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center justify-between gap-2 rounded-lg border border-border bg-surface px-3 py-2.5 transition-all hover:border-primary/40"
+            className="group flex items-center justify-between gap-2 rounded-xl border border-border/60 bg-background/40 px-3 py-2 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/5 hover:shadow-elevated"
           >
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">{group.name}</p>
               <p className="text-xs text-muted-foreground">{group.kind}</p>
             </div>
-            <span className="shrink-0 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600 transition-colors group-hover:bg-emerald-500/20 dark:text-emerald-400">
+            <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary transition-colors group-hover:bg-primary/20">
               Join
             </span>
           </a>
