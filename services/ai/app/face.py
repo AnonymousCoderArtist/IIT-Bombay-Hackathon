@@ -23,6 +23,11 @@ except ImportError:
     MiniFASNet = None
     _SPOOF_AVAILABLE = False
 
+if os.environ.get("UNIFACE_CACHE_DIR") is None:
+    repo_models = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models")
+    if os.path.isdir(repo_models):
+        os.environ["UNIFACE_CACHE_DIR"] = repo_models
+
 _analyzer: FaceAnalyzer | None = None
 _analyzer_lock = threading.Lock()
 

@@ -11,15 +11,19 @@ import BrandTelegramIcon from "@/components/ui/brand-telegram-icon";
 export function Footer() {
   const { t } = useI18n();
   const columns = [
-    { title: t("footer.product"), links: ["Features", "Pricing", "Changelog", "Roadmap"] },
-    { title: t("footer.campus"), links: ["Events", "Placements", "Clubs", "Announcements"] },
-    { title: t("footer.company"), links: ["About", "Blog", "Careers", "Contact"] },
+    { title: t("footer.product"), links: [{ label: "Features", href: "/#features" }, { label: "FAQ", href: "/#faq" }, { label: "Source Code", href: "https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon" }] },
+    { title: t("footer.campus"), links: [{ label: "Dashboard", href: "/dashboard" }, { label: "Login", href: "/login" }] },
+    { title: t("footer.company"), links: [{ label: "Open Source", href: "/#open-source" }, { label: "Readme", href: "https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon#readme" }] },
   ];
 
   const socials = [
-    { icon: GithubIcon },
-    { icon: GlobeIcon },
-    { icon: BrandTelegramIcon },
+    {
+      icon: GithubIcon,
+      href: "https://github.com/AnonymousCoderArtist/IIT-Bombay-Hackathon",
+      label: "GitHub",
+    },
+    { icon: GlobeIcon, href: "#", label: "Website" },
+    { icon: BrandTelegramIcon, href: "#", label: "Telegram" },
   ];
 
   return (
@@ -49,12 +53,14 @@ export function Footer() {
               {t("footer.tagline")}
             </p>
             <div className="mt-6 flex gap-3">
-              {socials.map(({ icon: Icon }, i) => (
+              {socials.map(({ icon: Icon, href, label }) => (
                 <a
-                  key={i}
-                  href="#"
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
                   className="flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:text-primary"
-                  aria-label="Social link"
+                  aria-label={label}
                 >
                   <Icon size={16} />
                 </a>
@@ -69,12 +75,14 @@ export function Footer() {
               </h3>
               <ul className="mt-4 space-y-2.5">
                 {column.links.map((link) => (
-                  <li key={link}>
+                  <li key={link.label}>
                     <a
-                      href="#"
+                      href={link.href}
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                       className="text-sm text-muted-foreground transition-colors duration-200 hover:text-primary"
                     >
-                      {link}
+                      {link.label}
                     </a>
                   </li>
                 ))}

@@ -5,6 +5,7 @@ import { Features } from "@/components/landing/features";
 import { Stats } from "@/components/landing/stats";
 import { Testimonials } from "@/components/landing/testimonials";
 import { Faq } from "@/components/landing/faq";
+import { OpenSource } from "@/components/landing/open-source";
 import { Footer } from "@/components/landing/footer";
 
 export default function LandingPage() {
@@ -18,6 +19,7 @@ export default function LandingPage() {
         <Stats />
         <Testimonials />
         <Faq />
+        <OpenSource />
       </main>
       <Footer />
     </>

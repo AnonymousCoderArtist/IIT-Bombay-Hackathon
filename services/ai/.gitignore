@@ -7,3 +7,6 @@
 data/
 __pycache__/
 *.pyc
+
+# Models repo me commit hain (services/ai/models/) — unhe ignore mat karo
+# ~/.uniface/models wali auto-download only tab hoti hai jab repo models nahi hain
